@@ -1,0 +1,48 @@
+<script lang="ts" setup>
+import RevenueUpdates from './cards/RevenueReport.vue'
+import ProjectTable from './cards/ProjectTable.vue'
+import RevenueByLocationMap from './cards/RevenueByLocationMap.vue'
+import DataSection from './DataSection.vue'
+import YearlyBreakup from './cards/YearlyBreakup.vue'
+import MonthlyEarnings from './cards/MonthlyEarnings.vue'
+import RegionRevenue from './cards/RegionRevenue.vue'
+import Timeline from './cards/Timeline.vue'
+
+import { useMkStore } from '../../../stores/mk'
+const store = useMkStore();
+// store.getItems();
+store.getCNN();
+</script>
+
+<template>
+  <h1 class="page-title font-bold">Dashboard-XXX</h1>
+  <!--pre>{{ store.cnn }}</pre-->
+ <VaCard>
+    <VaCardTitle class="flex items-start justify-between">
+      <h1 class="card-title text-secondary font-bold uppercase">CNN</h1>
+      <VaButton preset="primary" size="small" to="/projects">xxx</VaButton>
+    </VaCardTitle>
+    <VaCardContent>
+      <pre>{{ store.cnn }}</pre>
+    </VaCardContent>  
+  </VaCard>
+ 
+  <section class="flex flex-col gap-4">
+    <div class="flex flex-col sm:flex-row gap-4">
+      <RevenueUpdates class="w-full sm:w-[70%]" />
+      <div class="flex flex-col gap-4 w-full sm:w-[30%]">
+        <YearlyBreakup class="h-full" />
+        <MonthlyEarnings />
+      </div>
+    </div>
+    <DataSection />
+    <div class="flex flex-col md:flex-row gap-4">
+      <RevenueByLocationMap class="w-full md:w-4/6" />
+      <RegionRevenue class="w-full md:w-2/6" />
+    </div>
+    <div class="flex flex-col md:flex-row gap-4">
+      <ProjectTable class="w-full md:w-1/2" />
+      <Timeline class="w-full md:w-1/2" />
+    </div>
+  </section>
+</template>
