@@ -14,7 +14,9 @@
     "format": "prettier --write .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "deploy-hosting": "firebase deploy --only hosting",
+    "deploy-functions": "firebase deploy --only functions"
   },
   "lint-staged": {
     "./src/**/*.{ts,js,vue}": [
@@ -29,6 +31,7 @@
     "chart.js": "^4.4.1",
     "chartjs-chart-geo": "^4.2.8",
     "epic-spinners": "^2.0.0",
+    "firebase": "^12.3.0",
     "flag-icons": "^6.15.0",
     "ionicons": "^4.6.3",
     "medium-editor": "^5.23.3",
