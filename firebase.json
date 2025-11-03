@@ -19,6 +19,11 @@
       "source": "functions-hw",
       "codebase": "helloworld",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    },
+    {
+      "source": "functions-ada",
+      "codebase": "ada",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
     }
   ],
   "storage": {

@@ -1,7 +1,7 @@
 <template>
   <VaCard>
     <VaCardTitle>
-      <h1 class="card-title text-tag text-secondary font-bold uppercase">Monthly Earnings</h1>
+      <h1 class="card-title text-tag text-secondary font-bold uppercase">Fear & Greed</h1>
     </VaCardTitle>
     <VaCardContent>
       <div class="p-1 bg-black rounded absolute right-4 top-4">
@@ -29,6 +29,15 @@ import VaChart from '../../../../components/va-charts/VaChart.vue'
 import { useChartData } from '../../../../data/charts/composables/useChartData'
 import { lineChartData } from '../../../../data/charts/lineChartData'
 import { ChartOptions } from 'chart.js'
+
+// import { useCnnStore } from '@/stores/cnn-store'
+import { useCnnStore } from '@/stores/cnn-store'
+
+// import { useMkStore } from '../../../../../../stores/mk'
+
+const store = useCnnStore()
+// store.getItems();
+// store.getCNN()
 
 const chartData = useChartData(lineChartData)
 

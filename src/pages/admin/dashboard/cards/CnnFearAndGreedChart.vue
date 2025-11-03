@@ -31,7 +31,7 @@ import { lineChartData } from '../../../../data/charts/lineChartData'
 import { ChartOptions } from 'chart.js'
 
 const chartData = useChartData(lineChartData)
-
+console.log(chartData)
 const options: ChartOptions<'line'> = {
   scales: {
     x: {

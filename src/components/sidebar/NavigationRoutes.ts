@@ -11,6 +11,13 @@ export default {
     displayName: 'navigationRoutes.home',
   },
   routes: [
+    /* {
+      name: 'markets',
+      displayName: 'Markets',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },*/
     {
       name: 'dashboard',
       displayName: 'menu.dashboard',

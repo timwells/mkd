@@ -27,6 +27,6 @@ setGlobalOptions({ maxInstances: 3 })
 // https://firebase.google.com/docs/functions/get-started
 
 exports.helloWorld = onRequest((request, response) => {
-  logger.info('Hello logs!', { structuredData: true })
-  response.send('Hello from Firebase!')
+  // logger.info('Hello logs!', { structuredData: true })
+  response.send('Hello from Firebase2!')
 })

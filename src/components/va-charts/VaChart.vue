@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup generic="T extends 'line' | 'bar' | 'bubble' | 'doughnut' | 'pie'">
-import { computed } from 'vue'
+import { computed, defineOptions } from 'vue'
 import type { ChartOptions, ChartData, ChartComponent } from 'chart.js'
 import { defaultConfig, chartTypesMap } from './vaChartConfigs'
 
