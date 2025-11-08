@@ -22,7 +22,7 @@
               <template v-else>↓</template>
               {{ changeText }}
             </span>
-            since last month
+            {{period}}
           </p>
         </div>
       </section>
@@ -39,6 +39,7 @@ const props = defineProps<{
   value: string | number
   changeText: string
   up: boolean
+  period: string
   iconBackground: string
   iconColor: string
 }>()

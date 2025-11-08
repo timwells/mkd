@@ -28,26 +28,26 @@ export const useAdaStore = defineStore('ada', {
     data: [] as DataItem[],
     loading: false,
     error: null as string | null,
-    cnn: null as any,
   }),
 
   getters: {
-    getData: (state) => state.data,
-    isLoading: (state) => state.loading,
-    getError: (state) => state.error,
-    getByTicker: (state) => (ticker: string) => {
+    getData: (state): DataItem[] => state.data,
+    isLoading: (state): boolean => state.loading,
+    getError: (state): string | null => state.error,
+    getByTicker: (state) => (ticker: string): DataItem | undefined => {
       return state.data.find(item => item.ticker === ticker)
     },
   },
 
   actions: {
-    async getSentiment(ticker: string, freq: string) {
+    async getSentiment(ticker: string, freq: string, name: string): Promise<void> {
       this.loading = true
       this.error = null
       try {
         const response = await fetch(`${GFC}/ada/sentiment?ticker=${ticker}&freq=${freq}`)
         if (!response.ok) throw new Error('Failed to fetch items')
-        const data = await response.json()
+        let data = await response.json()
+        data.name = name; // Add name to the data object
         const index = this.data.findIndex(item => item.ticker === ticker);
         if (index !== -1) {
           this.data[index] = data; // Update existing object

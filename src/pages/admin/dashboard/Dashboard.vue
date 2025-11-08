@@ -4,9 +4,9 @@
 // import RevenueByLocationMap from './cards/RevenueByLocationMap.vue'
 // import DataSection from './DataSection.vue'
 // import YearlyBreakup from './cards/YearlyBreakup.vue'
-//import MonthlyEarnings from './cards/MonthlyEarnings.vue'
+import MonthlyEarnings from './cards/MonthlyEarnings.vue'
 //import CnnFearAndGreed2 from './cards/CnnFearAndGreed2.vue'
-//import RegionRevenue from './cards/RegionRevenue.vue'
+import RegionRevenue from './cards/RegionRevenue.vue'
 
 import AdaSentiment from './cards/AdaSentiment.vue'
 
@@ -29,10 +29,10 @@ const selectedTab = ref('Sentiment')
     <!--CnnFearAndGreed2 /-->
   </div>
   <div v-else-if="selectedTab === 'RegionRevenue'">
-    <!--RegionRevenue /-->
+    <RegionRevenue />
   </div>
   <div v-else-if="selectedTab === 'MonthlyEarnings'">
-    <!--MonthlyEarnings /-->
+    <MonthlyEarnings />
   </div>
 
   <div v-else-if="selectedTab === 'AdaSentiment'">
