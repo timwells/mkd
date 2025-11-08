@@ -4,7 +4,7 @@ import cors  from "cors";
 
 import { sentiment } from "./ada-api.js"
 
-const VERSION = 'ada-0.0.1';
+const VERSION = 'ada-0.0.2';
 const app = express();
 
 app.use(cors({ origin: true }));

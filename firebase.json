@@ -16,12 +16,12 @@
   ],
   "functions": [
     {
-      "source": "functions-hw",
+      "source": "functions/functions-hw",
       "codebase": "helloworld",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
     },
     {
-      "source": "functions-ada",
+      "source": "functions/ada",
       "codebase": "ada",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
     }

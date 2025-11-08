@@ -22,6 +22,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/dashboard/Dashboard.vue'),
       },
       {
+        name: 'fed',
+        path: 'fed',
+        component: () => import('../pages/views/FedPage.vue'),
+      },
+      {
+        name: 'funds',
+        path: 'funds',
+        component: () => import('../pages/views/FundsPage.vue'),
+      },
+      {
         name: 'settings',
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),

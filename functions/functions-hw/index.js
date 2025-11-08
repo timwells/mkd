@@ -28,5 +28,5 @@ setGlobalOptions({ maxInstances: 3 })
 
 exports.helloWorld = onRequest((request, response) => {
   // logger.info('Hello logs!', { structuredData: true })
-  response.send('Hello from Firebase2!')
+  response.send('Hello from Firebase2!  v2')
 })

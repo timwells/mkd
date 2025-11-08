@@ -26,6 +26,20 @@ export default {
       },
     },
     {
+      name: 'fed',
+      displayName: 'menu.fed',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    {
+      name: 'funds',
+      displayName: 'menu.funds',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    {
       name: 'users',
       displayName: 'menu.users',
       meta: {
