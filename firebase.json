@@ -21,6 +21,11 @@
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
     },
     {
+      "source": "functions/nt",
+      "codebase": "nt",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    },
+    {
       "source": "functions/ada",
       "codebase": "ada",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
