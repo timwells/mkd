@@ -32,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/views/FundsPage.vue'),
       },
       {
+        name: 'nt',
+        path: 'nt',
+        component: () => import('../pages/views/NtPage.vue'),
+      },
+      {
         name: 'settings',
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),

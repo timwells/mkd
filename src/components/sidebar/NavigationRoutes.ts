@@ -26,6 +26,13 @@ export default {
       },
     },
     {
+      name: 'nt',
+      displayName: 'menu.nt',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    {
       name: 'fed',
       displayName: 'menu.fed',
       meta: {
