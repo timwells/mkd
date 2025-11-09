@@ -22,7 +22,7 @@
               <template v-else>↓</template>
               {{ changeText }}
             </span>
-            {{period}}
+            {{ period }}
           </p>
         </div>
       </section>

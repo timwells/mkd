@@ -5,7 +5,6 @@
 // import DataSection from './DataSection.vue'
 // import YearlyBreakup from './cards/YearlyBreakup.vue'
 import MonthlyEarnings from './cards/MonthlyEarnings.vue'
-//import CnnFearAndGreed2 from './cards/CnnFearAndGreed2.vue'
 import RegionRevenue from './cards/RegionRevenue.vue'
 
 import AdaSentiment from './cards/AdaSentiment.vue'
@@ -15,7 +14,6 @@ import AdaSentiment from './cards/AdaSentiment.vue'
 import { ref } from 'vue'
 const selectedTab = ref('Sentiment')
 </script>
-
 
 <template>
   <VaTabs v-model="selectedTab">
@@ -38,5 +36,4 @@ const selectedTab = ref('Sentiment')
   <div v-else-if="selectedTab === 'AdaSentiment'">
     <AdaSentiment />
   </div>
-
 </template>

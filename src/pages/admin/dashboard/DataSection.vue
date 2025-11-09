@@ -7,6 +7,7 @@
       :value="metric.value"
       :change-text="metric.changeText"
       :up="metric.changeDirection === 'up'"
+      period="X"
       :icon-background="metric.iconBackground"
       :icon-color="metric.iconColor"
     >
@@ -41,7 +42,7 @@ const dashboardMetrics = computed<DashboardMetric[]>(() => [
     title: 'Open invoices',
     value: '$35,548',
     icon: 'mso-attach_money',
-    changeText: '$1, 450',
+    changeText: '$1,450',
     changeDirection: 'down',
     iconBackground: getColor('success'),
     iconColor: getColor('on-success'),

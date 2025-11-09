@@ -16,11 +16,11 @@ import { defineStore } from 'pinia'
 */
 
 interface DataItem {
-  ticker: string;
-  [key: string]: any;
+  ticker: string
+  [key: string]: any
 }
 
-const apiKey = import.meta.env.VITE_API_KEY
+// const apiKey = import.meta.env.VITE_API_KEY
 const GFC = import.meta.env.VITE_GCF_URL
 
 export const useAdaStore = defineStore('ada', {
@@ -34,9 +34,11 @@ export const useAdaStore = defineStore('ada', {
     getData: (state): DataItem[] => state.data,
     isLoading: (state): boolean => state.loading,
     getError: (state): string | null => state.error,
-    getByTicker: (state) => (ticker: string): DataItem | undefined => {
-      return state.data.find(item => item.ticker === ticker)
-    },
+    getByTicker:
+      (state) =>
+      (ticker: string): DataItem | undefined => {
+        return state.data.find((item) => item.ticker === ticker)
+      },
   },
 
   actions: {
@@ -46,13 +48,13 @@ export const useAdaStore = defineStore('ada', {
       try {
         const response = await fetch(`${GFC}/ada/sentiment?ticker=${ticker}&freq=${freq}`)
         if (!response.ok) throw new Error('Failed to fetch items')
-        let data = await response.json()
-        data.name = name; // Add name to the data object
-        const index = this.data.findIndex(item => item.ticker === ticker);
+        const data = await response.json()
+        data.name = name // Add name to the data object
+        const index = this.data.findIndex((item) => item.ticker === ticker)
         if (index !== -1) {
-          this.data[index] = data; // Update existing object
+          this.data[index] = data // Update existing object
         } else {
-          this.data.push(data); // Add new object
+          this.data.push(data) // Add new object
         }
       } catch (err: any) {
         this.error = err.message || 'Unknown error'

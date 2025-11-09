@@ -23,7 +23,6 @@
 </template>
 
 <script setup lang="ts">
-
 import { VaCard } from 'vuestic-ui'
 import VaChart from '../../../../components/va-charts/VaChart.vue'
 import { useChartData } from '../../../../data/charts/composables/useChartData'

@@ -27,17 +27,18 @@ export const useCnnStore = defineStore('cnn', {
       this.loading = true
       this.error = null
       try {
-        const response = await fetch('https://us-central1-mk-d-b59f2.cloudfunctions.net/cnn/marketsentiment', { headers: APP_FINTECH_HEADERS })
-        
-        if (!response.ok) 
-          throw new Error('Failed to fetch items')
-        
+        const response = await fetch('https://us-central1-mk-d-b59f2.cloudfunctions.net/cnn/marketsentiment', {
+          headers: APP_FINTECH_HEADERS,
+        })
+
+        if (!response.ok) throw new Error('Failed to fetch items')
+
         const data = await response.json()
         this.cnn = data
       } catch (err: any) {
-          this.error = err.message || 'Unknown error'
+        this.error = err.message || 'Unknown error'
       } finally {
-          this.loading = false
+        this.loading = false
       }
     },
   },

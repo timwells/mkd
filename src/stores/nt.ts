@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-const apiKey = import.meta.env.VITE_API_KEY
+// const apiKey = import.meta.env.VITE_API_KEY
 const GFC = import.meta.env.VITE_GCF_URL
 
 export const useNtStore = defineStore('nt', {
@@ -9,8 +9,7 @@ export const useNtStore = defineStore('nt', {
     error: null as string | null,
   }),
 
-  getters: {
-  },
+  getters: {},
 
   actions: {
     async getTrades(): Promise<void> {
