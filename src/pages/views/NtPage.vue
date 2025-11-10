@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Header } from 'vue3-easy-data-table'
+import { Header } from 'vue3-easy-data-table'
 import { useNtStore } from '../../stores/nt'
 
 const headers: Header[] = [

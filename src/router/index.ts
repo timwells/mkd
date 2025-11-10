@@ -37,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/views/NtPage.vue'),
       },
       {
+        name: 'dd',
+        path: 'dd',
+        component: () => import('../pages/views/DividendPage.vue'),
+      },
+      {
         name: 'settings',
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),

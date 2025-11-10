@@ -33,6 +33,13 @@ export default {
       },
     },
     {
+      name: 'dd',
+      displayName: 'menu.dd',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    {
       name: 'fed',
       displayName: 'menu.fed',
       meta: {
