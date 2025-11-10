@@ -17,6 +17,11 @@
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
     },
     {
+      "source": "functions/dd",
+      "codebase": "dd",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    },
+    {
       "source": "functions/nt",
       "codebase": "nt",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]

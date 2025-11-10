@@ -1,0 +1,7 @@
+node_modules/
+.cache/
+
+# Log files
+firebase-debug*.log
+ui-debug.log
+

@@ -1,6 +1,6 @@
-const { config } = require('./config')
+import { config } from './config'
 
-const apiKeyCheck = (req, res, next) => {
+export const apiKeyCheck = (req, res, next) => {
   const apiKey = req.headers['x-api-key'] // Access the api-key from headers
 
   if (!apiKey) return res.status(401).json({ error: 'API key is missing' })
@@ -10,5 +10,3 @@ const apiKeyCheck = (req, res, next) => {
   // If API key is valid, proceed to the next middleware or route handler
   next()
 }
-
-module.exports = apiKeyCheck

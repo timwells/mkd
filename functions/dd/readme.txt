@@ -1,0 +1,11 @@
+    "axios": "^1.9.0",
+    "cheerio": "^1.0.0",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.3.0",
+    "firebase-functions": "^6.3.2",
+    "moment": "^2.30.1",
+    "puppeteer": "^24.8.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "technicalindicators": "^3.1.0",
+    "tesseract.js": "^6.0.1"
