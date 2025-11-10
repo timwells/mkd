@@ -3,7 +3,7 @@ import moment from 'moment'
 
 // const apiKey = import.meta.env.VITE_API_KEY
 const GFC = import.meta.env.VITE_GCF_URL
-const REQ_AGE_THRESHOLD = 60 * 5 // example threshold in milliseconds
+const REQ_AGE_THRESHOLD = 60 * 10
 
 export const useNtStore = defineStore('nt', {
   state: () => ({

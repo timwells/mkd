@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { load } from 'cheerio'
+
 const DIVIDENDDATA_SITE3 = "https://www.exdividenddate.co.uk"
 const HEADERS = { headers: {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 
