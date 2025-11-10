@@ -1,7 +1,7 @@
 <template>
   <EasyDataTable :headers="headers" :items="items" alternating :loading="store.loading">
     <template #expand="item">
-      <div style="padding: 15px">Expanded content for {{ item.epic }} -> {{ item.href }}</div>
+      <div style="padding: 15px">{{ item.epic }} -> {{ item.href }}</div>
     </template>
   </EasyDataTable>
 </template>

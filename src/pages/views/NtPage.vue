@@ -1,7 +1,7 @@
 <template>
   <EasyDataTable :headers="headers" :items="items" alternating :loading="store.loading">
     <template #expand="item">
-      <div style="padding: 15px">Expanded content for {{ item.stock }}</div>
+      <div style="padding: 15px">{{ item.stock }}</div>
     </template>
   </EasyDataTable>
 </template>
@@ -31,7 +31,6 @@ const headers: Header[] = [
 ]
 
 const store = useNtStore()
-
 // compute items in a type-safe way: support either an array in store.data
 // or an object with an allTrades array to avoid "never[]" typing errors.
 const items = computed(() => {
