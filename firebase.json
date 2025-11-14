@@ -4,6 +4,7 @@
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   },
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "**",
@@ -14,6 +15,11 @@
     {
       "source": "functions/functions-hw",
       "codebase": "helloworld",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    },
+    {
+      "source": "functions/cnn",
+      "codebase": "cnn",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
     },
     {
