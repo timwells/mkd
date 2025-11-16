@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Header } from 'vue3-easy-data-table'
-import { useNtStore } from '../../stores/nt'
+import { useNtStore } from '@/stores/nt'
 
 const headers: Header[] = [
   { text: 'Stock', value: 'stock' },

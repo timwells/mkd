@@ -4092,6 +4092,39 @@ address@^1.0.1:
   resolved "https://registry.npmjs.org/address/-/address-1.2.2.tgz"
   integrity sha512-4B/qKCfeE/ODUaAUpSwfzazo5x29WD4r3vXiWsB7I2mSDAihwEqKO+g8GELZUQSSAo5e1XTYh3ZVfLyxBc12nA==
 
+ag-charts-community@12.3.1:
+  version "12.3.1"
+  resolved "https://registry.npmjs.org/ag-charts-community/-/ag-charts-community-12.3.1.tgz"
+  integrity sha512-uRaUFmCl8e0Y3KxjaHUYlkCPS5OtwtfTChkdpoZuBKDXqerCPTjPu+uvlun3rYUSYxScwVf2LZCI0Hfw4Vc+WQ==
+  dependencies:
+    ag-charts-core "12.3.1"
+    ag-charts-locale "12.3.1"
+    ag-charts-types "12.3.1"
+
+ag-charts-core@12.3.1:
+  version "12.3.1"
+  resolved "https://registry.npmjs.org/ag-charts-core/-/ag-charts-core-12.3.1.tgz"
+  integrity sha512-711UJ0fXengb8+4PEW4nlzWDowmbYymPcjW2eJWHRzzvttUf14hnh+wP/l/s3EGVgYkEHe9vkXFwmeOJUlkC0Q==
+  dependencies:
+    ag-charts-types "12.3.1"
+
+ag-charts-locale@12.3.1:
+  version "12.3.1"
+  resolved "https://registry.npmjs.org/ag-charts-locale/-/ag-charts-locale-12.3.1.tgz"
+  integrity sha512-dCn7oHh3xLI576FT514aBedNQgtb5zwh/Gcj7jHvjOWYRnfH8kaekZzLzntITA6dF6E78okJfoI7CUCbYduQ4Q==
+
+ag-charts-types@12.3.1:
+  version "12.3.1"
+  resolved "https://registry.npmjs.org/ag-charts-types/-/ag-charts-types-12.3.1.tgz"
+  integrity sha512-5216xYoawnvMXDFI6kTpPku+mH0Csiwu/FE7lsAm8Z22HEN6ciSG/V7g+IrpLWncELqksgENebCTP75PZ3CsHA==
+
+ag-charts-vue3@^12.3.1:
+  version "12.3.1"
+  resolved "https://registry.npmjs.org/ag-charts-vue3/-/ag-charts-vue3-12.3.1.tgz"
+  integrity sha512-NGiElSQjBNzMLrKE2Tmry7T9DplvOtDsyY6GSDc8aLDMUf39l8C/t8G6aC71f7cexSnuYs9azW45fth47WrJiA==
+  dependencies:
+    ag-charts-community "12.3.1"
+
 agent-base@^7.0.2:
   version "7.1.0"
   resolved "https://registry.npmjs.org/agent-base/-/agent-base-7.1.0.tgz"
@@ -9711,7 +9744,7 @@ vue-tsc@^2.1.6:
     "@vue/language-core" "2.1.6"
     semver "^7.5.4"
 
-"vue@^2.6.14 || ^3.3.0", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.0-0 || ^2.7.0", vue@^3.0.4, vue@^3.2.0, vue@^3.2.25, vue@^3.2.45, vue@^3.4.21, "vue@>= 3.2.0 < 4.0.0", vue@>=2, "vue@2 || 3", vue@3.5.8:
+"vue@^2.6.14 || ^3.3.0", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.0-0 || ^2.7.0", vue@^3.0.4, vue@^3.2.0, vue@^3.2.25, vue@^3.2.45, vue@^3.4.21, vue@^3.5.0, "vue@>= 3.2.0 < 4.0.0", vue@>=2, "vue@2 || 3", vue@3.5.8:
   version "3.5.8"
   resolved "https://registry.npmjs.org/vue/-/vue-3.5.8.tgz"
   integrity sha512-hvuvuCy51nP/1fSRvrrIqTLSvrSyz2Pq+KQ8S8SXCxTWVE0nMaOnSDnSOxV1eYmGfvK7mqiwvd1C59CEEz7dAQ==

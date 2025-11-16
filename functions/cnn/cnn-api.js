@@ -31,7 +31,14 @@ export const marketSentiment = async () => {
                
         // Combine F&G date-time and values
         // data.fear_and_greed_historical.data = data.fear_and_greed_historical.data.map(e => [e.x, parseFloat(e.y.toFixed(1))]);
-        data.fear_and_greed_historical.data = data.fear_and_greed_historical.data.map(e => [e.x, +e.y.toFixed(2)]);
+        // data.fear_and_greed_historical.data = data.fear_and_greed_historical.data.map(e => [e.x, +e.y.toFixed(2)]);
+        data.fear_and_greed_historical.data = data.fear_and_greed_historical.data.map(e => {
+            const d = new Date(e.x)       // parse original x
+            d.setUTCHours(0, 0, 0, 0)     // set time to midnight UTC
+            const ts = d.getTime()        // get Unix timestamp in milliseconds
+            return [ts, +e.y.toFixed(2)]
+        })
+
 
         // Combine Vix date-time and values
         data.market_volatility_vix.data = data.market_volatility_vix.data.map(e => [e.x, +e.y.toFixed(2)]);
