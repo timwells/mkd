@@ -19,20 +19,19 @@ export interface FearAndGreedData {
   previous_1_month: number
   previous_1_year: number
 }
-
-export interface FearAndGreedHistorical {
+export interface MarketHistorical {
   timestamp: number
   score: number
   rating: string
   data: TimeDataPair[]
 }
 
-export interface MarketVolatilityHistorical {
-  timestamp: number
-  score: number
-  rating: string
-  data: TimeDataPair[]
-}
+export type FearAndGreedHistorical = MarketHistorical
+export type MarketVolatilityHistorical = MarketHistorical
+export type MarketMomentumSp500Historical = MarketHistorical
+export type MarketMomentumSp500MA200 = TimeDataPair
+export type MarketMomentumSp500MA100 = TimeDataPair
+export type MarketMomentumSp500MA50 = TimeDataPair
 
 function isTimeDataPairArray(value: any): value is TimeDataPair[] {
   return (
@@ -42,7 +41,7 @@ function isTimeDataPairArray(value: any): value is TimeDataPair[] {
     )
   )
 }
-
+/*
 function isFearAndGreedHistorical(value: any): value is FearAndGreedHistorical {
   return (
     typeof value === 'object' &&
@@ -52,8 +51,8 @@ function isFearAndGreedHistorical(value: any): value is FearAndGreedHistorical {
     isTimeDataPairArray(value?.data)
   )
 }
-
-function isMarketVolatilityHistorical(value: any): value is MarketVolatilityHistorical {
+*/
+function isMarketHistorical(value: any): value is MarketHistorical {
   return (
     typeof value === 'object' &&
     typeof value?.timestamp === 'number' &&
@@ -72,6 +71,10 @@ export const useCnnStore = defineStore('cnn', {
     // fearAndGreedData: null as FearAndGreedData | null,
     fearAndGreedHistorical: null as FearAndGreedHistorical | null,
     marketVolatilityHistorical: null as MarketVolatilityHistorical | null,
+    marketMomentumSp500Historical: null as MarketVolatilityHistorical | null,
+    marketMomentumSp500MA200: null as any | null,
+    marketMomentumSp500MA100: null as any | null,
+    marketMomentumSp500MA50: null as any | null,
     loading: false,
     error: null as string | null,
     nextReq: 0 as number, // timestamp (ms)
@@ -97,19 +100,24 @@ export const useCnnStore = defineStore('cnn', {
         const json = (await response.json()) as unknown
 
         // Runtime type checks
-        if (isFearAndGreedHistorical((json as any)?.fear_and_greed_historical)) {
+        if (isMarketHistorical((json as any)?.fear_and_greed_historical)) {
           this.fearAndGreedHistorical = (json as any).fear_and_greed_historical
         } else {
           this.fearAndGreedHistorical = null
         }
 
-        if (isMarketVolatilityHistorical((json as any)?.market_volatility_vix)) {
+        if (isMarketHistorical((json as any)?.market_volatility_vix)) {
           this.marketVolatilityHistorical = (json as any).market_volatility_vix
         } else {
           this.marketVolatilityHistorical = null
         }
+
+        this.marketMomentumSp500Historical = (json as any).market_momentum_sp500
+        this.marketMomentumSp500MA200 = (json as any).market_momentum_sp500_MA200
+        this.marketMomentumSp500MA100 = (json as any).market_momentum_sp500_MA100
+        this.marketMomentumSp500MA50 = (json as any).market_momentum_sp500_MA50
       } catch (err: any) {
-        this.error = err.message ?? 'Unknown error'
+        this.error = err.message ?? 'Unknown Error'
       } finally {
         this.loading = false
       }

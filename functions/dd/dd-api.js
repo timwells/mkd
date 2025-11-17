@@ -20,7 +20,7 @@ export const exdividenddates = async () => {
     const $ = load(data)
 
     // Select all table rows except the header
-    $('#ctl00_ContentPlaceHolder1_lvExDividendDate_itemPlaceholderContainer tr')
+    $('#dividend-table-body tr')
       .slice(1)
       .each((_, el) => {
         const cells = $(el).find('td')
