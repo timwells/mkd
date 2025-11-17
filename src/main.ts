@@ -24,10 +24,7 @@ app.use(i18n)
 app.use(
   createVuestic({
     config: vuesticGlobalConfig,
-    plugins: {
-      devtools: false, // This removes the error
-    },
-  })
+  }),
 )
 
 if (import.meta.env.VITE_APP_GTM_ENABLED) {
