@@ -1,22 +1,60 @@
 <template>
   <div>
-    <AgCharts :options="fgOptions" />
-    <AgCharts :options="vixOptions" />
-    <AgCharts :options="sp500Options" />
+    <!-- Left-justified tabs -->
+    <VaTabs v-model="selectedTab" class="justify-start">
+      <VaTab name="Sentiment">Sentiment</VaTab>
+      <VaTab name="tab2">Tab2</VaTab>
+      <VaTab name="tab3">Tab3</VaTab>
+      <VaTab name="tab4">Tab4</VaTab>
+    </VaTabs>
 
-    <!--pre>{{ store.marketMomentumSp500Historical }}</pre>
-    <pre>{{ store.market_momentum_sp500_MA200 }}</pre>
-    <pre>{{ store.market_momentum_sp500_MA100 }}</pre>
-    <pre>{{ store.market_momentum_sp500_MA50 }}</pre-->
+    <!-- Content -->
+    <div v-if="selectedTab === 'Sentiment'">
+      <VaCard>
+        <VaCardContent>
+          <div >
+            <AgCharts :options="fgOptions" />
+          </div>
+        </VaCardContent>
+      </VaCard>
+      <VaCard>
+        <VaCardContent>
+          <div>
+            <AgCharts :options="vixOptions" />
+          </div>
+        </VaCardContent>
+      </VaCard>
+      <VaCard>
+        <VaCardContent>
+          <div>
+            <AgCharts :options="sp500Options" />
+          </div>
+        </VaCardContent>
+      </VaCard>
+    </div>
+    <div v-else-if="selectedTab === 'tab2'">
+      <div class="text-lg font-medium">Content for Tab2</div>
+      <p class="mt-2 text-gray-600">Your second tab content goes here.</p>
+    </div>
+    <div v-else-if="selectedTab === 'tab3'">
+      <div class="text-lg font-medium">Content for Tab3</div>
+      <p class="mt-2 text-gray-600">Your second tab content goes here.</p>
+    </div>
+
+    <div v-else-if="selectedTab === 'tab4'">
+      <div class="text-lg font-medium">Content for Tab4</div>
+      <p class="mt-2 text-gray-600">Your second tab content goes here.</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed,ref } from 'vue'
 import { AgCharts } from 'ag-charts-vue3'
 import type { AgChartOptions, AgLineSeriesOptions, AgTimeAxisOptions, AgNumberAxisOptions } from 'ag-charts-community'
 
 import { useCnnStore } from '@/stores/cnn'
+const selectedTab = ref('Sentiment')
 const store = useCnnStore()
 store.getMarketSentiment()
 
@@ -25,11 +63,10 @@ store.getMarketSentiment()
 // ----------------------------
 const toXY = (arr: [number, number][]) => arr.map(([x, y]) => ({ x, y }))
 const getMinY = (data: [number, number][]): number => (data.length === 0 ? 0 : Math.min(...data.map(([, y]) => y)))
-
 const getMaxY = (data: [number, number][]): number => (data.length === 0 ? 0 : Math.max(...data.map(([, y]) => y)))
 
 const formatDate = (x: number) =>
-  new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'UTC' }).format(new Date(x))
+  new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', year:'2-digit', timeZone: 'UTC' }).format(new Date(x))
 
 const makeMainSeries = (yName = 'Value', colour: string): AgLineSeriesOptions => ({
   type: 'line',
@@ -37,7 +74,7 @@ const makeMainSeries = (yName = 'Value', colour: string): AgLineSeriesOptions =>
   yKey: 'y',
   yName,
   stroke: colour,
-  strokeWidth: 3,
+  strokeWidth: 2,
   interpolation: { type: 'smooth' },
   marker: { enabled: false },
   tooltip: {
@@ -52,7 +89,7 @@ const makeHorizontalLine = (data: { x: number }[], y: number, color: string): Ag
   xKey: 'x',
   yKey: 'y',
   stroke: color,
-  strokeWidth: 3,
+  strokeWidth: 2,
   lineDash: [2, 2],
   marker: { enabled: false },
   tooltip: { enabled: false },
@@ -120,30 +157,6 @@ const buildChartOptions = (
 
   legend: { enabled: false },
 })
-/*
-axes: [
-    {
-      type: 'time',
-      position: 'bottom',
-      tick: {
-        interval: { months: 1 },   // Every single month
-      },
-      label: {
-        autoRotate: true,
-        formatter: ({ value }) => {
-          const d = new Date(value)
-          const month = d.toLocaleDateString('en-GB', { month: 'short' })
-          const year = d.getFullYear()
-          return d.getMonth() === 0 ? `${month} ${year}` : month
-        },
-      },
-    },
-    {
-      type: 'number',
-      position: 'left',
-    },
-  ],
-*/
 
 const buildChartOptions2 = (
   data: { x: number; y: number }[],
@@ -177,8 +190,6 @@ const fgOptions = computed(() =>
 )
 const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX Index'))
 
-//     axes: [timeAxis, numberAxis(Math.floor(minY * 0.98), Math.ceil(maxY * 1.02))],
-
 const sp500Options = computed(() =>
   buildChartOptions2(
     sp500Data.value,
@@ -187,10 +198,17 @@ const sp500Options = computed(() =>
     sp500MA200Data.value,
     5200,
     7000,
-    //Math.floor(getMinY(sp500Data.value)*0.98),
-    //Math.floor(getMaxY(sp500Data.value)*1.02),
+    // Math.floor(getMinY(sp500Data.value)*0.96),
+    // Math.floor(getMaxY(sp500Data.value)*1.04),
     BLUE,
     'SP500',
   ),
 )
 </script>
+
+<style>
+/* This is the key: override Vuestic's default flex-grow */
+.justify-start {
+  justify-content: flex-start !important;
+}
+</style>

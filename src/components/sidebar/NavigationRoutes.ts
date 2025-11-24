@@ -54,6 +54,13 @@ export default {
       },
     },
     {
+      name: 'metals',
+      displayName: 'menu.metals',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    {
       name: 'users',
       displayName: 'menu.users',
       meta: {

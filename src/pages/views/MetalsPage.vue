@@ -1,0 +1,159 @@
+<template>    
+    <div class="lw-chart" ref="chartContainer"></div>
+</template>
+
+<script setup>
+import { ref, onMounted, onBeforeUnmount, nextTick, shallowRef } from 'vue'
+import {
+  createChart,
+  LineSeries,
+  AreaSeries,
+  BarSeries,
+  HistogramSeries,
+  BaselineSeries,
+} from 'lightweight-charts'
+
+const chartContainer = ref(null)
+const chart = shallowRef(null)
+const seriesMap = shallowRef(new Map())
+const resizeObserver = shallowRef(null)
+const seriesCount = ref(0)
+const activeSeries = ref([])
+const newSeriesType = ref('line')
+const realtimeInterval = ref(null)
+
+// Series type mapping
+const SERIES_TYPE_MAP = {
+  line: LineSeries,
+  area: AreaSeries,
+  bar: BarSeries,
+  histogram: HistogramSeries,
+  baseline: BaselineSeries,
+}
+
+// Chart options
+const chartOptions = {
+  layout: {
+    background: { color: '#ffffff' },
+    textColor: '#333',
+  },
+  grid: {
+    vertLines: { color: '#e1e1e1' },
+    horzLines: { color: '#e1e1e1' },
+  },
+  width: 800,
+  height: 400,
+}
+
+// Add series
+function addSeries(config) {
+  if (!chart.value) return null
+
+  const { id, type = 'line', data = [], options = {} } = config
+
+  if (seriesMap.value.has(id)) {
+    console.warn(`Series "${id}" already exists`)
+    return null
+  }
+
+  try {
+    const SeriesDef = SERIES_TYPE_MAP[type.toLowerCase()] || LineSeries
+    const seriesInstance = chart.value.addSeries(SeriesDef, options)
+    
+    if (data.length > 0) {
+      seriesInstance.setData(data)
+    }
+
+    seriesMap.value.set(id, {
+      instance: seriesInstance,
+      type,
+    })
+
+    updateSeriesList()
+    return seriesInstance
+  } catch (error) {
+    console.error(`Failed to add series "${id}":`, error)
+    return null
+  }
+}
+
+// Update series list
+function updateSeriesList() {
+  activeSeries.value = Array.from(seriesMap.value.keys())
+  seriesCount.value = activeSeries.value.length
+}
+
+
+// Initialize chart
+function initChart() {
+  if (!chartContainer.value) return
+
+  chart.value = createChart(chartContainer.value, chartOptions)
+  
+  // Add initial series
+  addSeries({
+    id: 'initial-line',
+    type: 'line',
+    data: [
+      { time: '2023-01-01', value: 100 },
+      { time: '2023-01-02', value: 105 },
+      { time: '2023-01-03', value: 103 },
+      { time: '2023-01-04', value: 108 },
+      { time: '2023-01-05', value: 112 },
+    ],
+    options: {
+      color: '#2962FF',
+      lineWidth: 2,
+    }
+  })
+
+  chart.value.timeScale().fitContent()
+  updateSeriesList()
+}
+
+
+// Resize handling
+function enableResize() {
+  if (!chartContainer.value) return
+
+  resizeObserver.value = new ResizeObserver((entries) => {
+    if (!chart.value || !entries.length) return
+    const { width, height } = entries[0].contentRect
+    chart.value.resize(width, height)
+  })
+
+  resizeObserver.value.observe(chartContainer.value)
+  
+  nextTick(() => {
+    if (chart.value && chartContainer.value) {
+      const rect = chartContainer.value.getBoundingClientRect()
+      chart.value.resize(rect.width, rect.height)
+    }
+  })
+}
+
+// Cleanup
+function cleanup() {
+  
+  if (resizeObserver.value) {
+    resizeObserver.value.disconnect()
+  }
+  
+  if (chart.value) {
+    chart.value.remove()
+  }
+}
+
+// Lifecycle
+onMounted(() => {
+    console.log('MetalsPage mounted')
+    initChart()
+    enableResize()
+})
+
+onBeforeUnmount(() => {
+    console.log('MetalsPage before unmount')
+    cleanup()
+})
+
+</script>
