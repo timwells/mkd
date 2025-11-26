@@ -11,7 +11,6 @@ const FT_MY_MAPX_FUND_SYMBOLS = [
     {name: "Lindsell Train UK EqtyFund D Acc", symbol: "72625433", scale: 1.0}
 ]
 
-
 /*
 US10Y
 {
@@ -37,9 +36,7 @@ US10Y
         }
     ]
 }
-
 */
-
 
 // { time: "2024-08-31", value 1.0 }
 export const myMapFunds = async () => {
@@ -66,13 +63,13 @@ export const myMapFunds = async () => {
     return dataObj
 }
 
-export const getSeries = async (ticker) => {
+export const getHistoricalSeries = async (ticker) => {
     let result = tickerMap.get(ticker)
 
     if(result == null) {
         result = await findSymbolId(ticker)
     }
-
+    
     let dataObj = null;
     if(result) {
         let payLoad = PAYLOAD_BODY;
@@ -86,7 +83,7 @@ export const getSeries = async (ticker) => {
                     value: (data.Elements[0].ComponentSeries[data.Elements[0].ComponentSeries.length-1].Values[i])
                 })
             }
-            dataObj = { name: data.Elements[0].CompanyName, data:dv };
+            dataObj = { name: data.Elements[0].CompanyName, ticker: ticker, data:dv };
             return dataObj
         } catch(e) { console.log(e.error) }        
     }
