@@ -11,27 +11,35 @@
 
     <!-- Tab Content -->
     <div v-if="value === 'Sentiment'" class="tab-content" outlined>
-      <VaCard>
-        <VaCardContent>
-          <section>
-            <header class="flex items-center justify-between">header</header>
-            <div>
-              <AgCharts :options="fgOptions" />
-            </div>
-          </section>
-        </VaCardContent>
-      </VaCard>
-      <VaCard>
-        <VaCardContent>
-          <AgCharts :options="vixOptions" />
-        </VaCardContent>
-      </VaCard>
-      <VaCard>
-        <VaCardContent>
-          <AgCharts :options="sp500Options" />
-        </VaCardContent>
-      </VaCard>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <VaCard class="rounded-xl">
+          <VaCardContent>
+            <AgCharts :options="fgOptions" />
+          </VaCardContent>
+        </VaCard>
+        <VaCard class="rounded-xl">
+          <VaCardContent>
+            <AgCharts :options="sp500Options" />
+          </VaCardContent>
+        </VaCard>
+        <VaCard class="rounded-xl">
+          <VaCardContent>
+            <AgCharts :options="vixOptions" />
+          </VaCardContent>
+        </VaCard>
+        <VaCard class="rounded-xl">
+          <VaCardContent>
+            <iframe
+              src="https://cdn.jmbullion.com/fearandgreed/fearandgreed.html"
+              class="w-full"
+              style="height: 400px; border: 0;"
+              loading="lazy"
+            ></iframe>
+          </VaCardContent>
+        </VaCard>
+      </div>
     </div>
+
     <VaCard v-else-if="value === 'Two'" class="tab-content" outlined>
       <VaCardTitle>Tab Two Content</VaCardTitle>
       <VaCardContent>
@@ -48,54 +56,6 @@
   </div>
 </template>
 
-<!--template>
-  <div>
-    <VaTabs v-model="selectedTab" class="tabs-left">
-      <VaTab name="Sentiment">Sentiment</VaTab>
-      <VaTab name="tab2">Tab2</VaTab>
-      <VaTab name="tab3">Tab3</VaTab>
-      <VaTab name="tab4">Tab4</VaTab>
-    </VaTabs>
-
-    <div v-if="selectedTab === 'Sentiment'">
-      <VaCard>
-        <VaCardContent>
-          <div >
-            <AgCharts :options="fgOptions" />
-          </div>
-        </VaCardContent>
-      </VaCard>
-      <VaCard>
-        <VaCardContent>
-          <div>
-            <AgCharts :options="vixOptions" />
-          </div>
-        </VaCardContent>
-      </VaCard>
-      <VaCard>
-        <VaCardContent>
-          <div>
-            <AgCharts :options="sp500Options" />
-          </div>
-        </VaCardContent>
-      </VaCard>
-    </div>
-    <div v-else-if="selectedTab === 'tab2'">
-      <div class="text-lg font-medium">Content for Tab2</div>
-      <p class="mt-2 text-gray-600">Your second tab content goes here.</p>
-    </div>
-    <div v-else-if="selectedTab === 'tab3'">
-      <div class="text-lg font-medium">Content for Tab3</div>
-      <p class="mt-2 text-gray-600">Your second tab content goes here.</p>
-    </div>
-
-    <div v-else-if="selectedTab === 'tab4'">
-      <div class="text-lg font-medium">Content for Tab4</div>
-      <p class="mt-2 text-gray-600">Your second tab content goes here.</p>
-    </div>
-  </div>
-</template-->
-
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { AgCharts } from 'ag-charts-vue3'
@@ -105,7 +65,6 @@ import { useCnnStore } from '@/stores/cnn'
 const tabs = ['Sentiment', 'Two', 'Three']
 const value = ref('Sentiment')
 
-const selectedTab = ref('Sentiment')
 const store = useCnnStore()
 store.getMarketSentiment()
 
@@ -239,10 +198,11 @@ const GREEN = '#10b981'
 const ORANGE = '#ffcc00'
 
 const fgOptions = computed(() =>
-  buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'Fear & Greed Index'),
+  buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'Fear & Greed Index: SP500'),
 )
 const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX Index'))
-
+// const sp500Options: AgChartOptions = {
+  // ...
 const sp500Options = computed(() =>
   buildChartOptions2(
     sp500Data.value,
@@ -257,6 +217,7 @@ const sp500Options = computed(() =>
     'SP500',
   ),
 )
+
 </script>
 
 <style scoped>
