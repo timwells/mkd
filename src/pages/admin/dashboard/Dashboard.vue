@@ -32,7 +32,7 @@
             <iframe
               src="https://cdn.jmbullion.com/fearandgreed/fearandgreed.html"
               class="w-full"
-              style="height: 400px; border: 0;"
+              style="height: 400px; border: 0"
               loading="lazy"
             ></iframe>
           </VaCardContent>
@@ -40,17 +40,20 @@
       </div>
     </div>
 
-    <VaCard v-else-if="value === 'Two'" class="tab-content" outlined>
-      <VaCardTitle>Tab Two Content</VaCardTitle>
+    <VaCard v-else-if="value === 'Metals'" class="tab-content" outlined>
+      <VaCardTitle>ETFs</VaCardTitle>
       <VaCardContent>
-        <p>This content belongs to Tab Two.</p>
+        <LightweightChartFTMulti
+          :tickers="['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP']"
+          type="line"
+        />
       </VaCardContent>
     </VaCard>
 
-    <VaCard v-else-if="value === 'Three'" class="tab-content" outlined>
-      <VaCardTitle>Tab Three Content</VaCardTitle>
+    <VaCard v-else-if="value === 'Money Mkts'" class="tab-content" outlined>
+      <VaCardTitle>Money Markets</VaCardTitle>
       <VaCardContent>
-        <p>And this is the content for Tab Three!</p>
+        <LightweightChartFTMulti :tickers="['GB00BFYDWM59:GBP', 'GB00B8XYYQ86:GBP', 'GB0033029413:GBP']" type="line" />
       </VaCardContent>
     </VaCard>
   </div>
@@ -62,7 +65,9 @@ import { AgCharts } from 'ag-charts-vue3'
 import type { AgChartOptions, AgLineSeriesOptions, AgTimeAxisOptions, AgNumberAxisOptions } from 'ag-charts-community'
 import { useCnnStore } from '@/stores/cnn'
 
-const tabs = ['Sentiment', 'Two', 'Three']
+import LightweightChartFTMulti from '@/components/tradeview/LightweightChartFTMulti.vue'
+
+const tabs = ['Sentiment', 'Metals', 'Money Mkts']
 const value = ref('Sentiment')
 
 const store = useCnnStore()
@@ -202,7 +207,7 @@ const fgOptions = computed(() =>
 )
 const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX Index'))
 // const sp500Options: AgChartOptions = {
-  // ...
+// ...
 const sp500Options = computed(() =>
   buildChartOptions2(
     sp500Data.value,
@@ -217,7 +222,6 @@ const sp500Options = computed(() =>
     'SP500',
   ),
 )
-
 </script>
 
 <style scoped>

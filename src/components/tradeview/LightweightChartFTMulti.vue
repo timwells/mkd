@@ -1,40 +1,11 @@
 <template>
   <div class="lw-chart-wrap">
-    <!--div class="legend floating-legend" v-if="tickers.length">
-      <div
-        v-for="t in tickers"
-        :key="t"
-        class="legend-row"
-        @mouseenter="hoverLegendRow(t)"
-        @mouseleave="clearHoverRow(t)"
-      >
-        <button
-          class="eye"
-          :title="isVisible(t) ? 'Hide' : 'Show'"
-          @click.stop="toggleVisibility(t)"
-        >
-          <span v-if="isVisible(t)">👁</span>
-          <span v-else>🚫</span>
-        </button>
-
-        <div class="color-swatch" :style="{ background: colorFor(t) }" />
-
-        <div class="meta">
-          <div class="title">{{ displayName(t) }}</div>
-          <div class="sub">
-            <small class="ticker">{{ t }}</small>
-            <small class="value">{{ hoverValueDisplay(t) }}</small>
-          </div>
-        </div>
-      </div>
-    </div-->
-
     <div ref="chartContainer" class="lw-chart"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, shallowRef, nextTick } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, shallowRef, nextTick, defineOptions } from 'vue'
 
 import {
   createChart,
@@ -48,6 +19,8 @@ import {
   type LogicalRange,
 } from 'lightweight-charts'
 import { useFtStore } from '@/stores/ft'
+
+defineOptions({ name: 'LightweightChartFTMulti' })
 
 type AnySeries =
   | ISeriesApi<'Line'>
