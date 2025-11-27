@@ -49,6 +49,13 @@ import {
 } from 'lightweight-charts'
 import { useFtStore } from '@/stores/ft'
 
+type AnySeries =
+  | ISeriesApi<'Line'>
+  | ISeriesApi<'Area'>
+  | ISeriesApi<'Histogram'>
+  | ISeriesApi<'Candlestick'>
+  | ISeriesApi<'Baseline'>
+
 // ---------- Props & Emits ----------
 const props = defineProps<{
   tickers: string[]
@@ -75,7 +82,7 @@ function itemFor(ticker: string) {
 // ---------- DOM & chart references ----------
 const chartContainer = ref<HTMLElement | null>(null)
 const chart = shallowRef<any>(null)
-const seriesMap = reactive(new Map<string, { instance: ISeriesApi | null; opts: any; visible: boolean }>())
+const seriesMap = reactive(new Map<string, { instance: AnySeries | null; opts: any; visible: boolean }>())
 let resizeObserver: ResizeObserver | null = null
 let subCrosshairUnsub: (() => void) | null = null
 let subVisibleRangeUnsub: (() => void) | null = null
@@ -322,7 +329,9 @@ watch(
           if (rec?.instance) {
             try {
               chart.value.removeSeries(rec.instance)
-            } catch {}
+            } catch (e) {
+              console.log(e)
+            }
           }
           seriesMap.delete(t)
           delete hoverValues[t]
@@ -359,18 +368,18 @@ watch(
 )
 
 // ---------- helper for hover interactions on legend rows ----------
-function hoverLegendRow(ticker: string) {
-  const rec = seriesMap.get(ticker)
-  if (!rec || !rec.instance) return
-  // optionally set crosshair to the latest bar of this series
-  try {
-    const barsInLogical = rec.instance.barsInLogicalRange?.()
-    // set crosshair to last index: use last bar's time if available
-    // fallback: do nothing
-  } catch (e) {
-    /* ignore */
-  }
-}
+//function hoverLegendRow(ticker: string) {
+//  const rec = seriesMap.get(ticker)
+//  if (!rec || !rec.instance) return
+// optionally set crosshair to the latest bar of this series
+//  try {
+//    const barsInLogical = rec.instance.barsInLogicalRange?.()
+//    // set crosshair to last index: use last bar's time if available
+//    // fallback: do nothing
+//  } catch (e) {
+/* ignore */
+//  }
+//}
 
 function clearHoverRow(_ticker: string) {
   // no-op for now
@@ -434,16 +443,22 @@ onBeforeUnmount(() => {
   if (subCrosshairUnsub && typeof subCrosshairUnsub === 'function') {
     try {
       chart.value.unsubscribeCrosshairMove?.(subCrosshairUnsub)
-    } catch {}
+    } catch (e) {
+      console.log(e)
+    }
   }
   if (subVisibleRangeUnsub && typeof subVisibleRangeUnsub === 'function') {
     try {
       chart.value.timeScale()?.unsubscribeVisibleTimeRangeChange?.(subVisibleRangeUnsub)
-    } catch {}
+    } catch (e) {
+      console.log(e)
+    }
   }
   try {
     chart.value?.remove()
-  } catch {}
+  } catch (e) {
+    console.log(e)
+  }
 })
 </script>
 
