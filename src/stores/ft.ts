@@ -14,8 +14,8 @@ import { defineStore } from 'pinia'
 */
 
 interface DataItem {
-  name: string,
-  ticker: string,
+  name: string
+  ticker: string
   data: any[]
 }
 
@@ -34,8 +34,8 @@ export const useFtStore = defineStore('ft', {
     getError: (state): string | null => state.error,
     getByTicker:
       (state) =>
-        (ticker: string): DataItem | undefined => 
-          state.data.find((item) => item.ticker === ticker)
+      (ticker: string): DataItem | undefined =>
+        state.data.find((item) => item.ticker === ticker),
   },
 
   actions: {
@@ -43,12 +43,9 @@ export const useFtStore = defineStore('ft', {
       this.loading = true
       this.error = null
       try {
-        // ft/historical/series?ticker=REGB:LSE:GBP
         const response = await fetch(`${GFC}/ft/historical/series?ticker=${ticker}`)
         if (!response.ok) throw new Error('Failed to fetch items')
         const data = await response.json()
-
-        // console.log(data)
 
         const index = this.data.findIndex((item) => item.ticker === ticker)
         if (index !== -1) {
@@ -56,8 +53,6 @@ export const useFtStore = defineStore('ft', {
         } else {
           this.data.push(data) // Add new object
         }
-        console.log(this.data.length)
-        
       } catch (err: any) {
         this.error = err.message || 'Unknown error'
       } finally {

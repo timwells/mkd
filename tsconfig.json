@@ -19,6 +19,13 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "vite.config.ts", "node_modules/vuestic-ui", "src/pages/views/MetalsPage.bak"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "vite.config.ts",
+    "node_modules/vuestic-ui",
+    "src/pages/views/MetalsPage.bak"
+  ],
   "exclude": ["node_modules/**/*"]
 }

@@ -1,24 +1,25 @@
-import axios from 'axios';
+import axios from 'axios'
 import { load } from 'cheerio'
-import { HOST, TEAR_SHEET_PATH } from './ft-constants.js';
+import { HOST, TEAR_SHEET_PATH } from './ft-constants.js'
 
 export const findSymbolId = async (ticker) => {
-    const resource = `${HOST}${TEAR_SHEET_PATH}?s=${ticker}`
-    try {
-        const {data} = await axios.get(resource)
-        const $ = load(data)
-        const dataModConfig = $('section .mod-tearsheet-add-to-watchlist').attr('data-mod-config')
+  const resource = `${HOST}${TEAR_SHEET_PATH}?s=${ticker}`
+  try {
+    const { data } = await axios.get(resource)
+    const $ = load(data)
+    const dataModConfig = $('section .mod-tearsheet-add-to-watchlist').attr('data-mod-config')
 
-        let symObj = {}
-        if(dataModConfig) {
-            let dObj = JSON.parse(dataModConfig)
-            symObj.xid = dObj.xid
-            symObj.symbol = dObj.symbol
-        } else {
-            symObj = null
-        }
-        return symObj
+    let symObj = {}
+    if (dataModConfig) {
+      let dObj = JSON.parse(dataModConfig)
+      symObj.xid = dObj.xid
+      symObj.symbol = dObj.symbol
+    } else {
+      symObj = null
     }
-    catch (e) { console.log(e) }
-    return null
+    return symObj
+  } catch (e) {
+    console.log(e)
+  }
+  return null
 }

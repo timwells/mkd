@@ -1,5 +1,5 @@
 <template>
-  <div class="lw-chart" ref="chartContainer"></div>
+  <div ref="chartContainer" class="lw-chart"></div>
 </template>
 
 <script setup>
@@ -96,13 +96,13 @@ function enableResize() {
   try {
     resizeObserver.value = new ResizeObserver((entries) => {
       if (!chart.value || !entries.length) return
-      
+
       const { width, height } = entries[0].contentRect
       chart.value.resize(width, height)
     })
 
     resizeObserver.value.observe(chartContainer.value)
-    
+
     // Initial resize
     nextTick(() => {
       if (chart.value && chartContainer.value) {
@@ -125,11 +125,11 @@ function disableResize() {
 // Cleanup
 function cleanup() {
   disableResize()
-  
+
   if (series.value) {
     series.value = null
   }
-  
+
   if (chart.value) {
     chart.value.remove()
     chart.value = null
@@ -149,63 +149,89 @@ onBeforeUnmount(() => {
 })
 
 // Watchers with deep option where needed
-watch(() => props.autosize, (shouldAutosize) => {
-  shouldAutosize ? enableResize() : disableResize()
-})
+watch(
+  () => props.autosize,
+  (shouldAutosize) => {
+    shouldAutosize ? enableResize() : disableResize()
+  },
+)
 
-watch(() => props.type, () => {
-  createSeries()
-})
+watch(
+  () => props.type,
+  () => {
+    createSeries()
+  },
+)
 
-watch(() => props.data, (newData) => {
-  if (series.value && Array.isArray(newData)) {
-    try {
-      series.value.setData(newData)
-    } catch (error) {
-      console.error('Failed to update series data:', error)
+watch(
+  () => props.data,
+  (newData) => {
+    if (series.value && Array.isArray(newData)) {
+      try {
+        series.value.setData(newData)
+      } catch (error) {
+        console.error('Failed to update series data:', error)
+      }
     }
-  }
-}, { deep: true })
+  },
+  { deep: true },
+)
 
-watch(() => props.chartOptions, (newOptions) => {
-  if (chart.value && newOptions) {
-    try {
-      chart.value.applyOptions(newOptions)
-    } catch (error) {
-      console.error('Failed to apply chart options:', error)
+watch(
+  () => props.chartOptions,
+  (newOptions) => {
+    if (chart.value && newOptions) {
+      try {
+        chart.value.applyOptions(newOptions)
+      } catch (error) {
+        console.error('Failed to apply chart options:', error)
+      }
     }
-  }
-}, { deep: true })
+  },
+  { deep: true },
+)
 
-watch(() => props.seriesOptions, (newOptions) => {
-  if (series.value && newOptions) {
-    try {
-      series.value.applyOptions(newOptions)
-    } catch (error) {
-      console.error('Failed to apply series options:', error)
+watch(
+  () => props.seriesOptions,
+  (newOptions) => {
+    if (series.value && newOptions) {
+      try {
+        series.value.applyOptions(newOptions)
+      } catch (error) {
+        console.error('Failed to apply series options:', error)
+      }
     }
-  }
-}, { deep: true })
+  },
+  { deep: true },
+)
 
-watch(() => props.priceScaleOptions, (newOptions) => {
-  if (chart.value && newOptions) {
-    try {
-      chart.value.priceScale().applyOptions(newOptions)
-    } catch (error) {
-      console.error('Failed to apply price scale options:', error)
+watch(
+  () => props.priceScaleOptions,
+  (newOptions) => {
+    if (chart.value && newOptions) {
+      try {
+        chart.value.priceScale().applyOptions(newOptions)
+      } catch (error) {
+        console.error('Failed to apply price scale options:', error)
+      }
     }
-  }
-}, { deep: true })
+  },
+  { deep: true },
+)
 
-watch(() => props.timeScaleOptions, (newOptions) => {
-  if (chart.value && newOptions) {
-    try {
-      chart.value.timeScale().applyOptions(newOptions)
-    } catch (error) {
-      console.error('Failed to apply time scale options:', error)
+watch(
+  () => props.timeScaleOptions,
+  (newOptions) => {
+    if (chart.value && newOptions) {
+      try {
+        chart.value.timeScale().applyOptions(newOptions)
+      } catch (error) {
+        console.error('Failed to apply time scale options:', error)
+      }
     }
-  }
-}, { deep: true })
+  },
+  { deep: true },
+)
 
 // Exposed API
 defineExpose({

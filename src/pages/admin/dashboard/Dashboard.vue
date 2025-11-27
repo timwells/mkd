@@ -1,14 +1,62 @@
 <template>
+  <div class="tabs-container">
+    <!-- Tabs -->
+    <VaTabs v-model="value" class="tabs-left">
+      <template #tabs>
+        <VaTab v-for="tab in tabs" :key="tab" :name="tab">
+          {{ tab }}
+        </VaTab>
+      </template>
+    </VaTabs>
+
+    <!-- Tab Content -->
+    <div v-if="value === 'Sentiment'" class="tab-content" outlined>
+      <VaCard>
+        <VaCardContent>
+          <section>
+            <header class="flex items-center justify-between">header</header>
+            <div>
+              <AgCharts :options="fgOptions" />
+            </div>
+          </section>
+        </VaCardContent>
+      </VaCard>
+      <VaCard>
+        <VaCardContent>
+          <AgCharts :options="vixOptions" />
+        </VaCardContent>
+      </VaCard>
+      <VaCard>
+        <VaCardContent>
+          <AgCharts :options="sp500Options" />
+        </VaCardContent>
+      </VaCard>
+    </div>
+    <VaCard v-else-if="value === 'Two'" class="tab-content" outlined>
+      <VaCardTitle>Tab Two Content</VaCardTitle>
+      <VaCardContent>
+        <p>This content belongs to Tab Two.</p>
+      </VaCardContent>
+    </VaCard>
+
+    <VaCard v-else-if="value === 'Three'" class="tab-content" outlined>
+      <VaCardTitle>Tab Three Content</VaCardTitle>
+      <VaCardContent>
+        <p>And this is the content for Tab Three!</p>
+      </VaCardContent>
+    </VaCard>
+  </div>
+</template>
+
+<!--template>
   <div>
-    <!-- Left-justified tabs -->
-    <VaTabs v-model="selectedTab" class="justify-start">
+    <VaTabs v-model="selectedTab" class="tabs-left">
       <VaTab name="Sentiment">Sentiment</VaTab>
       <VaTab name="tab2">Tab2</VaTab>
       <VaTab name="tab3">Tab3</VaTab>
       <VaTab name="tab4">Tab4</VaTab>
     </VaTabs>
 
-    <!-- Content -->
     <div v-if="selectedTab === 'Sentiment'">
       <VaCard>
         <VaCardContent>
@@ -46,14 +94,17 @@
       <p class="mt-2 text-gray-600">Your second tab content goes here.</p>
     </div>
   </div>
-</template>
+</template-->
 
 <script lang="ts" setup>
-import { computed,ref } from 'vue'
+import { computed, ref } from 'vue'
 import { AgCharts } from 'ag-charts-vue3'
 import type { AgChartOptions, AgLineSeriesOptions, AgTimeAxisOptions, AgNumberAxisOptions } from 'ag-charts-community'
-
 import { useCnnStore } from '@/stores/cnn'
+
+const tabs = ['Sentiment', 'Two', 'Three']
+const value = ref('Sentiment')
+
 const selectedTab = ref('Sentiment')
 const store = useCnnStore()
 store.getMarketSentiment()
@@ -66,7 +117,9 @@ const getMinY = (data: [number, number][]): number => (data.length === 0 ? 0 : M
 const getMaxY = (data: [number, number][]): number => (data.length === 0 ? 0 : Math.max(...data.map(([, y]) => y)))
 
 const formatDate = (x: number) =>
-  new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', year:'2-digit', timeZone: 'UTC' }).format(new Date(x))
+  new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', timeZone: 'UTC' }).format(
+    new Date(x),
+  )
 
 const makeMainSeries = (yName = 'Value', colour: string): AgLineSeriesOptions => ({
   type: 'line',
@@ -206,9 +259,15 @@ const sp500Options = computed(() =>
 )
 </script>
 
-<style>
-/* This is the key: override Vuestic's default flex-grow */
-.justify-start {
+<style scoped>
+:deep(.tabs-left) .va-tabs__content {
+  display: flex !important;
   justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 12px;
+}
+
+.tab-content {
+  margin-top: 1rem;
 }
 </style>

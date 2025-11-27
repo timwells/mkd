@@ -34,16 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  reactive,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-  shallowRef,
-  nextTick,
-} from 'vue'
+import { ref, reactive, computed, watch, onMounted, onBeforeUnmount, shallowRef, nextTick } from 'vue'
 
 import {
   createChart,
@@ -84,7 +75,7 @@ function itemFor(ticker: string) {
 // ---------- DOM & chart references ----------
 const chartContainer = ref<HTMLElement | null>(null)
 const chart = shallowRef<any>(null)
-const seriesMap = reactive(new Map<string, { instance: ISeriesApi | null; opts: any; visible: boolean; }>())
+const seriesMap = reactive(new Map<string, { instance: ISeriesApi | null; opts: any; visible: boolean }>())
 let resizeObserver: ResizeObserver | null = null
 let subCrosshairUnsub: (() => void) | null = null
 let subVisibleRangeUnsub: (() => void) | null = null
@@ -248,7 +239,7 @@ function handleCrosshairMove(param: MouseEventParams) {
   // If crosshair is outside chart, param.point may be undefined or negative
   if (!param.time || !param.point) {
     // clear hover values
-    props.tickers.forEach(t => hoverValues[t] = null)
+    props.tickers.forEach((t) => (hoverValues[t] = null))
     return
   }
 
@@ -329,7 +320,9 @@ watch(
         if (!newTickers.includes(t) && seriesMap.has(t)) {
           const rec = seriesMap.get(t)
           if (rec?.instance) {
-            try { chart.value.removeSeries(rec.instance) } catch {}
+            try {
+              chart.value.removeSeries(rec.instance)
+            } catch {}
           }
           seriesMap.delete(t)
           delete hoverValues[t]
@@ -340,12 +333,12 @@ watch(
     // after add/remove, fit content
     chart.value?.timeScale()?.fitContent?.()
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 // watch store updates for each ticker and update series data
 watch(
-  () => props.tickers.map(t => store.getByTicker(t)),
+  () => props.tickers.map((t) => store.getByTicker(t)),
   (items) => {
     items.forEach((item, idx) => {
       const t = props.tickers[idx]
@@ -362,7 +355,7 @@ watch(
     })
     chart.value?.timeScale()?.fitContent?.()
   },
-  { deep: true }
+  { deep: true },
 )
 
 // ---------- helper for hover interactions on legend rows ----------
@@ -374,7 +367,9 @@ function hoverLegendRow(ticker: string) {
     const barsInLogical = rec.instance.barsInLogicalRange?.()
     // set crosshair to last index: use last bar's time if available
     // fallback: do nothing
-  } catch (e) { /* ignore */ }
+  } catch (e) {
+    /* ignore */
+  }
 }
 
 function clearHoverRow(_ticker: string) {
@@ -398,7 +393,7 @@ function hoverValueDisplayFallback(ticker: string) {
 
 // wrapper used by template
 //function hoverValueDisplay(ticker: string) {
-  // show hovered if present, otherwise last data point
+// show hovered if present, otherwise last data point
 //  return hoverValues[ticker] ?? hoverValueDisplayFallback(ticker)
 //}
 
@@ -437,12 +432,18 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   resizeObserver?.disconnect()
   if (subCrosshairUnsub && typeof subCrosshairUnsub === 'function') {
-    try { chart.value.unsubscribeCrosshairMove?.(subCrosshairUnsub) } catch {}
+    try {
+      chart.value.unsubscribeCrosshairMove?.(subCrosshairUnsub)
+    } catch {}
   }
   if (subVisibleRangeUnsub && typeof subVisibleRangeUnsub === 'function') {
-    try { chart.value.timeScale()?.unsubscribeVisibleTimeRangeChange?.(subVisibleRangeUnsub) } catch {}
+    try {
+      chart.value.timeScale()?.unsubscribeVisibleTimeRangeChange?.(subVisibleRangeUnsub)
+    } catch {}
   }
-  try { chart.value?.remove() } catch {}
+  try {
+    chart.value?.remove()
+  } catch {}
 })
 </script>
 
@@ -464,10 +465,10 @@ onBeforeUnmount(() => {
   z-index: 5;
   top: 8px;
   left: 8px;
-  background: rgba(255,255,255,0.92);
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 8px;
   padding: 6px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   max-width: 360px;
   backdrop-filter: blur(4px);
 }
@@ -478,10 +479,10 @@ onBeforeUnmount(() => {
   gap: 8px;
   padding: 6px 8px;
   border-radius: 6px;
-  transition: background .12s;
+  transition: background 0.12s;
 }
 .legend-row:hover {
-  background: rgba(0,0,0,0.03);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .eye {
@@ -492,16 +493,16 @@ onBeforeUnmount(() => {
   line-height: 1;
   width: 28px;
   height: 28px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .color-swatch {
   width: 12px;
   height: 12px;
   border-radius: 2px;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.18) inset;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18) inset;
 }
 
 .meta {
@@ -519,9 +520,9 @@ onBeforeUnmount(() => {
   max-width: 220px;
 }
 .sub {
-  display:flex;
-  gap:12px;
-  align-items:center;
+  display: flex;
+  gap: 12px;
+  align-items: center;
   font-size: 12px;
   color: #666;
 }

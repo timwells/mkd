@@ -2,7 +2,7 @@
   <div class="demo-container">
     <div class="controls">
       <h2>Lightweight Chart Demo</h2>
-      
+
       <div class="control-group">
         <button @click="addRandomSeries">Add Random Series</button>
         <button @click="addRealtimeSeries">Start Realtime Series</button>
@@ -33,21 +33,14 @@
     </div>
 
     <div class="chart-wrapper">
-      <div class="lw-chart" ref="chartContainer"></div>
+      <div ref="chartContainer" class="lw-chart"></div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick, shallowRef } from 'vue'
-import {
-  createChart,
-  LineSeries,
-  AreaSeries,
-  BarSeries,
-  HistogramSeries,
-  BaselineSeries,
-} from 'lightweight-charts'
+import { createChart, LineSeries, AreaSeries, BarSeries, HistogramSeries, BaselineSeries } from 'lightweight-charts'
 
 // State
 const chartContainer = ref(null)
@@ -87,7 +80,7 @@ function initChart() {
   if (!chartContainer.value) return
 
   chart.value = createChart(chartContainer.value, chartOptions)
-  
+
   // Add initial series
   addSeries({
     id: 'initial-line',
@@ -102,7 +95,7 @@ function initChart() {
     options: {
       color: '#2962FF',
       lineWidth: 2,
-    }
+    },
   })
 
   chart.value.timeScale().fitContent()
@@ -123,7 +116,7 @@ function addSeries(config) {
   try {
     const SeriesDef = SERIES_TYPE_MAP[type.toLowerCase()] || LineSeries
     const seriesInstance = chart.value.addSeries(SeriesDef, options)
-    
+
     if (data.length > 0) {
       seriesInstance.setData(data)
     }
@@ -180,30 +173,27 @@ function generateRandomData(days = 20) {
   const data = []
   let value = Math.random() * 100 + 50
   const today = new Date()
-  
+
   for (let i = days; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
     const timeStr = date.toISOString().split('T')[0]
-    
+
     value += (Math.random() - 0.5) * 10
     value = Math.max(10, value)
-    
+
     data.push({
       time: timeStr,
-      value: Math.round(value * 100) / 100
+      value: Math.round(value * 100) / 100,
     })
   }
-  
+
   return data
 }
 
 // Random color
 function randomColor() {
-  const colors = [
-    '#2962FF', '#FF6D00', '#00C853', '#AA00FF', 
-    '#00B8D4', '#FF5252', '#FFD600', '#00BFA5'
-  ]
+  const colors = ['#2962FF', '#FF6D00', '#00C853', '#AA00FF', '#00B8D4', '#FF5252', '#FFD600', '#00BFA5']
   return colors[Math.floor(Math.random() * colors.length)]
 }
 
@@ -211,7 +201,7 @@ function randomColor() {
 function addRandomSeries() {
   const seriesId = `series-${Date.now()}`
   const data = generateRandomData()
-  
+
   addSeries({
     id: seriesId,
     type: newSeriesType.value,
@@ -219,49 +209,51 @@ function addRandomSeries() {
     options: {
       color: randomColor(),
       lineWidth: 2,
-    }
+    },
   })
 }
 
 // Start realtime series
 function addRealtimeSeries() {
   if (realtimeInterval.value) return
-  
+
   const seriesId = 'realtime-series'
   const startDate = new Date()
   let counter = 0
   let value = 100
-  
+
   // Remove if exists
   if (seriesMap.value.has(seriesId)) {
     removeSeries(seriesId)
   }
-  
+
   // Add initial series
   addSeries({
     id: seriesId,
     type: 'line',
-    data: [{
-      time: startDate.toISOString().split('T')[0],
-      value: value
-    }],
+    data: [
+      {
+        time: startDate.toISOString().split('T')[0],
+        value: value,
+      },
+    ],
     options: {
       color: '#FF6D00',
       lineWidth: 3,
-    }
+    },
   })
-  
+
   // Update every second
   realtimeInterval.value = setInterval(() => {
     counter++
     value += (Math.random() - 0.5) * 5
-    
+
     const date = new Date(startDate)
     date.setDate(date.getDate() + counter)
-    
+
     appendSeriesData(seriesId, {
       time: date.toISOString().split('T')[0],
-      value: Math.round(value * 100) / 100
+      value: Math.round(value * 100) / 100,
     })
   }, 1000)
 }
@@ -278,7 +270,7 @@ function stopRealtime() {
 function clearAll() {
   stopRealtime()
   const ids = Array.from(seriesMap.value.keys())
-  ids.forEach(id => removeSeries(id))
+  ids.forEach((id) => removeSeries(id))
 }
 
 // Resize handling
@@ -292,7 +284,7 @@ function enableResize() {
   })
 
   resizeObserver.value.observe(chartContainer.value)
-  
+
   nextTick(() => {
     if (chart.value && chartContainer.value) {
       const rect = chartContainer.value.getBoundingClientRect()
@@ -304,11 +296,11 @@ function enableResize() {
 // Cleanup
 function cleanup() {
   stopRealtime()
-  
+
   if (resizeObserver.value) {
     resizeObserver.value.disconnect()
   }
-  
+
   if (chart.value) {
     chart.value.remove()
   }
@@ -362,7 +354,7 @@ h3 {
 
 button {
   padding: 10px 16px;
-  background: #2962FF;
+  background: #2962ff;
   color: white;
   border: none;
   border-radius: 6px;

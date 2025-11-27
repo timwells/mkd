@@ -1,17 +1,10 @@
 <template>
-  <div class="lw-chart" ref="chartContainer"></div>
+  <div ref="chartContainer" class="lw-chart"></div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onMounted, onBeforeUnmount, shallowRef, nextTick, computed } from 'vue'
-import {
-  createChart,
-  LineSeries,
-  AreaSeries,
-  BarSeries,
-  HistogramSeries,
-  BaselineSeries,
-} from 'lightweight-charts'
+import { createChart, LineSeries, AreaSeries, BarSeries, HistogramSeries, BaselineSeries } from 'lightweight-charts'
 import { useFtStore } from '@/stores/ft'
 
 // -------- PROPS --------
@@ -60,8 +53,7 @@ function initChart() {
   chart.value = createChart(chartContainer.value, chartOptions)
 
   const SeriesDef = SERIES_TYPE_MAP[props.type] || LineSeries
-  series.value = chart.value.addSeries(SeriesDef, 
-  {
+  series.value = chart.value.addSeries(SeriesDef, {
     title: props.ticker,
     lineWidth: 1,
     priceFormat: { type: 'price', precision: 2 },
@@ -70,12 +62,11 @@ function initChart() {
 
 // -------- APPLY DATA TO CHART --------
 function updateChart() {
-
   if (!series.value || !storeData.value) return
   if (!storeData.value.data || storeData.value.data.length === 0) return
 
   series.value.setData(storeData.value.data)
-  series.value.applyOptions({ title:  storeData.value.name })
+  series.value.applyOptions({ title: storeData.value.name })
   chart.value.timeScale().fitContent()
 }
 
