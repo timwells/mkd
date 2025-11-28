@@ -28,12 +28,8 @@
         </VaCard>
         <VaCard class="rounded-xl">
           <VaCardContent>
-            <iframe
-              src="https://cdn.jmbullion.com/fearandgreed/fearandgreed.html"
-              class="w-full"
-              style="height: 400px; border: 0"
-              loading="lazy"
-            ></iframe>
+            <AgCharts :options="goldFearAndGreedOptions" />
+            
           </VaCardContent>
         </VaCard>
       </div>
@@ -95,8 +91,8 @@ store.getMarketSentiment()
 // Helpers
 // ----------------------------
 const toXY = (arr: [number, number][]) => arr.map(([x, y]) => ({ x, y }))
-const getMinY = (data: [number, number][]): number => (data.length === 0 ? 0 : Math.min(...data.map(([, y]) => y)))
-const getMaxY = (data: [number, number][]): number => (data.length === 0 ? 0 : Math.max(...data.map(([, y]) => y)))
+//const getMinY = (data: [number, number][]): number => (data.length === 0 ? 0 : Math.min(...data.map(([, y]) => y)))
+//const getMaxY = (data: [number, number][]): number => (data.length === 0 ? 0 : Math.max(...data.map(([, y]) => y)))
 
 const formatDate = (x: number) =>
   new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', timeZone: 'UTC' }).format(
@@ -158,17 +154,17 @@ const numberAxis = (min: number, max: number): AgNumberAxisOptions => ({
 // ----------------------------
 // Data
 // ----------------------------
-const fgData = computed(() => toXY(store.fearAndGreedHistorical?.data ?? []))
+const fgData = computed(() => toXY(store.marketFearAndGreedHistorical?.data ?? []))
 const vixData = computed(() => toXY(store.marketVolatilityHistorical?.data ?? []))
 const sp500Data = computed(() => toXY(store.marketMomentumSp500Historical?.data ?? []))
 const sp500MA50Data = computed(() => toXY(store.marketMomentumSp500MA50?.data ?? []))
 const sp500MA100Data = computed(() => toXY(store.marketMomentumSp500MA100?.data ?? []))
 const sp500MA200Data = computed(() => toXY(store.marketMomentumSp500MA200?.data ?? []))
+const goldFearAndGreedData = computed(() => toXY(store.goldFearAndGreed?.data ?? []))
 
 const metalsEtfTickers = ['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP'];
 const oilGasStockTickers = ['BP.', 'SHEL', 'HBR', 'SQZ', 'RKH' ];
 const moneyMarketTickers = ['GB00BFYDWM59:GBP', 'GB00B8XYYQ86:GBP', 'GB0033029413:GBP']; 
-
 
 // ----------------------------
 // Chart Options
@@ -224,7 +220,7 @@ const GREEN = '#10b981'
 const ORANGE = '#ffcc00'
 
 const fgOptions = computed(() =>
-  buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'Fear & Greed Index: SP500'),
+  buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'SP500: Fear & Greed Index'),
 )
 const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX Index'))
 const sp500Options = computed(() =>
@@ -239,6 +235,20 @@ const sp500Options = computed(() =>
     // Math.floor(getMaxY(sp500Data.value)*1.04),
     BLUE,
     'SP500',
+  ),
+)
+
+const goldFearAndGreedOptions = computed(() =>
+  buildChartOptions(
+    goldFearAndGreedData.value,
+    20,
+    100,
+    BLUE,
+    85,
+    GREEN,
+    25,
+    RED,
+    'Gold: Fear & Greed Index',
   ),
 )
 </script>

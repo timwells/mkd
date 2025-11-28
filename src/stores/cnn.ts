@@ -26,12 +26,14 @@ export interface MarketHistorical {
   data: TimeDataPair[]
 }
 
-export type FearAndGreedHistorical = MarketHistorical
+export type MarketFearAndGreedHistorical = MarketHistorical
 export type MarketVolatilityHistorical = MarketHistorical
 export type MarketMomentumSp500Historical = MarketHistorical
 export type MarketMomentumSp500MA200 = TimeDataPair
 export type MarketMomentumSp500MA100 = TimeDataPair
 export type MarketMomentumSp500MA50 = TimeDataPair
+export type GoldFearAndGreed = TimeDataPair
+
 
 function isTimeDataPairArray(value: any): value is TimeDataPair[] {
   return (
@@ -67,14 +69,14 @@ function isMarketHistorical(value: any): value is MarketHistorical {
 // -----------------
 export const useCnnStore = defineStore('cnn', {
   state: () => ({
-    // data: null as any | null,
-    // fearAndGreedData: null as FearAndGreedData | null,
-    fearAndGreedHistorical: null as FearAndGreedHistorical | null,
+    marketFearAndGreedHistorical: null as MarketFearAndGreedHistorical | null,
     marketVolatilityHistorical: null as MarketVolatilityHistorical | null,
     marketMomentumSp500Historical: null as MarketVolatilityHistorical | null,
     marketMomentumSp500MA200: null as any | null,
     marketMomentumSp500MA100: null as any | null,
     marketMomentumSp500MA50: null as any | null,
+    goldFearAndGreed: null as any | null,
+
     loading: false,
     error: null as string | null,
     nextReq: 0 as number, // timestamp (ms)
@@ -101,9 +103,9 @@ export const useCnnStore = defineStore('cnn', {
 
         // Runtime type checks
         if (isMarketHistorical((json as any)?.fear_and_greed_historical)) {
-          this.fearAndGreedHistorical = (json as any).fear_and_greed_historical
+          this.marketFearAndGreedHistorical = (json as any).fear_and_greed_historical
         } else {
-          this.fearAndGreedHistorical = null
+          this.marketFearAndGreedHistorical = null
         }
 
         if (isMarketHistorical((json as any)?.market_volatility_vix)) {
@@ -116,6 +118,8 @@ export const useCnnStore = defineStore('cnn', {
         this.marketMomentumSp500MA200 = (json as any).market_momentum_sp500_MA200
         this.marketMomentumSp500MA100 = (json as any).market_momentum_sp500_MA100
         this.marketMomentumSp500MA50 = (json as any).market_momentum_sp500_MA50
+        this.goldFearAndGreed = (json as any).gold_fear_and_greed 
+
       } catch (err: any) {
         this.error = err.message ?? 'Unknown Error'
       } finally {

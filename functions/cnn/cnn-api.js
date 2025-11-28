@@ -11,6 +11,18 @@ const HEADERS = {
   'Cache-Control': 'no-cache',
 }
 
+const JMB_FEAR_AND_GREED = 'https://cdn.jmbullion.com/fearandgreed/fearandgreed.json'
+
+const goldSentiment = async () => {
+  let { data } = await axios.get(JMB_FEAR_AND_GREED)
+  return {
+    data: Object.entries(data).map(([date, value]) => [
+      new Date(date).getTime(), // timestamp in milliseconds
+      value
+    ])    
+  }
+}
+
 const buildTASeries = (series, sma) => {
   let smaTimeValue = []
   let j = 0
@@ -67,7 +79,11 @@ export const marketSentiment = async () => {
     delete data.put_call_options
     delete data.market_volatility_vix_50
 
-    return data
+    // Gold Fear and Greed
+    data.gold_fear_and_greed = await goldSentiment()
+
+    return data;
+
   } catch (e) {
     console.log(e.message)
   }
