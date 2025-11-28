@@ -40,22 +40,26 @@
       </div>
     </div>
 
-    <VaCard v-else-if="value === 'Metals'" class="tab-content" outlined>
-      <VaCardTitle>ETFs</VaCardTitle>
-      <VaCardContent>
-        <LightweightChartFTMulti
-          :tickers="['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP']"
-          type="line"
-        />
-      </VaCardContent>
-    </VaCard>
+    <div v-if="value === 'Metals'" class="tab-content" outlined>
+      <VaCard class="rounded-xl">
+        <VaCardTitle>ETFs</VaCardTitle>
+        <VaCardContent>
+          <LightweightChartFTMulti
+            :tickers="['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP']"
+            type="line"
+          />
+        </VaCardContent>
+      </VaCard>
+    </div>
 
-    <VaCard v-else-if="value === 'Money Mkts'" class="tab-content" outlined>
-      <VaCardTitle>Money Markets</VaCardTitle>
-      <VaCardContent>
-        <LightweightChartFTMulti :tickers="['GB00BFYDWM59:GBP', 'GB00B8XYYQ86:GBP', 'GB0033029413:GBP']" type="line" />
-      </VaCardContent>
-    </VaCard>
+    <div v-else-if="value === 'Money Mkts'" class="tab-content" outlined>
+      <VaCard class="rounded-xl">
+        <VaCardTitle>Money Markets</VaCardTitle>
+        <VaCardContent>
+          <LightweightChartFTMulti :tickers="['GB00BFYDWM59:GBP', 'GB00B8XYYQ86:GBP', 'GB0033029413:GBP']" type="line" />
+        </VaCardContent>
+      </VaCard>
+    </div>
   </div>
 </template>
 

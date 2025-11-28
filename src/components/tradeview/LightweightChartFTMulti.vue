@@ -439,12 +439,13 @@ onBeforeUnmount(() => {
 .lw-chart-wrap {
   position: relative;
   width: 100%;
+  height: 400px;
   user-select: none;
 }
 
 .lw-chart {
   width: 100%;
-  height: 100%;
+  height: 400px;
 }
 
 /* Floating legend */
