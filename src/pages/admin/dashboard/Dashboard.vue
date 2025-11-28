@@ -1,11 +1,10 @@
 <template>
   <div class="tabs-container">
+
     <!-- Tabs -->
     <VaTabs v-model="value" class="tabs-left">
       <template #tabs>
-        <VaTab v-for="tab in tabs" :key="tab" :name="tab">
-          {{ tab }}
-        </VaTab>
+        <VaTab v-for="tab in tabs" :key="tab" :name="tab">{{ tab }}</VaTab>
       </template>
     </VaTabs>
 
@@ -45,18 +44,33 @@
         <VaCardTitle>ETFs</VaCardTitle>
         <VaCardContent>
           <LightweightChartFTMulti
-            :tickers="['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP']"
+            :tickers="metalsEtfTickers"
             type="line"
           />
         </VaCardContent>
       </VaCard>
     </div>
 
-    <div v-else-if="value === 'Money Mkts'" class="tab-content" outlined>
+    <div v-if="value === 'Oil & Gas'" class="tab-content" outlined>
+      <VaCard class="rounded-xl">
+        <VaCardTitle>Stocks</VaCardTitle>
+        <VaCardContent>
+          <LightweightChartMfMulti
+            :tickers="oilGasStockTickers"
+            type="line"
+          />
+        </VaCardContent>
+      </VaCard>
+    </div>
+
+    <div v-else-if="value === 'Money'" class="tab-content" outlined>
       <VaCard class="rounded-xl">
         <VaCardTitle>Money Markets</VaCardTitle>
         <VaCardContent>
-          <LightweightChartFTMulti :tickers="['GB00BFYDWM59:GBP', 'GB00B8XYYQ86:GBP', 'GB0033029413:GBP']" type="line" />
+          <LightweightChartFTMulti 
+            :tickers="moneyMarketTickers"
+            type="line" 
+          />
         </VaCardContent>
       </VaCard>
     </div>
@@ -70,10 +84,10 @@ import type { AgChartOptions, AgLineSeriesOptions, AgTimeAxisOptions, AgNumberAx
 import { useCnnStore } from '@/stores/cnn'
 
 import LightweightChartFTMulti from '@/components/tradeview/LightweightChartFTMulti.vue'
+import LightweightChartMfMulti from '@/components/tradeview/LightweightChartMfMulti.vue'
 
-const tabs = ['Sentiment', 'Metals', 'Money Mkts']
+const tabs = ['Sentiment', 'Metals', 'Money' , 'Oil & Gas']
 const value = ref('Sentiment')
-
 const store = useCnnStore()
 store.getMarketSentiment()
 
@@ -144,7 +158,6 @@ const numberAxis = (min: number, max: number): AgNumberAxisOptions => ({
 // ----------------------------
 // Data
 // ----------------------------
-
 const fgData = computed(() => toXY(store.fearAndGreedHistorical?.data ?? []))
 const vixData = computed(() => toXY(store.marketVolatilityHistorical?.data ?? []))
 const sp500Data = computed(() => toXY(store.marketMomentumSp500Historical?.data ?? []))
@@ -152,10 +165,14 @@ const sp500MA50Data = computed(() => toXY(store.marketMomentumSp500MA50?.data ??
 const sp500MA100Data = computed(() => toXY(store.marketMomentumSp500MA100?.data ?? []))
 const sp500MA200Data = computed(() => toXY(store.marketMomentumSp500MA200?.data ?? []))
 
+const metalsEtfTickers = ['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP'];
+const oilGasStockTickers = ['BP.', 'SHEL', 'HBR', 'SQZ', 'RKH' ];
+const moneyMarketTickers = ['GB00BFYDWM59:GBP', 'GB00B8XYYQ86:GBP', 'GB0033029413:GBP']; 
+
+
 // ----------------------------
 // Chart Options
 // ----------------------------
-
 const buildChartOptions = (
   data: { x: number; y: number }[],
   minAxis: number,
@@ -210,8 +227,6 @@ const fgOptions = computed(() =>
   buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'Fear & Greed Index: SP500'),
 )
 const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX Index'))
-// const sp500Options: AgChartOptions = {
-// ...
 const sp500Options = computed(() =>
   buildChartOptions2(
     sp500Data.value,
