@@ -352,7 +352,8 @@ function determineCurrentDisplayValue(ticker: string) {
   const it = itemFor(ticker)
   const last = it?.data?.length ? it.data[it.data.length - 1] : null
   if (!last) return '—'
-  const v = last.value ?? last.close ?? last
+  // const v = last.value ?? last.close ?? last
+  const v = last.value ?? last
   return v !== undefined ? formatNumber(v) : '—'
 }
 

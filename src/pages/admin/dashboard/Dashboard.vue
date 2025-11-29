@@ -1,6 +1,5 @@
 <template>
   <div class="tabs-container">
-
     <!-- Tabs -->
     <VaTabs v-model="value" class="tabs-left">
       <template #tabs>
@@ -29,7 +28,6 @@
         <VaCard class="rounded-xl">
           <VaCardContent>
             <AgCharts :options="goldFearAndGreedOptions" />
-            
           </VaCardContent>
         </VaCard>
       </div>
@@ -39,10 +37,7 @@
       <VaCard class="rounded-xl">
         <VaCardTitle>ETFs</VaCardTitle>
         <VaCardContent>
-          <LightweightChartFTMulti
-            :tickers="metalsEtfTickers"
-            type="line"
-          />
+          <LightweightChartFTMulti :tickers="metalsEtfTickers" type="line" />
         </VaCardContent>
       </VaCard>
     </div>
@@ -51,10 +46,7 @@
       <VaCard class="rounded-xl">
         <VaCardTitle>Stocks</VaCardTitle>
         <VaCardContent>
-          <LightweightChartMfMulti
-            :tickers="oilGasStockTickers"
-            type="line"
-          />
+          <LightweightChartMfMulti :tickers="oilGasStockTickers" type="line" />
         </VaCardContent>
       </VaCard>
     </div>
@@ -63,10 +55,7 @@
       <VaCard class="rounded-xl">
         <VaCardTitle>Money Markets</VaCardTitle>
         <VaCardContent>
-          <LightweightChartFTMulti 
-            :tickers="moneyMarketTickers"
-            type="line" 
-          />
+          <LightweightChartFTMulti :tickers="moneyMarketTickers" type="line" />
         </VaCardContent>
       </VaCard>
     </div>
@@ -82,7 +71,7 @@ import { useCnnStore } from '@/stores/cnn'
 import LightweightChartFTMulti from '@/components/tradeview/LightweightChartFTMulti.vue'
 import LightweightChartMfMulti from '@/components/tradeview/LightweightChartMfMulti.vue'
 
-const tabs = ['Sentiment', 'Metals', 'Money' , 'Oil & Gas']
+const tabs = ['Sentiment', 'Metals', 'Money', 'Oil & Gas']
 const value = ref('Sentiment')
 const store = useCnnStore()
 store.getMarketSentiment()
@@ -162,9 +151,9 @@ const sp500MA100Data = computed(() => toXY(store.marketMomentumSp500MA100?.data 
 const sp500MA200Data = computed(() => toXY(store.marketMomentumSp500MA200?.data ?? []))
 const goldFearAndGreedData = computed(() => toXY(store.goldFearAndGreed?.data ?? []))
 
-const metalsEtfTickers = ['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP'];
-const oilGasStockTickers = ['BP.', 'SHEL', 'HBR', 'SQZ', 'RKH' ];
-const moneyMarketTickers = ['GB00BFYDWM59:GBP', 'GB00B8XYYQ86:GBP', 'GB0033029413:GBP']; 
+const metalsEtfTickers = ['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP']
+const oilGasStockTickers = ['BP.', 'SHEL', 'HBR', 'SQZ', 'RKH']
+const moneyMarketTickers = ['GB00BFYDWM59:GBP', 'GB00B8XYYQ86:GBP', 'GB0033029413:GBP']
 
 // ----------------------------
 // Chart Options
@@ -239,17 +228,7 @@ const sp500Options = computed(() =>
 )
 
 const goldFearAndGreedOptions = computed(() =>
-  buildChartOptions(
-    goldFearAndGreedData.value,
-    20,
-    100,
-    BLUE,
-    85,
-    GREEN,
-    25,
-    RED,
-    'Gold: Fear & Greed Index',
-  ),
+  buildChartOptions(goldFearAndGreedData.value, 20, 100, BLUE, 85, GREEN, 25, RED, 'Gold: Fear & Greed Index'),
 )
 </script>
 

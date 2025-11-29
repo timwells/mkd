@@ -34,7 +34,6 @@ export type MarketMomentumSp500MA100 = TimeDataPair
 export type MarketMomentumSp500MA50 = TimeDataPair
 export type GoldFearAndGreed = TimeDataPair
 
-
 function isTimeDataPairArray(value: any): value is TimeDataPair[] {
   return (
     Array.isArray(value) &&
@@ -118,8 +117,7 @@ export const useCnnStore = defineStore('cnn', {
         this.marketMomentumSp500MA200 = (json as any).market_momentum_sp500_MA200
         this.marketMomentumSp500MA100 = (json as any).market_momentum_sp500_MA100
         this.marketMomentumSp500MA50 = (json as any).market_momentum_sp500_MA50
-        this.goldFearAndGreed = (json as any).gold_fear_and_greed 
-
+        this.goldFearAndGreed = (json as any).gold_fear_and_greed
       } catch (err: any) {
         this.error = err.message ?? 'Unknown Error'
       } finally {

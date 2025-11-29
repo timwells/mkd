@@ -55,9 +55,11 @@ export const useMfStore = defineStore('mf', {
       // ✔ Fetch from API
       try {
         // exchange=LSE&symbol=RNWH&precision=Day&period=Max
-        const response = await fetch(`${GFC}/fool/historical/values?exchange=LSE&symbol=${ticker}&precision=Day&period=Max`)
+        const response = await fetch(
+          `${GFC}/fool/historical/values?exchange=LSE&symbol=${ticker}&precision=Day&period=Max`,
+        )
         if (!response.ok) throw new Error(`Failed to fetch: ${ticker}`)
-        
+
         const item: DataItem = await response.json()
 
         // ✔ Update cache only (no dup licate elsewhere)
@@ -65,7 +67,6 @@ export const useMfStore = defineStore('mf', {
           timestamp: now,
           item,
         }
-
       } catch (err: any) {
         this.error = err.message || 'Unknown error'
       } finally {

@@ -18,8 +18,8 @@ const goldSentiment = async () => {
   return {
     data: Object.entries(data).map(([date, value]) => [
       new Date(date).getTime(), // timestamp in milliseconds
-      value
-    ])    
+      value,
+    ]),
   }
 }
 
@@ -82,8 +82,7 @@ export const marketSentiment = async () => {
     // Gold Fear and Greed
     data.gold_fear_and_greed = await goldSentiment()
 
-    return data;
-
+    return data
   } catch (e) {
     console.log(e.message)
   }

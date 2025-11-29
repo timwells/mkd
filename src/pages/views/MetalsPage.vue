@@ -5,14 +5,11 @@
       type="line"
     /-->
 
-    <LightweightChartMfMulti
-      :tickers="['BP.', 'SHEL', 'HBR', 'SQZ', 'RKH' ]"
-      type="line"
-    />
+    <LightweightChartMfMulti :tickers="['BP.', 'SHEL', 'HBR', 'SQZ', 'RKH']" type="line" />
   </div>
 </template>
 RNWH
 <script setup>
 //import LightweightChartFTMulti from '@/components/tradeview/LightweightChartFTMulti.vue'
-import LightweightChartMfMulti from '@/components/tradeview/LightweightChartMfMulti.vue';
+import LightweightChartMfMulti from '@/components/tradeview/LightweightChartMfMulti.vue'
 </script>

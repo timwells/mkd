@@ -55,9 +55,9 @@ export const useFtStore = defineStore('ft', {
       const cached = this.cache[ticker]
       const now = Date.now()
 
-      if (cached && (now - cached.timestamp) < TTL_MS) {
+      if (cached && now - cached.timestamp < TTL_MS) {
         // Cache hit → ensure it's in `state.data`
-        const index = this.data.findIndex(i => i.ticker === ticker)
+        const index = this.data.findIndex((i) => i.ticker === ticker)
         if (index === -1) {
           this.data.push(cached.item)
         }
@@ -73,7 +73,7 @@ export const useFtStore = defineStore('ft', {
         const data: DataItem = await response.json()
 
         // Update state
-        const index = this.data.findIndex(item => item.ticker === ticker)
+        const index = this.data.findIndex((item) => item.ticker === ticker)
         if (index !== -1) {
           this.data[index] = data
         } else {
@@ -83,9 +83,8 @@ export const useFtStore = defineStore('ft', {
         // Update in-memory cache
         this.cache[ticker] = {
           timestamp: now,
-          item: data
+          item: data,
         }
-
       } catch (err: any) {
         this.error = err.message || 'Unknown error'
       } finally {
@@ -94,5 +93,3 @@ export const useFtStore = defineStore('ft', {
     },
   },
 })
-
-
