@@ -12,6 +12,8 @@ interface DataItem {
 }
 
 const GFC = import.meta.env.VITE_GCF_URL
+const API_KEY = import.meta.env.VITE_API_KEY
+
 const TTL_MS = 12 * 60 * 60 * 1000 // 12 hours
 
 interface CacheEntry {
@@ -55,9 +57,11 @@ export const useMfStore = defineStore('mf', {
       // ✔ Fetch from API
       try {
         // exchange=LSE&symbol=RNWH&precision=Day&period=Max
-        const response = await fetch(
-          `${GFC}/fool/historical/values?exchange=LSE&symbol=${ticker}&precision=Day&period=Max`,
-        )
+        const response = await fetch(`${GFC}/fool/historical/values?exchange=LSE&symbol=${ticker}&precision=Day&period=Max`, {
+                                method: "GET",
+                                headers: {"Content-Type": "application/json","x-api-key": API_KEY}
+                              });
+
         if (!response.ok) throw new Error(`Failed to fetch: ${ticker}`)
 
         const item: DataItem = await response.json()

@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import moment from 'moment'
 
-// const apiKey = import.meta.env.VITE_API_KEY
 const GFC = import.meta.env.VITE_GCF_URL
+const API_KEY = import.meta.env.VITE_API_KEY
+
 const REQ_AGE_THRESHOLD = 60 * 10
 
 export const useNtStore = defineStore('nt', {
@@ -25,7 +26,11 @@ export const useNtStore = defineStore('nt', {
         this.error = null
 
         try {
-          const response = await fetch(`${GFC}/nt/trades`)
+          const response = await fetch(`${GFC}/nt/trades`, {
+                                          method: "GET",
+                                          headers: {"Content-Type": "application/json","x-api-key": API_KEY}
+                                        });
+
           if (!response.ok) throw new Error('Failed to fetch items')
           this.data = await response.json()
           this.loading = false

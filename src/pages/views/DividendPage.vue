@@ -4,14 +4,10 @@
       <div style="padding: 15px">
         <VaCard class="rounded-xl">
           <VaCardTitle>{{ item.name }}</VaCardTitle>
-            <VaCardContent class="w-full" style="height: 600px;">
-              <LightweightChartMfMulti
-                :tickers="[item.epic]"
-                type="line"
-                class="w-full h-full"
-              />
-            </VaCardContent>        
-          </VaCard>
+          <VaCardContent class="w-full" style="height: 600px">
+            <LightweightChartMfMulti :tickers="[item.epic]" type="line" class="w-full h-full" />
+          </VaCardContent>
+        </VaCard>
       </div>
     </template>
   </EasyDataTable>
@@ -22,7 +18,6 @@ import { computed } from 'vue'
 import { Header } from 'vue3-easy-data-table'
 import { useDdStore } from '@/stores/dd'
 import LightweightChartMfMulti from '@/components/tradeview/LightweightChartMfMulti.vue'
-
 
 const headers: Header[] = [
   { text: 'Name', value: 'name' },

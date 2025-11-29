@@ -20,8 +20,8 @@ interface DataItem {
   [key: string]: any
 }
 
-// const apiKey = import.meta.env.VITE_API_KEY
 const GFC = import.meta.env.VITE_GCF_URL
+const API_KEY = import.meta.env.VITE_API_KEY
 
 export const useAdaStore = defineStore('ada', {
   state: () => ({
@@ -46,7 +46,12 @@ export const useAdaStore = defineStore('ada', {
       this.loading = true
       this.error = null
       try {
-        const response = await fetch(`${GFC}/ada/sentiment?ticker=${ticker}&freq=${freq}`)
+        const response = await fetch(`${GFC}/ada/sentiment?ticker=${ticker}&freq=${freq}`, {
+                                        method: "GET",
+                                        headers: {"Content-Type": "application/json","x-api-key": API_KEY}
+                                      });
+
+
         if (!response.ok) throw new Error('Failed to fetch items')
         const data = await response.json()
         data.name = name // Add name to the data object

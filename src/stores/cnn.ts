@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 const GFC = import.meta.env.VITE_GCF_URL
+const API_KEY = import.meta.env.VITE_API_KEY
 
 // 60 minutes in milliseconds:
 const REQ_AGE_THRESHOLD = 60 * 60 * 1000
@@ -95,10 +96,14 @@ export const useCnnStore = defineStore('cnn', {
       this.error = null
 
       try {
-        const response = await fetch(`${GFC}/cnn/marketsentiment`)
+        const response = await fetch(`${GFC}/cnn/marketsentiment`, {
+                                        method: "GET",
+                                        headers: {"Content-Type": "application/json","x-api-key": API_KEY}
+                                      });
+
         if (!response.ok) throw new Error('Failed to fetch market sentiment')
 
-        const json = (await response.json()) as unknown
+          const json = (await response.json()) as unknown
 
         // Runtime type checks
         if (isMarketHistorical((json as any)?.fear_and_greed_historical)) {

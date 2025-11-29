@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 const apiKey = import.meta.env.VITE_API_KEY
+const API_KEY = import.meta.env.VITE_API_KEY
 
 interface Item {
   userId: number

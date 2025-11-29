@@ -1,63 +1,75 @@
 <template>
-  <div class="tabs-container">
-    <!-- Tabs -->
-    <VaTabs v-model="value" class="tabs-left">
-      <template #tabs>
-        <VaTab v-for="tab in tabs" :key="tab" :name="tab">{{ tab }}</VaTab>
-      </template>
-    </VaTabs>
+  <div>
+    <VaAlert
+      v-if="store?.error"
+      color="danger"
+      border="top"
+      class="mb-6"
+      closeable
+    >
+      {{ store.error }}
+    </VaAlert>
 
-    <!-- Tab Content -->
-    <div v-if="value === 'Sentiment'" class="tab-content" outlined>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="tabs-container">
+      <!-- Tabs -->
+      <VaTabs v-model="value" class="tabs-left">
+        <template #tabs>
+          <VaTab v-for="tab in tabs" :key="tab" :name="tab">{{ tab }}</VaTab>
+        </template>
+      </VaTabs>
+
+      <!-- Tab Content -->
+      <div v-if="value === 'Sentiment'" class="tab-content" outlined>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <VaCard class="rounded-xl">
+            <VaCardContent>
+              <AgCharts :options="fgOptions" />
+            </VaCardContent>
+          </VaCard>
+          <VaCard class="rounded-xl">
+            <VaCardContent>
+              <AgCharts :options="sp500Options" />
+            </VaCardContent>
+          </VaCard>
+          <VaCard class="rounded-xl">
+            <VaCardContent>
+              <AgCharts :options="vixOptions" />
+            </VaCardContent>
+          </VaCard>
+          <VaCard class="rounded-xl">
+            <VaCardContent>
+              <AgCharts :options="goldFearAndGreedOptions" />
+            </VaCardContent>
+          </VaCard>
+        </div>
+      </div>
+
+      <div v-if="value === 'Metals'" class="tab-content" outlined>
         <VaCard class="rounded-xl">
+          <VaCardTitle>ETFs</VaCardTitle>
           <VaCardContent>
-            <AgCharts :options="fgOptions" />
-          </VaCardContent>
-        </VaCard>
-        <VaCard class="rounded-xl">
-          <VaCardContent>
-            <AgCharts :options="sp500Options" />
-          </VaCardContent>
-        </VaCard>
-        <VaCard class="rounded-xl">
-          <VaCardContent>
-            <AgCharts :options="vixOptions" />
-          </VaCardContent>
-        </VaCard>
-        <VaCard class="rounded-xl">
-          <VaCardContent>
-            <AgCharts :options="goldFearAndGreedOptions" />
+            <LightweightChartFTMulti :tickers="metalsEtfTickers" type="line" />
           </VaCardContent>
         </VaCard>
       </div>
-    </div>
 
-    <div v-if="value === 'Metals'" class="tab-content" outlined>
-      <VaCard class="rounded-xl">
-        <VaCardTitle>ETFs</VaCardTitle>
-        <VaCardContent>
-          <LightweightChartFTMulti :tickers="metalsEtfTickers" type="line" />
-        </VaCardContent>
-      </VaCard>
-    </div>
+      <div v-if="value === 'Oil & Gas'" class="tab-content" outlined>
+        <VaCard class="rounded-xl">
+          <VaCardTitle>Stocks</VaCardTitle>
+          <VaCardContent>
+            <LightweightChartMfMulti :tickers="oilGasStockTickers" type="line" />
+          </VaCardContent>
+        </VaCard>
+      </div>
 
-    <div v-if="value === 'Oil & Gas'" class="tab-content" outlined>
-      <VaCard class="rounded-xl">
-        <VaCardTitle>Stocks</VaCardTitle>
-        <VaCardContent>
-          <LightweightChartMfMulti :tickers="oilGasStockTickers" type="line" />
-        </VaCardContent>
-      </VaCard>
-    </div>
-
-    <div v-else-if="value === 'Money'" class="tab-content" outlined>
-      <VaCard class="rounded-xl">
-        <VaCardTitle>Money Markets</VaCardTitle>
-        <VaCardContent>
-          <LightweightChartFTMulti :tickers="moneyMarketTickers" type="line" />
-        </VaCardContent>
-      </VaCard>
+      <div v-else-if="value === 'Money'" class="tab-content" outlined>
+        <VaCard class="rounded-xl">
+          <VaCardTitle>Money Markets</VaCardTitle>
+          <VaCardContent>
+            <LightweightChartFTMulti :tickers="moneyMarketTickers" type="line" />
+          </VaCardContent>
+        </VaCard>
+      </div>
     </div>
   </div>
 </template>
