@@ -1,6 +1,6 @@
 <template>
   <VaCard square outlined class="rounded-xl">
-    <VaCardTitle>Money Markets</VaCardTitle>
+    <VaCardTitle>{{moneyMarketTickers}}</VaCardTitle>
     <VaCardContent>
       <LightweightChartFTMulti :tickers="moneyMarketTickers" type="line" />
     </VaCardContent>

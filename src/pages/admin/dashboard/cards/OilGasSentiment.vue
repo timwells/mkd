@@ -1,6 +1,6 @@
 <template>
   <VaCard square outlined class="rounded-xl">
-    <VaCardTitle>Stocks</VaCardTitle>
+    <VaCardTitle>{{oilGasStockTickers}}</VaCardTitle>
     <VaCardContent>
       <LightweightChartMfMulti :tickers="oilGasStockTickers" type="line" />
     </VaCardContent>
