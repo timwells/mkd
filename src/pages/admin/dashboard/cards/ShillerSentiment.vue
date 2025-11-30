@@ -5,7 +5,5 @@
 </template>
 RNWH
 <script setup>
-//import LightweightChartFTMulti from '@/components/lw-charts/LightweightChartFTMulti.vue'
-//import LightweightChartMfMulti from '@/components/lw-charts/LightweightChartMfMulti.vue'
 import LightweightChartMtplMulti from '@/components/lw-charts/LightweightChartMtplMulti.vue'
 </script>

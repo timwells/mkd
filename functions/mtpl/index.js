@@ -6,9 +6,10 @@ import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
 
-import { myMapFunds, getHistoricalSeries, lookUpSymbol, lookUpSymbol2 } from './ft-api.js'
+import { datasetImpl } from './mtpl-api.js'
 
-const VERSION = 'ft-0.0.1'
+const VERSION = 'mtpl-0.0.1'
+
 // Optional: Set defaults for all v2 functions in this file
 setGlobalOptions({
   region: 'us-central1',
@@ -26,24 +27,20 @@ app.use(apiKeyValidation)
 app.use(express.json())
 
 app.get('/version', async (req, res) => res.send(VERSION))
-
-app.get('/mymapfunds', async (req, res) => {
-  return res.status(200).json(await myMapFunds())
-})
-
 app.get('/historical/series', async (req, res) => {
-  const { ticker } = req.query
-  return res.status(200).json(await getHistoricalSeries(ticker))
+  const { ds, mas } = req.query
+  let data = await datasetImpl(ds, mas);
+  return res.status(200).json(data)
 })
 
-app.get('/lookup/symbol', async (req, res) => {
-  const { ticker } = req.query
-  return res.status(200).json(await lookUpSymbol(ticker))
+app.all(/.*/, (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Route not found',
+    message: `No endpoint found for ${req.method} ${req.originalUrl}`,
+    path: req.originalUrl,
+    timestamp: new Date().toISOString(),
+  })
 })
 
-app.get('/lookup2/symbol', async (req, res) => {
-  const { ticker } = req.query
-  return res.status(200).json(await lookUpSymbol2(ticker))
-})
-
-export const ft = onRequest(app)
+export const mtpl = onRequest(app)

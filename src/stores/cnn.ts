@@ -97,13 +97,13 @@ export const useCnnStore = defineStore('cnn', {
 
       try {
         const response = await fetch(`${GFC}/cnn/marketsentiment`, {
-                                        method: "GET",
-                                        headers: {"Content-Type": "application/json","x-api-key": API_KEY}
-                                      });
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        })
 
         if (!response.ok) throw new Error('Failed to fetch market sentiment')
 
-          const json = (await response.json()) as unknown
+        const json = (await response.json()) as unknown
 
         // Runtime type checks
         if (isMarketHistorical((json as any)?.fear_and_greed_historical)) {

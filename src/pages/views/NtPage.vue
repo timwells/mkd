@@ -17,7 +17,7 @@
 import { computed } from 'vue'
 import { Header } from 'vue3-easy-data-table'
 import { useNtStore } from '@/stores/nt'
-import LightweightChartMfMulti from '@/components/tradeview/LightweightChartMfMulti.vue'
+import LightweightChartMfMulti from '@/components/lw-charts/LightweightChartMfMulti.vue'
 
 const headers: Header[] = [
   { text: 'Stock', value: 'stock' },

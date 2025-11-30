@@ -21,7 +21,7 @@ interface CacheEntry {
   item: DataItem
 }
 
-export const useMfStore = defineStore('mf', {
+export const useMtplStore = defineStore('mtpl', {
   state: () => ({
     loading: false,
     error: null as string | null,
@@ -33,11 +33,10 @@ export const useMfStore = defineStore('mf', {
   getters: {
     isLoading: (state): boolean => state.loading,
     getError: (state): string | null => state.error,
-
     getByTicker:
       (state) =>
-      (ticker: string): DataItem | undefined =>
-        state.cache[ticker]?.item,
+        (ticker: string): DataItem | undefined =>
+            state.cache[ticker]?.item,
   },
 
   actions: {
@@ -57,13 +56,10 @@ export const useMfStore = defineStore('mf', {
       // ✔ Fetch from API
       try {
         // exchange=LSE&symbol=RNWH&precision=Day&period=Max
-        const response = await fetch(
-          `${GFC}/fool/historical/values?exchange=LSE&symbol=${ticker}&precision=Day&period=Max`,
-          {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
-          },
-        )
+        const response = await fetch(`${GFC}/mtpl/historical/series?ds=${ticker}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        })
 
         if (!response.ok) throw new Error(`Failed to fetch: ${ticker}`)
 
@@ -74,6 +70,8 @@ export const useMfStore = defineStore('mf', {
           timestamp: now,
           item,
         }
+
+        // console.log(this.cache[ticker])
       } catch (err: any) {
         this.error = err.message || 'Unknown error'
       } finally {

@@ -47,10 +47,9 @@ export const useAdaStore = defineStore('ada', {
       this.error = null
       try {
         const response = await fetch(`${GFC}/ada/sentiment?ticker=${ticker}&freq=${freq}`, {
-                                        method: "GET",
-                                        headers: {"Content-Type": "application/json","x-api-key": API_KEY}
-                                      });
-
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        })
 
         if (!response.ok) throw new Error('Failed to fetch items')
         const data = await response.json()

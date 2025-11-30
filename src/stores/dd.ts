@@ -27,10 +27,9 @@ export const useDdStore = defineStore('dd', {
 
         try {
           const response = await fetch(`${GFC}/dd/exdividenddates`, {
-                                        method: "GET",
-                                        headers: {"Content-Type": "application/json","x-api-key": API_KEY}
-                                      });
-
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+          })
 
           if (!response.ok) throw new Error('Failed to fetch items')
           this.data = await response.json()
