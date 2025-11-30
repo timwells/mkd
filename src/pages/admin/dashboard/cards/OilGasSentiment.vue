@@ -1,6 +1,6 @@
 <template>
   <VaCard square outlined class="rounded-xl">
-    <VaCardTitle>{{oilGasStockTickers}}</VaCardTitle>
+    <VaCardTitle>{{ oilGasStockTickers }}</VaCardTitle>
     <VaCardContent>
       <LightweightChartMfMulti :tickers="oilGasStockTickers" type="line" />
     </VaCardContent>
@@ -12,7 +12,4 @@ import LightweightChartMfMulti from '@/components/lw-charts/LightweightChartMfMu
 const oilGasStockTickers = ['BP.', 'SHEL', 'HBR', 'SQZ', 'RKH']
 </script>
 
-<style scoped>
-</style>
-
-
+<style scoped></style>

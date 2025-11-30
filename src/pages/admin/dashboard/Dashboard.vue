@@ -32,7 +32,7 @@
         <MoneySentiment />
       </div>
       <div v-if="value === 'Oil/Gas'" class="tab-content" outlined>
-        <OilGasSentiment/>
+        <OilGasSentiment />
       </div>
     </div>
   </div>
@@ -48,7 +48,6 @@ import ShillerSentiment from './cards/ShillerSentiment.vue'
 
 const tabs = ['Sentiment', 'Shiller', 'Metals', 'Money', 'Oil/Gas']
 const value = ref('Sentiment')
-
 </script>
 
 <style scoped>

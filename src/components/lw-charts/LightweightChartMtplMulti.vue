@@ -6,13 +6,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch, onMounted, onBeforeUnmount, shallowRef, nextTick } from 'vue'
-import {
-  createChart,
-  LineSeries,
-  type ISeriesApi,
-  type MouseEventParams,
-  type LogicalRange,
-} from 'lightweight-charts'
+import { createChart, LineSeries, type ISeriesApi, type MouseEventParams, type LogicalRange } from 'lightweight-charts'
 import { useMtplStore } from '@/stores/mtpl'
 
 defineOptions({ name: 'LightweightChartMtplMulti' })
@@ -41,13 +35,18 @@ function itemFor(ticker: string) {
 const chartContainer = ref<HTMLElement | null>(null)
 const chart = shallowRef<any>(null)
 
-const seriesMap = reactive(new Map<string, {
-  main?: LineSeriesApi
-  ma50?: LineSeriesApi
-  ma100?: LineSeriesApi
-  ma200?: LineSeriesApi
-  visible: boolean
-}>())
+const seriesMap = reactive(
+  new Map<
+    string,
+    {
+      main?: LineSeriesApi
+      ma50?: LineSeriesApi
+      ma100?: LineSeriesApi
+      ma200?: LineSeriesApi
+      visible: boolean
+    }
+  >(),
+)
 
 let resizeObserver: ResizeObserver | null = null
 let subCrosshairUnsub: (() => void) | null = null
@@ -130,7 +129,7 @@ function addSeriesForTicker(ticker: string) {
       title: displayName(ticker, 'MA200'),
       color: colorFor(ticker, 'ma200'),
       lineWidth: 1.5,
-      lineStyle: 2, // dash 
+      lineStyle: 2, // dash
       priceLineVisible: true,
       lastValueVisible: true,
     })
@@ -142,10 +141,11 @@ function addSeriesForTicker(ticker: string) {
 function removeSeriesForTicker(ticker: string) {
   const entry = seriesMap.get(ticker)
   if (!entry || !chart.value) return
-
-  ;[entry.main, entry.ma50, entry.ma100, entry.ma200].forEach(series => {
+  ;[entry.main, entry.ma50, entry.ma100, entry.ma200].forEach((series) => {
     if (series) {
-      try { chart.value.removeSeries(series) } catch (_) {}
+      try {
+        chart.value.removeSeries(series)
+      } catch (_) {}
     }
   })
 
@@ -157,11 +157,13 @@ const hoverValues = reactive<Record<string, string | null>>({})
 
 function handleCrosshairMove(param: MouseEventParams) {
   if (!param?.time || !param.point) {
-    props.tickers.forEach(t => { hoverValues[t] = null })
+    props.tickers.forEach((t) => {
+      hoverValues[t] = null
+    })
     return
   }
 
-  props.tickers.forEach(ticker => {
+  props.tickers.forEach((ticker) => {
     const entry = seriesMap.get(ticker)
     if (!entry?.visible) {
       hoverValues[ticker] = null
@@ -197,7 +199,7 @@ function initChart() {
     height: chartHeight,
   })
 
-  props.tickers.forEach(t => addSeriesForTicker(t))
+  props.tickers.forEach((t) => addSeriesForTicker(t))
 
   subCrosshairUnsub = chart.value.subscribeCrosshairMove(handleCrosshairMove)
   subVisibleRangeUnsub = chart.value.timeScale().subscribeVisibleTimeRangeChange((range) => {
@@ -220,21 +222,25 @@ function enableResize() {
 }
 
 // ---------- Watchers ----------
-watch(() => props.tickers, async (newTickers, oldTickers = []) => {
-  const toAdd = newTickers.filter(t => !seriesMap.has(t))
-  const toRemove = oldTickers.filter(t => !newTickers.includes(t))
+watch(
+  () => props.tickers,
+  async (newTickers, oldTickers = []) => {
+    const toAdd = newTickers.filter((t) => !seriesMap.has(t))
+    const toRemove = oldTickers.filter((t) => !newTickers.includes(t))
 
-  for (const t of toAdd) {
-    if (!itemFor(t)) await store.getHistoricalSeries(t)
-    addSeriesForTicker(t)
-  }
-  for (const t of toRemove) removeSeriesForTicker(t)
+    for (const t of toAdd) {
+      if (!itemFor(t)) await store.getHistoricalSeries(t)
+      addSeriesForTicker(t)
+    }
+    for (const t of toRemove) removeSeriesForTicker(t)
 
-  nextTick(() => chart.value?.timeScale()?.fitContent())
-}, { immediate: true })
+    nextTick(() => chart.value?.timeScale()?.fitContent())
+  },
+  { immediate: true },
+)
 
 watch(
-  () => props.tickers.map(t => store.getByTicker(t)),
+  () => props.tickers.map((t) => store.getByTicker(t)),
   (items) => {
     items.forEach((item, i) => {
       const ticker = props.tickers[i]
@@ -242,13 +248,13 @@ watch(
 
       const entry = seriesMap.get(ticker)!
       entry.main?.setData(item.data || [])
-      entry.ma50?.setData(item.MA50?.data?.filter(d => d.value !== null) || [])
-      entry.ma100?.setData(item.MA100?.data?.filter(d => d.value !== null) || [])
-      entry.ma200?.setData(item.MA200?.data?.filter(d => d.value !== null) || [])
+      entry.ma50?.setData(item.MA50?.data?.filter((d) => d.value !== null) || [])
+      entry.ma100?.setData(item.MA100?.data?.filter((d) => d.value !== null) || [])
+      entry.ma200?.setData(item.MA200?.data?.filter((d) => d.value !== null) || [])
     })
     nextTick(() => chart.value?.timeScale()?.fitContent())
   },
-  { deep: true }
+  { deep: true },
 )
 
 // ---------- Lifecycle ----------

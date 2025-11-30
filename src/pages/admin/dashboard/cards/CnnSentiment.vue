@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
     <VaCard square outlined class="rounded-xl">
       <VaCardContent>
         <AgCharts :options="sp500Options" />
@@ -22,7 +22,6 @@
     </VaCard>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
@@ -158,11 +157,11 @@ const GREEN = '#10b981'
 const ORANGE = '#ffcc00'
 
 const fgOptions = computed(() =>
-  buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'SP500: Fear & Greed Index'))
-const vixOptions = computed(() => 
-  buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX Index'))
+  buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'SP500: Fear & Greed Index'),
+)
+const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX Index'))
 
-  const sp500Options = computed(() =>
+const sp500Options = computed(() =>
   buildChartOptions2(
     sp500Data.value,
     sp500MA50Data.value,
@@ -182,6 +181,4 @@ const goldFearAndGreedOptions = computed(() =>
 )
 </script>
 
-<style>
-
-</style>
+<style></style>

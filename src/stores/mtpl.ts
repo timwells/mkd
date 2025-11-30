@@ -35,8 +35,8 @@ export const useMtplStore = defineStore('mtpl', {
     getError: (state): string | null => state.error,
     getByTicker:
       (state) =>
-        (ticker: string): DataItem | undefined =>
-            state.cache[ticker]?.item,
+      (ticker: string): DataItem | undefined =>
+        state.cache[ticker]?.item,
   },
 
   actions: {

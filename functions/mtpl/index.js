@@ -29,7 +29,7 @@ app.use(express.json())
 app.get('/version', async (req, res) => res.send(VERSION))
 app.get('/historical/series', async (req, res) => {
   const { ds, mas } = req.query
-  let data = await datasetImpl(ds, mas);
+  let data = await datasetImpl(ds, mas)
   return res.status(200).json(data)
 })
 

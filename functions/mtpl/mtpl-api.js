@@ -10,7 +10,7 @@ const alignSMA = (series, smaValues, period) => {
 
   return series.map((point, i) => ({
     time: point.time,
-    value: i < period - 1 ? null : Number(smaValues[i - (period - 1)].toFixed(3))
+    value: i < period - 1 ? null : Number(smaValues[i - (period - 1)].toFixed(3)),
   }))
 }
 
@@ -22,26 +22,31 @@ export const datasetImpl = async (ds, mas) => {
   const url = `${MULTPL_HOST}/${ds}/${MULTPL_POST_FIX}`
 
   // Parse requested MAs: "50,100,200" → ['MA50', 'MA100', 'MA200']
-  let requestedMAs = mas ? mas.split(',')
-                                  .map(s => s.trim())
-                                    .filter(Boolean)
-                                      .map(n => `MA${n}`)
-                            : []
+  let requestedMAs = mas
+    ? mas
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .map((n) => `MA${n}`)
+    : []
 
   try {
     const { data } = await axios.get(url, {
       timeout: 10000,
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; MarketData/1.0)' }
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; MarketData/1.0)' },
     })
 
     const $ = load(data)
     const $table = $('#datatable')
     if (!$table.length) throw new Error('Table #datatable not found')
 
-    let  rows = []
+    let rows = []
 
     $table.find('tr').each((_i, row) => {
-      const cols = $(row).find('td').map((_, el) => $(el).text().trim()).get()
+      const cols = $(row)
+        .find('td')
+        .map((_, el) => $(el).text().trim())
+        .get()
       if (cols.length < 2) return
 
       const date = new Date(cols[0])
@@ -60,7 +65,7 @@ export const datasetImpl = async (ds, mas) => {
     if (rows.length === 0) throw new Error('No valid data')
 
     rows.sort((a, b) => a.time.localeCompare(b.time))
-    const values = rows.map(r => r.value)
+    const values = rows.map((r) => r.value)
 
     let result = {
       name: ds,
@@ -80,19 +85,17 @@ export const datasetImpl = async (ds, mas) => {
       if (smaValues.length === 0) continue
 
       result[maKey] = {
-        data: alignSMA(rows, smaValues, period)
+        data: alignSMA(rows, smaValues, period),
       }
     }
     return result
-
   } catch (error) {
-
     console.error(`[datasetImpl] Failed ${ds}:`, error.message)
     return {
       name: ds,
       ticker: ds,
       data: [],
-      error: error.message || 'Unknown error'
+      error: error.message || 'Unknown error',
     }
   }
 }
