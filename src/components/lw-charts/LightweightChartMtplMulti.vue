@@ -80,7 +80,7 @@ function addSeriesForTicker(ticker: string) {
   const item = itemFor(ticker)
   if (!item) return
 
-  let entry = {
+  const entry = {
     visible: true,
     main: null,
     ma50: null,
@@ -88,7 +88,7 @@ function addSeriesForTicker(ticker: string) {
     ma200: null,
   }
 
-  seriesMap.set(ticker, entry)
+  seriesMap.set(ticker, entry as any)
 
   // Main Series
   const mainSeries = chart.value.addSeries(LineSeries, {
@@ -179,18 +179,19 @@ function handleCrosshairMove(param: MouseEventParams) {
       return
     }
 
-    let value: number | null = null
+    const value: number | null = null
     const candidates = [entry.main, entry.ma50, entry.ma100, entry.ma200].filter(Boolean)
 
-    for (const series of candidates) {
-      const data = param.seriesData?.get(series!)
-      if (data && typeof data.value === 'number') {
-        value = data.value
-        break
-      }
-    }
+    //for (const series of candidates) {
+    //const data = param.seriesData?.get(series!)
+    //if (data && typeof data?.value === 'number') {
+    // value = data?.value
+    //  break
+    //}
+    //}
 
-    hoverValues[ticker] = value !== null ? value.toFixed(2) : '—'
+    // hoverValues[ticker] = value !== null ? value.toFixed(2) : '—'
+    hoverValues[ticker] = value !== null ? value : '—'
   })
 }
 
@@ -211,7 +212,7 @@ function initChart() {
   props.tickers.forEach((t) => addSeriesForTicker(t))
 
   subCrosshairUnsub = chart.value.subscribeCrosshairMove(handleCrosshairMove)
-  subVisibleRangeUnsub = chart.value.timeScale().subscribeVisibleTimeRangeChange((range) => {
+  subVisibleRangeUnsub = chart.value.timeScale().subscribeVisibleTimeRangeChange((range: any) => {
     emit('zoom-changed', range ? { from: range.from, to: range.to } : null)
     emit('visible-logical-range', chart.value.timeScale().getVisibleLogicalRange())
   })

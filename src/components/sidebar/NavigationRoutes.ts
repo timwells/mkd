@@ -7,17 +7,10 @@ export interface INavigationRoute {
 
 export default {
   root: {
-    name: '/',
+    name: '/dashboard',
     displayName: 'navigationRoutes.home',
   },
   routes: [
-    /* {
-      name: 'markets',
-      displayName: 'Markets',
-      meta: {
-        icon: 'vuestic-iconset-dashboard',
-      },
-    },*/
     {
       name: 'dashboard',
       displayName: 'menu.dashboard',
@@ -60,7 +53,7 @@ export default {
         icon: 'vuestic-iconset-dashboard',
       },
     },
-    {
+    /*  {
       name: 'users',
       displayName: 'menu.users',
       meta: {
@@ -116,7 +109,6 @@ export default {
         },
       ],
     },
-
     {
       name: 'faq',
       displayName: 'menu.faq',
@@ -144,6 +136,6 @@ export default {
       meta: {
         icon: 'settings',
       },
-    },
+    },*/
   ] as INavigationRoute[],
 }
