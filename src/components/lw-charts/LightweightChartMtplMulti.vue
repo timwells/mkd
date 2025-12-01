@@ -80,7 +80,14 @@ function addSeriesForTicker(ticker: string) {
   const item = itemFor(ticker)
   if (!item) return
 
-  const entry = { visible: true }
+  let entry = {
+    visible: true,
+    main: null,
+    ma50: null,
+    ma100: null,
+    ma200: null,
+  }
+
   seriesMap.set(ticker, entry)
 
   // Main Series
@@ -145,7 +152,9 @@ function removeSeriesForTicker(ticker: string) {
     if (series) {
       try {
         chart.value.removeSeries(series)
-      } catch (_) {}
+      } catch (e) {
+        console.error(e)
+      }
     }
   })
 
@@ -248,9 +257,9 @@ watch(
 
       const entry = seriesMap.get(ticker)!
       entry.main?.setData(item.data || [])
-      entry.ma50?.setData(item.MA50?.data?.filter((d) => d.value !== null) || [])
-      entry.ma100?.setData(item.MA100?.data?.filter((d) => d.value !== null) || [])
-      entry.ma200?.setData(item.MA200?.data?.filter((d) => d.value !== null) || [])
+      entry.ma50?.setData(item.MA50?.data?.filter((d: any) => d.value !== null) || [])
+      entry.ma100?.setData(item.MA100?.data?.filter((d: any) => d.value !== null) || [])
+      entry.ma200?.setData(item.MA200?.data?.filter((d: any) => d.value !== null) || [])
     })
     nextTick(() => chart.value?.timeScale()?.fitContent())
   },

@@ -9,6 +9,15 @@ interface DataItem {
   name: string
   ticker: string
   data: DataPoint[]
+  MA50?: {
+    data: DataPoint[]
+  }
+  MA100?: {
+    data: DataPoint[]
+  }
+  MA200?: {
+    data: DataPoint[]
+  }
 }
 
 const GFC = import.meta.env.VITE_GCF_URL
