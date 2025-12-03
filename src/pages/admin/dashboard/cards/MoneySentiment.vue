@@ -1,7 +1,7 @@
 <template>
   <VaCard square outlined class="rounded-xl">
     <VaCardTitle>{{ moneyMarketTickers }}</VaCardTitle>
-    <VaCardContent>
+    <VaCardContent class="w-full" style="height: 600px">
       <LightweightChartFTMulti :tickers="moneyMarketTickers" type="line" />
     </VaCardContent>
   </VaCard>

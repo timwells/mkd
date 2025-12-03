@@ -11,14 +11,16 @@
     <div v-if="value === 'Gold'" class="tab-content" outlined>
       <VaCard square outlined class="rounded-xl">
         <VaCardTitle>Gold</VaCardTitle>
-        <VaCardContent> </VaCardContent>
+        <VaCardContent no-padding style="height: 600px">
+          <LightweightChartFTMulti :tickers="goldTickers" type="line" />
+        </VaCardContent>
       </VaCard>
     </div>
 
     <div v-if="value === 'ETFs'" class="tab-content" outlined>
       <VaCard square outlined class="rounded-xl">
         <VaCardTitle>ETFs</VaCardTitle>
-        <VaCardContent>
+        <VaCardContent no-padding style="height: 600px">
           <LightweightChartFTMulti :tickers="metalsEtfTickers" type="line" />
         </VaCardContent>
       </VaCard>
@@ -33,6 +35,7 @@ const value = ref('ETFs')
 
 import LightweightChartFTMulti from '@/components/lw-charts/LightweightChartFTMulti.vue'
 const metalsEtfTickers = ['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP']
+const goldTickers = ['GC.1:CMX', 'US@SI.1:CMX']
 </script>
 
 <style scoped>
