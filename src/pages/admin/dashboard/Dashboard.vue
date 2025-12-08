@@ -34,6 +34,9 @@
       <div v-if="value === 'Oil/Gas'" class="tab-content" outlined>
         <OilGasSentiment />
       </div>
+      <div v-if="value === 'Samuel Bennel'" class="tab-content" outlined>
+        <SamuelBennel />
+      </div>
     </div>
   </div>
 </template>
@@ -45,8 +48,9 @@ import MetalsSentiment from './cards/MetalsSentiment.vue'
 import MoneySentiment from './cards/MoneySentiment.vue'
 import OilGasSentiment from './cards/OilGasSentiment.vue'
 import ShillerSentiment from './cards/ShillerSentiment.vue'
+import SamuelBennel from './cards/SamuelBennel.vue'
 
-const tabs = ['Sentiment', 'Shiller', 'Metals', 'Money', 'Oil/Gas']
+const tabs = ['Sentiment', 'Shiller', 'Metals', 'Money', 'Oil/Gas', 'Samuel Bennel']
 const value = ref('Sentiment')
 </script>
 

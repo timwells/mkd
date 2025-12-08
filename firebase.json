@@ -5,6 +5,7 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   },
   "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "**",
@@ -12,6 +13,16 @@
     }
   ],
   "functions": [
+    {
+      "source": "functions/cnbc",
+      "codebase": "cnbc",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    },
+    {
+      "source": "functions/tvc4",
+      "codebase": "tvc4",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    },
     {
       "source": "functions/functions-hw",
       "codebase": "helloworld",
