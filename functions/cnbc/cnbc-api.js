@@ -123,6 +123,7 @@ export const getHistoricalValuesImpl = async (symbol) => {
   
     return {
         name: data.data.chartData.allSymbols[0].name,
+        ticker: symbol,
         data: valueSeries 
     }
   } catch (error) {
