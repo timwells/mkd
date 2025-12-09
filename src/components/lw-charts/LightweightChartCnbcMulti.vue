@@ -94,7 +94,7 @@ function addSeriesForTicker(ticker: string) {
   const mainSeries = chart.value.addSeries(LineSeries, {
     title: displayName(ticker),
     color: colorFor(ticker, 'main'),
-    lineWidth: 2,
+    lineWidth: 1,
     priceFormat: { type: 'price', precision: 2 },
     lastValueVisible: true,
     priceLineVisible: true,
@@ -107,7 +107,7 @@ function addSeriesForTicker(ticker: string) {
     const ma50 = chart.value.addSeries(LineSeries, {
       title: displayName(ticker, 'MA50'),
       color: colorFor(ticker, 'ma50'),
-      lineWidth: 1.0,
+      lineWidth: 0.5,
       lineStyle: 2, // dashed
       priceLineVisible: false,
       lastValueVisible: false,
