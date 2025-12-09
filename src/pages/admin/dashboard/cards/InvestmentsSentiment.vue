@@ -10,16 +10,15 @@
 <script lang="ts" setup>
 import LightweightChartFTMulti from '@/components/lw-charts/LightweightChartFTMulti.vue'
 const investmentMarketTickers = [
-'GB00BFBFYB71:GBP',
-'GB00BFBFYJ57:GBP',
-'GB00BFBFYQ25:GBP',
-'GB00BFBFYX91:GBP',
-'GB00BFBFZ140:GBP',
-'GB00BN090M98:GBP',
-//'GB00B18B9X76:GBP',
-'IE00B3NS4D25:GBP'
+  'GB00BFBFYB71:GBP',
+  'GB00BFBFYJ57:GBP',
+  'GB00BFBFYQ25:GBP',
+  'GB00BFBFYX91:GBP',
+  'GB00BFBFZ140:GBP',
+  'GB00BN090M98:GBP',
+  //'GB00B18B9X76:GBP',
+  'IE00B3NS4D25:GBP',
 ]
-
 
 /*
 GB00BFBFYB71:GBP
