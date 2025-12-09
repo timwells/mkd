@@ -45,7 +45,6 @@
 </template>
 
 <script lang="ts" setup>
-
 import { ref } from 'vue'
 import CnnSentiment from './cards/CnnSentiment.vue'
 import MetalsSentiment from './cards/MetalsSentiment.vue'

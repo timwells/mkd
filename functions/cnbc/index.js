@@ -6,10 +6,7 @@ import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
 
-import { 
-  getHistoricalValuesImpl,
-  getHistoricalValuesImpl2 
-} from './cnbc-api.js'
+import { getHistoricalValuesImpl, getHistoricalValuesImpl2 } from './cnbc-api.js'
 
 const VERSION = 'cnbc-0.0.1'
 // Optional: Set defaults for all v2 functions in this file
@@ -36,6 +33,6 @@ app.get('/historical/values', async (req, res) => {
 
 app.get('/historical/values2', async (req, res) => {
   return res.status(200).json(await getHistoricalValuesImpl2(req, res))
-} )
+})
 
 export const cnbc = onRequest(app)

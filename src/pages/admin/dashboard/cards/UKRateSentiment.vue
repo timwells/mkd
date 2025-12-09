@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import LightweightChartCnbcMulti from '@/components/lw-charts/LightweightChartCnbcMulti.vue'
-const UKRateMarketTickers = ['UK2Y-GB','UK5Y-GB','UK10Y-GB','UK30Y-GB']
+const UKRateMarketTickers = ['UK2Y-GB', 'UK5Y-GB', 'UK10Y-GB', 'UK30Y-GB']
 </script>
 
 <style scoped></style>
