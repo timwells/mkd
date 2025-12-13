@@ -34,13 +34,22 @@
         </VaCardContent>
       </VaCard>
     </div>
+
+    <div v-if="value === 'GVIX'" class="tab-content" outlined>
+      <VaCard square outlined class="rounded-xl">
+        <VaCardContent no-padding style="height: 600px">
+          <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1iobf" height="600px" width="300%" frameborder="0" scrolling="no"></iframe>
+        </VaCardContent>
+      </VaCard>
+    </div>
+
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const tabs = ['Gold', 'Silver', 'ETFs']
+const tabs = ['Gold', 'Silver', 'ETFs', 'GVIX']
 const value = ref('Gold')
 
 import LightweightChartFTMulti from '@/components/lw-charts/LightweightChartFTMulti.vue'

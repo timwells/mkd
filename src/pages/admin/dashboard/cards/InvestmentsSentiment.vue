@@ -36,37 +36,32 @@ const myMapInvestmentMarketTickers = [
   'GB00BN090M98:GBP',
 ]
 
-const moneyInvestmentMarketTickers = [ 
-  "GB0007832602:GBP", 
-  "GB0007832487:GBP", 
-  "GB0007832826:GBP"
-]
+const moneyInvestmentMarketTickers = ['GB0007832602:GBP', 'GB0007832487:GBP', 'GB0007832826:GBP']
 
-const mgInvestmentMarketTickers = [ 
-  //"GB0007832826:GBP", 
-  //"GB00B9GRH067:GBX", 
-  //"GB00B935C537:GBP", 
-  "GB00B6QQDK47:GBP", 
-  "GB0030927700:GBP",
-  "DIVI:LSE",
+const mgInvestmentMarketTickers = [
+  //"GB0007832826:GBP",
+  //"GB00B9GRH067:GBX",
+  //"GB00B935C537:GBP",
+  'GB00B6QQDK47:GBP',
+  'GB0030927700:GBP',
+  'DIVI:LSE',
   //"GB00B18B9X76:GBP",
   //"IE00B3NS4D25:GBP"
   //'GB00B18B9X76:GBP',
   //'IE00B3NS4D25:GBP',
 ]
 
-const avivaInvestmentMarketTickers = [ 
-  //"GB0007832826:GBP", 
-  "GB00B9GRH067:GBX", 
-  "GB00B935C537:GBP", 
-  //"GB00B6QQDK47:GBP", 
+const avivaInvestmentMarketTickers = [
+  //"GB0007832826:GBP",
+  'GB00B9GRH067:GBX',
+  'GB00B935C537:GBP',
+  //"GB00B6QQDK47:GBP",
   //"GB0030927700:GBP",
   //"GB00B18B9X76:GBP",
   //"IE00B3NS4D25:GBP"
   //'GB00B18B9X76:GBP',
   //'IE00B3NS4D25:GBP',
 ]
-
 </script>
 
 <style scoped></style>
