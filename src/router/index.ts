@@ -37,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/views/MetalsPage.vue'),
       },
       {
+        name: 'cryptos',
+        path: 'cryptos',
+        component: () => import('../pages/views/CryptosPage.vue'),
+      },
+      {
         name: 'nt',
         path: 'nt',
         component: () => import('../pages/views/NtPage.vue'),

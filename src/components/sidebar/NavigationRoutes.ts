@@ -47,6 +47,13 @@ export default {
       },
     },
     {
+      name: 'cryptos',
+      displayName: 'menu.cryptos',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    {
       name: 'metals',
       displayName: 'menu.metals',
       meta: {
