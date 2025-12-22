@@ -54,13 +54,13 @@ export default {
       },
     },
     {
-      name: 'metals',
-      displayName: 'menu.metals',
+      name: 'testing',
+      displayName: 'menu.testing',
       meta: {
         icon: 'vuestic-iconset-dashboard',
       },
     },
-    /*  {
+    /*    {
       name: 'users',
       displayName: 'menu.users',
       meta: {
@@ -94,8 +94,9 @@ export default {
           displayName: 'menu.billing',
         },
       ],
-    },
-    {
+    },*/
+
+    /*{
       name: 'auth',
       displayName: 'menu.auth',
       meta: {
@@ -115,8 +116,8 @@ export default {
           displayName: 'menu.recover-password',
         },
       ],
-    },
-    {
+    },*/
+    /*{
       name: 'faq',
       displayName: 'menu.faq',
       meta: {

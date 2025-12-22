@@ -1,10 +1,16 @@
 <template>
   <VaForm ref="form" @submit.prevent="submit">
     <h1 class="font-semibold text-4xl mb-4">Log in</h1>
-    <p class="text-base mb-4 leading-5">
+
+    <!--p class="text-base mb-4 leading-5">
       New to Vuestic?
       <RouterLink :to="{ name: 'signup' }" class="font-semibold text-primary">Sign up</RouterLink>
-    </p>
+    </p-->
+
+    <VaAlert v-if="error" color="danger" class="mb-4" closeable @close="error = ''">
+      {{ error }}
+    </VaAlert>
+
     <VaInput
       v-model="formData.email"
       :rules="[validators.required, validators.email]"
@@ -33,37 +39,47 @@
 
     <div class="auth-layout__options flex flex-col sm:flex-row items-start sm:items-center justify-between">
       <VaCheckbox v-model="formData.keepLoggedIn" class="mb-2 sm:mb-0" label="Keep me signed in on this device" />
-      <RouterLink :to="{ name: 'recover-password' }" class="mt-2 sm:mt-0 sm:ml-1 font-semibold text-primary">
+      <!--RouterLink :to="{ name: 'recover-password' }" class="mt-2 sm:mt-0 sm:ml-1 font-semibold text-primary">
         Forgot password?
-      </RouterLink>
+      </RouterLink-->
     </div>
 
     <div class="flex justify-center mt-4">
-      <VaButton class="w-full" @click="submit"> Login</VaButton>
+      <VaButton class="w-full" @click="submit">Login</VaButton>
     </div>
   </VaForm>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useForm, useToast } from 'vuestic-ui'
+import { useForm } from 'vuestic-ui'
 import { validators } from '../../services/utils'
+import { useAuthStore } from '@/stores/auth'
 
 const { validate } = useForm('form')
 const { push } = useRouter()
-const { init } = useToast()
+const error = ref('')
 
 const formData = reactive({
   email: '',
   password: '',
-  keepLoggedIn: false,
+  keepLoggedIn: true,
 })
 
-const submit = () => {
+const authStore = useAuthStore()
+
+const submit = async () => {
   if (validate()) {
-    init({ message: "You've successfully logged in", color: 'success' })
-    push({ name: 'dashboard' })
+    error.value = ''
+    console.log('Logging in with', formData.email, formData.password, formData.keepLoggedIn)
+    try {
+      await authStore.signIn(formData.email, formData.password, formData.keepLoggedIn)
+      push({ name: 'dashboard' })
+    } catch (err: any) {
+      error.value = 'Login failed. Please check your credentials.'
+      // console.error('Login failed:', error.value)
+    }
   }
 }
 </script>

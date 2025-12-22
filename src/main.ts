@@ -7,12 +7,20 @@ import { createGtm } from '@gtm-support/vue-gtm'
 
 import stores from './stores'
 import router from './router'
+// import { useAuthStore } from '@/stores/auth'
 
 import vuesticGlobalConfig from './services/vuestic-ui/global-config'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 import 'vue3-easy-data-table/dist/style.css'
 
 const app = createApp(App)
+//if (import.meta.env.DEV) {
+app.config.warnHandler = () => null // Silences all Vue warnings
+//}
+
+// Initialize auth state listener globally
+// const authStore = useAuthStore()
+// authStore.initAuth()
 
 // --- Global components ---
 app.component('EasyDataTable', Vue3EasyDataTable)

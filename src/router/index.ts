@@ -4,6 +4,7 @@ import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
+import { useAuthStore } from '../stores/auth'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,31 +21,37 @@ const routes: Array<RouteRecordRaw> = [
         name: 'dashboard',
         path: 'dashboard',
         component: () => import('../pages/admin/dashboard/Dashboard.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'fed',
         path: 'fed',
         component: () => import('../pages/views/FedPage.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'funds',
         path: 'funds',
         component: () => import('../pages/views/FundsPage.vue'),
+        meta: { requiresAuth: true },
       },
       {
-        name: 'metals',
-        path: 'metals',
+        name: 'testing',
+        path: 'testing',
         component: () => import('../pages/views/MetalsPage.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'cryptos',
         path: 'cryptos',
         component: () => import('../pages/views/CryptosPage.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'nt',
         path: 'nt',
         component: () => import('../pages/views/NtPage.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'dd',
@@ -55,21 +62,25 @@ const routes: Array<RouteRecordRaw> = [
         name: 'settings',
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'preferences',
         path: 'preferences',
         component: () => import('../pages/preferences/Preferences.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'users',
         path: 'users',
         component: () => import('../pages/users/UsersPage.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'projects',
         path: 'projects',
         component: () => import('../pages/projects/ProjectsPage.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'payments',
@@ -80,16 +91,19 @@ const routes: Array<RouteRecordRaw> = [
             name: 'payment-methods',
             path: 'payment-methods',
             component: () => import('../pages/payments/PaymentsPage.vue'),
+            meta: { requiresAuth: true },
           },
           {
             name: 'billing',
             path: 'billing',
             component: () => import('../pages/billing/BillingPage.vue'),
+            meta: { requiresAuth: true },
           },
           {
             name: 'pricing-plans',
             path: 'pricing-plans',
             component: () => import('../pages/pricing-plans/PricingPlans.vue'),
+            meta: { requiresAuth: true },
           },
         ],
       },
@@ -97,6 +111,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'faq',
         path: '/faq',
         component: () => import('../pages/faq/FaqPage.vue'),
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -125,6 +140,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/auth/CheckTheEmail.vue'),
       },
       {
+        name: 'logout',
+        path: 'logout',
+        component: () => import('../pages/auth/Logout.vue'),
+      },
+      {
         path: '',
         redirect: { name: 'login' },
       },
@@ -151,6 +171,26 @@ const router = createRouter({
     }
   },
   routes,
+})
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  const isAuthenticated = authStore.isAuthenticated
+
+  console.log('Navigation guard: requiresAuth=', requiresAuth, ' isAuthenticated=', isAuthenticated, ' to=', to.name)
+
+  if (to.name === 'login' && isAuthenticated) {
+    console.log('Already authenticated, redirecting to dashboard')
+    next({ name: 'dashboard' })
+    return
+  }
+
+  if (requiresAuth && !isAuthenticated) {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
 })
 
 export default router
