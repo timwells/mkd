@@ -7,7 +7,7 @@ export interface INavigationRoute {
 
 export default {
   root: {
-    name: '/dashboard',
+    name: '/',
     displayName: 'navigationRoutes.home',
   },
   routes: [
