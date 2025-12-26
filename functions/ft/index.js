@@ -6,9 +6,14 @@ import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
 
-import { myMapFunds, getHistoricalSeries, lookUpSymbol, lookUpSymbol2 } from './ft-api.js'
+import { 
+  getHistoricalSeries, 
+  getHistoricalSeries2, 
+  lookUpSymbol, 
+  lookUpSymbol2 
+} from './ft-api.js'
 
-const VERSION = 'ft-0.0.1'
+const VERSION = 'ft-0.0.2'
 // Optional: Set defaults for all v2 functions in this file
 setGlobalOptions({
   region: 'us-central1',
@@ -27,13 +32,19 @@ app.use(express.json())
 
 app.get('/version', async (req, res) => res.send(VERSION))
 
-app.get('/mymapfunds', async (req, res) => {
-  return res.status(200).json(await myMapFunds())
-})
+//app.get('/mymapfunds', async (req, res) => {
+//  return res.status(200).json(await myMapFunds())
+//})
 
 app.get('/historical/series', async (req, res) => {
   const { ticker } = req.query
   return res.status(200).json(await getHistoricalSeries(ticker))
+})
+
+app.get('/historical/series2', async (req, res) => {
+  const { ticker, mas } = req.query
+
+  return res.status(200).json(await getHistoricalSeries2(ticker, mas))
 })
 
 app.get('/lookup/symbol', async (req, res) => {

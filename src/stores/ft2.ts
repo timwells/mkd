@@ -1,26 +1,28 @@
-/*
-{
-  "name": "VanEck Rare Earth and Strategic Metals UCITS ETF A USD Acc",
-  "ticker": "REGB:LSE:GBP",
-  "data": [
-      {
-          "time": "2021-09-29",
-          "value": 13.709
-      }
-    ]
-}
-*/
-
 import { defineStore } from 'pinia'
+
+interface DataPoint {
+  time: string
+  value: number
+}
 
 interface DataItem {
   name: string
   ticker: string
-  data: any[]
+  data: DataPoint[]
+  MA50?: {
+    data: DataPoint[]
+  }
+  MA100?: {
+    data: DataPoint[]
+  }
+  MA200?: {
+    data: DataPoint[]
+  }
 }
 
 const GFC = import.meta.env.VITE_GCF_URL
 const API_KEY = import.meta.env.VITE_API_KEY
+
 const TTL_MS = 12 * 60 * 60 * 1000 // 12 hours
 
 interface CacheEntry {
@@ -28,13 +30,12 @@ interface CacheEntry {
   item: DataItem
 }
 
-export const useFtStore = defineStore('ft', {
+export const useFt2Store = defineStore('ft2', {
   state: () => ({
-    data: [] as DataItem[],
     loading: false,
     error: null as string | null,
 
-    // --- In-memory cache only ---
+    // Only store ONE dataset -> the cache
     cache: {} as Record<string, CacheEntry>,
   }),
 
@@ -44,7 +45,7 @@ export const useFtStore = defineStore('ft', {
     getByTicker:
       (state) =>
       (ticker: string): DataItem | undefined =>
-        state.data.find((item) => item.ticker === ticker),
+        state.cache[ticker]?.item,
   },
 
   actions: {
@@ -52,44 +53,34 @@ export const useFtStore = defineStore('ft', {
       this.loading = true
       this.error = null
 
-      // --- IN-MEMORY CACHE CHECK ---
-      const cached = this.cache[ticker]
       const now = Date.now()
+      const cached = this.cache[ticker]
 
+      // ✔ Cache hit
       if (cached && now - cached.timestamp < TTL_MS) {
-        // Cache hit → ensure it's in `state.data`
-        const index = this.data.findIndex((i) => i.ticker === ticker)
-        if (index === -1) {
-          this.data.push(cached.item)
-        }
         this.loading = false
         return
       }
 
-      // --- FETCH FROM API ---
+      // ✔ Fetch from API
       try {
-        const response = await fetch(`${GFC}/ft/historical/series?ticker=${ticker}`, {
+        // exchange=LSE&symbol=RNWH&precision=Day&period=Max
+        const response = await fetch(`${GFC}/ft/historical/series2?ticker=${ticker}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
         })
 
         if (!response.ok) throw new Error(`Failed to fetch: ${ticker}`)
 
-        const data: DataItem = await response.json()
+        const item: DataItem = await response.json()
 
-        // Update state
-        const index = this.data.findIndex((item) => item.ticker === ticker)
-        if (index !== -1) {
-          this.data[index] = data
-        } else {
-          this.data.push(data)
-        }
-
-        // Update in-memory cache
+        // ✔ Update cache only (no dup licate elsewhere)
         this.cache[ticker] = {
           timestamp: now,
-          item: data,
+          item,
         }
+
+        // console.log(this.cache[ticker])
       } catch (err: any) {
         this.error = err.message || 'Unknown error'
       } finally {

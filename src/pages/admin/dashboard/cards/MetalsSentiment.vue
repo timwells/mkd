@@ -12,7 +12,7 @@
       <VaCard square outlined class="rounded-xl">
         <VaCardTitle>Gold</VaCardTitle>
         <VaCardContent no-padding style="height: 600px">
-          <LightweightChartFTMulti :tickers="goldTickers" type="line" />
+          <LightweightChartFTMultiMA :tickers="goldTickers" type="line" />
         </VaCardContent>
       </VaCard>
     </div>
@@ -21,7 +21,7 @@
       <VaCard square outlined class="rounded-xl">
         <VaCardTitle>Silver</VaCardTitle>
         <VaCardContent no-padding style="height: 600px">
-          <LightweightChartFTMulti :tickers="silverTickers" type="line" />
+          <LightweightChartFTMultiMA :tickers="silverTickers" type="line" />
         </VaCardContent>
       </VaCard>
     </div>
@@ -30,7 +30,7 @@
       <VaCard square outlined class="rounded-xl">
         <VaCardTitle>ETFs</VaCardTitle>
         <VaCardContent no-padding style="height: 600px">
-          <LightweightChartFTMulti :tickers="metalsEtfTickers" type="line" />
+          <LightweightChartFTMultiMA :tickers="metalsEtfTickers" type="line" />
         </VaCardContent>
       </VaCard>
     </div>
@@ -53,14 +53,20 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+// import LightweightChartFTMulti from '@/components/lw-charts/LightweightChartFTMulti.vue'
+import LightweightChartFTMultiMA from '@/components/lw-charts/LightweightChartFTMultiMA.vue'
 
 const tabs = ['Gold', 'Silver', 'ETFs', 'GVIX']
 const value = ref('Gold')
-
-import LightweightChartFTMulti from '@/components/lw-charts/LightweightChartFTMulti.vue'
-const metalsEtfTickers = ['REGB:LSE:GBP', 'GJGB:LSE:GBP', 'URNG:LSE:GBP', 'NUCG:LSE:GBP', 'GDGB:LSE:GBP']
-const goldTickers = ['GC.1:CMX']
-const silverTickers = ['US@SI.1:CMX']
+const metalsEtfTickers = [
+  'REGB:LSE:GBP&mas=50,100,200', 
+  'GJGB:LSE:GBP&mas=50,100,200', 
+  'URNG:LSE:GBP&mas=50,100,200', 
+  'NUCG:LSE:GBP&mas=50,100,200', 
+  'GDGB:LSE:GBP&mas=50,100,200'
+]
+const goldTickers = ['GC.1:CMX&mas=50,100,200']
+const silverTickers = ['US@SI.1:CMX&mas=50,100,200']
 </script>
 
 <style scoped>
