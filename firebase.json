@@ -14,6 +14,11 @@
   ],
   "functions": [
     {
+      "source": "functions/pb",
+      "codebase": "pb",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    },
+    {
       "source": "functions/cnbc",
       "codebase": "cnbc",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
