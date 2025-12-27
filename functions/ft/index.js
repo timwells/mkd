@@ -6,12 +6,7 @@ import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
 
-import { 
-  getHistoricalSeries, 
-  getHistoricalSeries2, 
-  lookUpSymbol, 
-  lookUpSymbol2 
-} from './ft-api.js'
+import { getHistoricalSeries, getHistoricalSeries2, lookUpSymbol, lookUpSymbol2 } from './ft-api.js'
 
 const VERSION = 'ft-0.0.2'
 // Optional: Set defaults for all v2 functions in this file

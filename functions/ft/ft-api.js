@@ -13,8 +13,9 @@ const alignSMA = (series, smaValues, period) => {
 
 export const getHistoricalSeries2 = async (ticker, mas) => {
   // Parse requested MAs: "50,100,200" → ['MA50', 'MA100', 'MA200']
-  console.log('Requested Ticker, MAs:', ticker,mas)
-  let requestedMAs = mas ? mas
+  console.log('Requested Ticker, MAs:', ticker, mas)
+  let requestedMAs = mas
+    ? mas
         .split(',')
         .map((s) => s.trim())
         .filter(Boolean)
@@ -35,7 +36,7 @@ export const getHistoricalSeries2 = async (ticker, mas) => {
       const period = Number(match[1])
       if (period < 2 || period > result.data.length) continue
 
-      const smaValues = SMA.calculate({ period, values: result.data.map(d => d.value) })
+      const smaValues = SMA.calculate({ period, values: result.data.map((d) => d.value) })
       if (smaValues.length === 0) continue
 
       result[maKey] = {
@@ -75,10 +76,10 @@ export const getHistoricalSeries = async (ticker) => {
           value: data.Elements[0].ComponentSeries[data.Elements[0].ComponentSeries.length - 1].Values[i],
         })
       }
-      dataObj = { 
-        name: data.Elements[0].CompanyName, 
-        ticker: ticker, 
-        data: dv 
+      dataObj = {
+        name: data.Elements[0].CompanyName,
+        ticker: ticker,
+        data: dv,
       }
       return dataObj
     } catch (e) {

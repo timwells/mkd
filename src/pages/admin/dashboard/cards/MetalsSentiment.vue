@@ -59,11 +59,11 @@ import LightweightChartFTMultiMA from '@/components/lw-charts/LightweightChartFT
 const tabs = ['Gold', 'Silver', 'ETFs', 'GVIX']
 const value = ref('Gold')
 const metalsEtfTickers = [
-  'REGB:LSE:GBP&mas=50,100,200', 
-  'GJGB:LSE:GBP&mas=50,100,200', 
-  'URNG:LSE:GBP&mas=50,100,200', 
-  'NUCG:LSE:GBP&mas=50,100,200', 
-  'GDGB:LSE:GBP&mas=50,100,200'
+  'REGB:LSE:GBP&mas=50,100,200',
+  'GJGB:LSE:GBP&mas=50,100,200',
+  'URNG:LSE:GBP&mas=50,100,200',
+  'NUCG:LSE:GBP&mas=50,100,200',
+  'GDGB:LSE:GBP&mas=50,100,200',
 ]
 const goldTickers = ['GC.1:CMX&mas=50,100,200']
 const silverTickers = ['US@SI.1:CMX&mas=50,100,200']

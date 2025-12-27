@@ -11,9 +11,16 @@
 
     <!-- Tab Content -->
     <VaCard v-if="value === 'One'" class="tab-content" outlined>
-      <VaCardTitle>Tab One Content</VaCardTitle>
+      <VaCardTitle>Sahm Rule</VaCardTitle>
       <VaCardContent>
-        <p>This is example content for Tab One.</p>
+        <iframe
+          src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1Pede&width=670&height=475"
+          scrolling="no"
+          frameborder="0"
+          style="overflow: hidden; width: 2600px; height: 600px"
+          allowTransparency="true"
+          loading="lazy"
+        ></iframe>
       </VaCardContent>
     </VaCard>
 

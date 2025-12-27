@@ -39,9 +39,9 @@ const myMapInvestmentMarketTickers = [
 ]
 
 const moneyInvestmentMarketTickers = [
-  'GB0007832602:GBP&mas=50,100,200', 
-  'GB0007832487:GBP&mas=50,100,200', 
-  'GB0007832826:GBP&mas=50,100,200'
+  'GB0007832602:GBP&mas=50,100,200',
+  'GB0007832487:GBP&mas=50,100,200',
+  'GB0007832826:GBP&mas=50,100,200',
 ]
 
 const mgInvestmentMarketTickers = [
