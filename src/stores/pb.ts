@@ -5,25 +5,6 @@ const GFC = import.meta.env.VITE_GCF_URL
 const API_KEY = import.meta.env.VITE_API_KEY
 const REQ_AGE_THRESHOLD = 12 * 60 * 60 * 1000 // 12 hours
 
-const d = [
-  {
-    name: 'xx',
-    holder: '47199237Q',
-    results: [
-      {
-        prize: '25',
-        bond_number: '117WZ078459',
-        date: 'December 2025',
-      },
-      {
-        date: 'December 2025',
-        bond_number: '117WZ073756',
-        prize: '50',
-      },
-    ],
-  },
-]
-
 export const usePbStore = defineStore('pb', {
   state: () => ({
     data: [],
