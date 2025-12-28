@@ -10,7 +10,7 @@
     <div class="tab-content" outlined>
       <section class="flex flex-col gap-4">
         <div class="flex flex-col sm:flex-row gap-4">
-          <div class="w-full sm:w-[20%]" >
+          <div class="w-full sm:w-[20%]">
             <VaCard square outlined class="rounded-xl">
               <VaCardTitle>
                 <h1 class="card-title text-tag text-secondary font-bold uppercase">This Month Winnings</h1>
@@ -20,17 +20,29 @@
                   <VaIcon name="mso-attach_money" color="#fff" size="large" />
                 </div>
                 <section>
-                  <div class="text-xl font-bold mb-2">£ {{ currentTabData?.currentMonthWins }}
-                    <span :class="['text-xs', {
-                      'text-success': currentTabData?.percentageChangeFromLastMonthDirection > 0,
-                      'text-info': currentTabData?.percentageChangeFromLastMonthDirection === 0,
-                      'text-danger': currentTabData?.percentageChangeFromLastMonthDirection < 0,
-                      }]">
-                      <VaIcon :name="currentTabData?.percentageChangeFromLastMonthDirection > 0 ? 
-                        'arrow_upward' : currentTabData?.percentageChangeFromLastMonthDirection === 0 ? 
-                        'arrow_outward' : 
-                        'arrow_downward'" />
-                      {{ currentTabData?.percentageChangeFromLastMonth }} %</span>  
+                  <div class="text-xl font-bold mb-2">
+                    £ {{ currentTabData?.currentMonthWins }}
+                    <span
+                      :class="[
+                        'text-xs',
+                        {
+                          'text-success': currentTabData?.percentageChangeFromLastMonthDirection > 0,
+                          'text-info': currentTabData?.percentageChangeFromLastMonthDirection === 0,
+                          'text-danger': currentTabData?.percentageChangeFromLastMonthDirection < 0,
+                        },
+                      ]"
+                    >
+                      <VaIcon
+                        :name="
+                          currentTabData?.percentageChangeFromLastMonthDirection > 0
+                            ? 'arrow_upward'
+                            : currentTabData?.percentageChangeFromLastMonthDirection === 0
+                              ? 'arrow_outward'
+                              : 'arrow_downward'
+                        "
+                      />
+                      {{ currentTabData?.percentageChangeFromLastMonth }} %</span
+                    >
                   </div>
                 </section>
                 <div class="w-full flex items-center"></div>
@@ -46,11 +58,6 @@
                 </div>
                 <section>
                   <div class="text-xl font-bold mb-2">£ {{ currentTabData?.lastMonthWins }}</div>
-                  <!--p class="text-xs text-success">
-                    <VaIcon name="arrow_upward" />
-                    25.36%
-                    <span class="text-secondary"> current month</span>
-                  </p-->
                 </section>
                 <div class="w-full flex items-center"></div>
               </VaCardContent>
@@ -66,14 +73,8 @@
                 </div>
                 <section>
                   <div class="text-xl font-bold mb-2">£ {{ currentTabData?.lastSixMonthWins }}</div>
-                  <!-- p class="text-xs text-success">
-                    <VaIcon name="arrow_upward" />
-                    25.36%
-                    <span class="text-secondary"> last month</span>
-                  </p-->
                 </section>
-                <div class="w-full flex items-center">
-                </div>
+                <div class="w-full flex items-center"></div>
               </VaCardContent>
             </VaCard>
           </div>
@@ -81,16 +82,17 @@
           <!-- data table-->
           <div class="flex flex-col gap-4 w-full sm:w-[80%]">
             <VaCard square outlined class="rounded-xl">
-              <EasyDataTable 
-                :headers="headers" 
-                :items="currentTabData?.prizes ?? []" 
-                alternating 
-                :loading="store.loading"/>
+              <EasyDataTable
+                :headers="headers"
+                :items="currentTabData?.prizes ?? []"
+                alternating
+                :loading="store.loading"
+              />
             </VaCard>
           </div>
         </div>
       </section>
-    </div> 
+    </div>
   </div>
 </template>
 
@@ -111,7 +113,12 @@ const headers: Header[] = [
 
 // Define the shape of your data
 interface PremiumBondsResponse {
-  results: Array<{
+  lastSixMonthWins: number
+  currentMonthWins: number
+  lastMonthWins: number
+  percentageChangeFromLastMonth: number
+  percentageChangeFromLastMonthDirection: number
+  prizes: Array<{
     prize: number
     bond: string
     shortDate: string
@@ -120,7 +127,7 @@ interface PremiumBondsResponse {
 
 const currentTabData = computed(
   () => store.data[store.getHolderNames.indexOf(value.value)] ?? null,
-) as any as PremiumBondsResponse | null
+) as any as PremiumBondsResponse
 
 store.getResults(PREMIUM_BOND_HOLDERS)
 </script>

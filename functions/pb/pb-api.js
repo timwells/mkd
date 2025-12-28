@@ -26,7 +26,7 @@ const lookUpResults = async (url, nh) => {
     const lastSixMonth = await axios.post(url, fD2)
     let results = []
     thisMonth.data.history.forEach((e) => {
-      if (e.prize !== '0') { 
+      if (e.prize !== '0') {
         e.currentMonth = true
         results.push(e)
       }
@@ -59,42 +59,40 @@ const processResultsRequest = async (url, holders) => {
       let results = await lookUpResults(url, nh)
 
       // Pre-parse prizes to numbers if possible (optional, for overall performance if results is large)
-      const prizes = results.map(item => ({
-        prize: parseInt(item.prize, 10) || 0,  // Safe parse, default to 0 if invalid
+      const prizes = results.map((item) => ({
+        prize: parseInt(item.prize, 10) || 0, // Safe parse, default to 0 if invalid
         bond: item.bond_number,
         date: moment(item.date),
         shortDate: moment(item.date).format('MMM-YYYY'),
-        isCurrentMonth: item.currentMonth === true  // Normalize boolean
-      }));
+        isCurrentMonth: item.currentMonth === true, // Normalize boolean
+      }))
 
       // Current month wins (using the pre-computed flag for simplicity and speed)
-      const currentMonthWins = prizes
-        .filter(item => item.isCurrentMonth)
-        .reduce((acc, item) => acc + item.prize, 0);
+      const currentMonthWins = prizes.filter((item) => item.isCurrentMonth).reduce((acc, item) => acc + item.prize, 0)
 
       // Last month wins – using pre-computed start/end for efficiency
-      const now = moment();
-      const startOfLastMonth = now.clone().subtract(1, 'month').startOf('month');
-      const endOfLastMonth = now.clone().subtract(1, 'month').endOf('month');
+      const now = moment()
+      const startOfLastMonth = now.clone().subtract(1, 'month').startOf('month')
+      const endOfLastMonth = now.clone().subtract(1, 'month').endOf('month')
 
       const lastMonthWins = prizes
-        .filter(item => item.date.isBetween(startOfLastMonth, endOfLastMonth, null, '[]'))
-        .reduce((acc, item) => acc + item.prize, 0);
+        .filter((item) => item.date.isBetween(startOfLastMonth, endOfLastMonth, null, '[]'))
+        .reduce((acc, item) => acc + item.prize, 0)
 
       // Assuming "last six month wins" means total wins in the results array (as in original code)
       // If you truly need exactly the last 6 calendar months, adjust the filter accordingly
-      const lastSixMonthWins = prizes.reduce((acc, item) => acc + item.prize, 0);
+      const lastSixMonthWins = prizes.reduce((acc, item) => acc + item.prize, 0)
 
       // Safe percentage change calculation
-      let percentageChangeFromLastMonth = 0;
+      let percentageChangeFromLastMonth = 0
       if (lastMonthWins !== 0) {
-        percentageChangeFromLastMonth = 100 * (currentMonthWins - lastMonthWins) / lastMonthWins;
+        percentageChangeFromLastMonth = (100 * (currentMonthWins - lastMonthWins)) / lastMonthWins
       }
       // Optional: round to 2 decimals
-      percentageChangeFromLastMonth = Math.round(percentageChangeFromLastMonth * 100) / 100;
+      percentageChangeFromLastMonth = Math.round(percentageChangeFromLastMonth * 100) / 100
 
       // Direction indicator (-1 down, 0 no change/zero base, +1 up)
-      const percentageChangeFromLastMonthDirection = lastMonthWins === 0 ? 0 : (currentMonthWins > lastMonthWins ? 1 : -1);
+      const percentageChangeFromLastMonthDirection = lastMonthWins === 0 ? 0 : currentMonthWins > lastMonthWins ? 1 : -1
 
       aggregateResults.push({
         name: nh.name,
@@ -104,8 +102,8 @@ const processResultsRequest = async (url, holders) => {
         lastSixMonthWins: lastSixMonthWins,
         percentageChangeFromLastMonth: percentageChangeFromLastMonth,
         percentageChangeFromLastMonthDirection: percentageChangeFromLastMonthDirection,
-        prizes: prizes
-      })                
+        prizes: prizes,
+      })
     }
 
     return aggregateResults
