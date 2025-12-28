@@ -28,9 +28,9 @@ app.use(express.json())
 app.get('/version', async (req, res) => res.send(VERSION))
 
 app.get('/results', async (req, res) => {
-    const { holders } = req.query;
-    let results = await prizeResults(holders)
-    return res.status(200).json(results)
-});
+  const { holders } = req.query
+  let results = await prizeResults(holders)
+  return res.status(200).json(results)
+})
 
 export const pb = onRequest(app)

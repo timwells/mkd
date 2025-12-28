@@ -48,6 +48,12 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
       },
       {
+        name: 'premium-bonds',
+        path: 'premium-bonds',
+        component: () => import('../pages/views/PremiumBondsPage.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         name: 'nt',
         path: 'nt',
         component: () => import('../pages/views/NtPage.vue'),

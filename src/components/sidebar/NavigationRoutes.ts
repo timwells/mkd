@@ -54,6 +54,13 @@ export default {
       },
     },
     {
+      name: 'premium-bonds',
+      displayName: 'menu.premium-bonds',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    {
       name: 'testing',
       displayName: 'menu.testing',
       meta: {
