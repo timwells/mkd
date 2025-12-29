@@ -13,8 +13,6 @@ export const usePbStore = defineStore('pb', {
     nextReq: 0.0 as number,
   }),
 
-  // [{"name": "na"}, {"name": "nb"}, {"name": "nc"}, {"name": "nd"}],
-
   getters: {
     isLoading(state): boolean {
       return state.loading

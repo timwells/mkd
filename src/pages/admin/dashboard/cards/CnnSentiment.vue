@@ -21,6 +21,19 @@
       </VaCardContent>
     </VaCard>
   </div>
+  <div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
+    <VaCard square outlined class="rounded-xl">
+      <VaCardContent>
+        <iframe
+          src="https://studioalpha.substack.com/p/2026-is-not-about-ai-its-about-liquidity"
+          height="600px"
+          width="100%"
+          frameborder="0"
+          scrolling="no"
+        ></iframe>
+      </VaCardContent>
+    </VaCard>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -159,7 +172,7 @@ const ORANGE = '#ffcc00'
 const fgOptions = computed(() =>
   buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'SP500: Fear & Greed Index'),
 )
-const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX Index'))
+const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX: Index'))
 
 const sp500Options = computed(() =>
   buildChartOptions2(

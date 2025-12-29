@@ -54,6 +54,12 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
       },
       {
+        name: 't212',
+        path: 't212',
+        component: () => import('../pages/views/T212Page.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         name: 'nt',
         path: 'nt',
         component: () => import('../pages/views/NtPage.vue'),

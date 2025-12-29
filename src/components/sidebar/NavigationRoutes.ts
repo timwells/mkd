@@ -61,6 +61,13 @@ export default {
       },
     },
     {
+      name: 't212',
+      displayName: 'menu.t212',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    {
       name: 'testing',
       displayName: 'menu.testing',
       meta: {
