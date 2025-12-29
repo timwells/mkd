@@ -19,14 +19,14 @@ export const useT212Store = defineStore('t212', {
     async getOpenOrders(): Promise<void> {
       this.error = null
       this.loading = true
-      
+
       try {
         const response = await fetch(`${GFC}/t212/equity/orders`, {
           method: 'GET',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
-            'x-api-key': API_KEY, 
-            'x-t212-key': T212_KEY 
+            'x-api-key': API_KEY,
+            'x-t212-key': T212_KEY,
           },
         })
 
@@ -34,22 +34,22 @@ export const useT212Store = defineStore('t212', {
         this.openOrders = await response.json()
         this.loading = false
       } catch (err: any) {
-          this.error = err.message || 'Unknown error'
+        this.error = err.message || 'Unknown error'
       } finally {
-          this.loading = false
+        this.loading = false
       }
     },
     async getOpenOrders2(): Promise<void> {
       this.error = null
       this.loading = true
-      
+
       try {
         const response = await fetch(`${GFC}/t212/equity/orders2`, {
           method: 'GET',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
-            'x-api-key': API_KEY, 
-            'x-t212-key': T212_KEY 
+            'x-api-key': API_KEY,
+            'x-t212-key': T212_KEY,
           },
         })
 
@@ -57,9 +57,9 @@ export const useT212Store = defineStore('t212', {
         this.openOrders2 = await response.json()
         this.loading = false
       } catch (err: any) {
-          this.error = err.message || 'Unknown error'
+        this.error = err.message || 'Unknown error'
       } finally {
-          this.loading = false
+        this.loading = false
       }
     },
   },

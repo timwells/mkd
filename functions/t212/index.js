@@ -5,10 +5,7 @@ import express from 'express'
 import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
-import { 
-  OpenOrders, 
-  OpenOrders2 
-} from './t212-api.js'
+import { OpenOrders, OpenOrders2 } from './t212-api.js'
 
 const VERSION = 't212-0.0.1'
 // Optional: Set defaults for all v2 functions in this file
@@ -30,16 +27,20 @@ app.get('/version', async (req, res) => res.send(VERSION))
 
 app.get('/equity/orders', async (req, res) => {
   const t212Key = req.headers['x-t212-key'] || null
-  if(!t212Key) { return res.status(400).json({ error: 'Missing x-t212-key header' })}
-  
-  return res.status(200).json(await OpenOrders(t212Key))  
+  if (!t212Key) {
+    return res.status(400).json({ error: 'Missing x-t212-key header' })
+  }
+
+  return res.status(200).json(await OpenOrders(t212Key))
 })
 
 app.get('/equity/orders2', async (req, res) => {
   const t212Key = req.headers['x-t212-key'] || null
-  if(!t212Key) { return res.status(400).json({ error: 'Missing x-t212-key header' })}
-  
-  return res.status(200).json(await OpenOrders2(t212Key))  
+  if (!t212Key) {
+    return res.status(400).json({ error: 'Missing x-t212-key header' })
+  }
+
+  return res.status(200).json(await OpenOrders2(t212Key))
 })
 
 export const t212 = onRequest(app)
