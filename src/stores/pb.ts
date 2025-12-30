@@ -4,10 +4,26 @@ import moment from 'moment'
 const GFC = import.meta.env.VITE_GCF_URL
 const API_KEY = import.meta.env.VITE_API_KEY
 const REQ_AGE_THRESHOLD = 12 * 60 * 60 * 1000 // 12 hours
+export interface PremiumBondHolderResults {
+  lastSixMonthWins: number
+  currentMonthWins: number
+  lastMonthWins: number
+  percentageChangeFromLastMonth: number
+  percentageChangeFromLastMonthDirection: number
+  prizes: Array<{
+    prize: number
+    bond: string
+    shortDate: string
+  }>
+}
+export interface PremiumBondsNextDrawDate {
+  text: string
+}
 
 export const usePbStore = defineStore('pb', {
   state: () => ({
-    data: [],
+    results: [] as PremiumBondHolderResults[],
+    nextDrawDate: null as PremiumBondsNextDrawDate | null,
     loading: false,
     error: null as string | null,
     nextReq: 0.0 as number,
@@ -20,16 +36,31 @@ export const usePbStore = defineStore('pb', {
     getError(state): string | null {
       return state.error
     },
-    getData(state): any[] {
-      return state.data
+    getResults(state): any[] {
+      return state.results
     },
     getHolderNames(state): any[] {
-      return state.data.map((holder: any) => holder.name)
+      return state.results.map((holder: any) => holder.name)
     },
   },
 
   actions: {
-    async getResults(holders: string): Promise<void> {
+    async getNextDrawDate(): Promise<void> {
+      try {
+        const response = await fetch(`${GFC}/pb/nextdraw`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        })
+
+        if (!response.ok) throw new Error('Failed to fetch items')
+        this.nextDrawDate = (await response.json()) as PremiumBondsNextDrawDate
+      } catch (err: any) {
+        this.error = err.message || 'Unknown error'
+      } finally {
+        this.loading = false
+      }
+    },
+    async getAllResults(holders: string): Promise<void> {
       const now = moment().valueOf()
       if (this.nextReq === 0.0 || now >= this.nextReq) {
         this.nextReq = moment().add(REQ_AGE_THRESHOLD, 'minutes').valueOf()
@@ -44,7 +75,7 @@ export const usePbStore = defineStore('pb', {
           })
 
           if (!response.ok) throw new Error('Failed to fetch items')
-          this.data = await response.json()
+          this.results = (await response.json()) as PremiumBondHolderResults[]
           this.loading = false
         } catch (err: any) {
           this.error = err.message || 'Unknown error'

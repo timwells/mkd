@@ -39,7 +39,7 @@ export const OpenOrders2 = async (t212Key) => {
       })
     }
 
-    order.createdAt = order.createdAt.split("T")[0]; // keep only date part
+    order.createdAt = order.createdAt.split('T')[0] // keep only date part
     // reduce object noise
     delete order.id
     delete order.extendedHours

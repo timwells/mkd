@@ -3,9 +3,10 @@
     <!-- Tabs -->
     <VaTabs v-model="value" class="tabs-left">
       <template #tabs>
-        <VaTab v-for="tab in store.getHolderNames" :key="tab" :name="tab">{{ tab }}</VaTab>
+        <VaTab v-for="tab in getHolderNames" :key="tab" :name="tab">{{ tab }}</VaTab>
       </template>
     </VaTabs>
+    <h2 class="text-xl font-semibold">{{ nextDrawDate2?.text || 'No draw date available' }}</h2>
     <!-- Tab Content -->
     <div class="tab-content" outlined>
       <section class="flex flex-col gap-4">
@@ -86,7 +87,7 @@
                 :headers="headers"
                 :items="currentTabData?.prizes ?? []"
                 alternating
-                :loading="store.loading"
+                :loading="isLoading"
               />
             </VaCard>
           </div>
@@ -97,13 +98,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Header } from 'vue3-easy-data-table'
+import { ref, onMounted, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { usePbStore } from '@/stores/pb'
+import { Header } from 'vue3-easy-data-table'
+
+import type { PremiumBondHolderResults, PremiumBondsNextDrawDate } from '@/stores/pb'
+
 const PREMIUM_BOND_HOLDERS = import.meta.env.VITE_PREMIUM_BOND_HOLDERS
 
-const store = usePbStore()
-const value = ref(store.getHolderNames[0] || 'Tim')
+const pbStore = usePbStore()
+
+// Reactive refs from the store (recommended pattern)
+const { isLoading, getHolderNames } = storeToRefs(pbStore)
+
+const value = ref(pbStore.getHolderNames[0] || 'Tim')
 
 const headers: Header[] = [
   { text: 'Prize', value: 'prize' },
@@ -111,25 +120,16 @@ const headers: Header[] = [
   { text: 'Date', value: 'shortDate' },
 ]
 
-// Define the shape of your data
-interface PremiumBondsResponse {
-  lastSixMonthWins: number
-  currentMonthWins: number
-  lastMonthWins: number
-  percentageChangeFromLastMonth: number
-  percentageChangeFromLastMonthDirection: number
-  prizes: Array<{
-    prize: number
-    bond: string
-    shortDate: string
-  }>
-}
-
 const currentTabData = computed(
-  () => store.data[store.getHolderNames.indexOf(value.value)] ?? null,
-) as any as PremiumBondsResponse
+  () => pbStore.results[pbStore.getHolderNames.indexOf(value.value)] ?? null,
+) as any as PremiumBondHolderResults
 
-store.getResults(PREMIUM_BOND_HOLDERS)
+const nextDrawDate2 = computed(() => pbStore.nextDrawDate) as any as PremiumBondsNextDrawDate
+
+onMounted(() => {
+  pbStore.getNextDrawDate()
+  pbStore.getAllResults(PREMIUM_BOND_HOLDERS)
+})
 </script>
 
 <style scoped>
