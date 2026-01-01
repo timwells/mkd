@@ -6,7 +6,7 @@ import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
 
-import { prizeResults, nextPrizeDrawDate } from './pb-api.js'
+import { prizeResults, nextPrizeDrawDate, winners } from './pb-api.js'
 
 const VERSION = 'pb-0.0.2'
 // Optional: Set defaults for all v2 functions in this file
@@ -35,6 +35,10 @@ app.get('/results', async (req, res) => {
 
 app.get('/nextdraw', async (req, res) => {
   return res.status(200).json({ text: await nextPrizeDrawDate() })
+})
+
+app.get('/winners', async (req, res) => {
+  return res.status(200).json(await winners())
 })
 
 export const pb = onRequest(app)

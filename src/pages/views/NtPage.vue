@@ -1,5 +1,12 @@
 <template>
-  <EasyDataTable :headers="headers" :items="items" alternating :loading="store.loading">
+  <EasyDataTable
+    :headers="headers"
+    :items="items"
+    alternating
+    :loading="store.loading"
+    :rows-per-page="5000"
+    pagination="false"
+  >
     <template #expand="item">
       <div style="padding: 15px">
         <VaCard class="rounded-xl">

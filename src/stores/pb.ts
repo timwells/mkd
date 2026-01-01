@@ -20,10 +20,22 @@ export interface PremiumBondsNextDrawDate {
   text: string
 }
 
+export interface PremiumBondNationalWinners {
+  period: string
+  winners: Array<{
+    prize: number
+    bondNumber: string
+    holdings: number
+    area: string
+    purchaseDate: string
+  }>
+}
+
 export const usePbStore = defineStore('pb', {
   state: () => ({
     results: [] as PremiumBondHolderResults[],
     nextDrawDate: null as PremiumBondsNextDrawDate | null,
+    nationalWinners: null as PremiumBondNationalWinners | null,
     loading: false,
     error: null as string | null,
     nextReq: 0.0 as number,
@@ -82,6 +94,22 @@ export const usePbStore = defineStore('pb', {
         } finally {
           this.loading = false
         }
+      }
+    },
+
+    async getNationalWinners(): Promise<void> {
+      try {
+        const response = await fetch(`${GFC}/pb/winners`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
+        })
+
+        if (!response.ok) throw new Error('Failed to fetch items')
+        this.nationalWinners = (await response.json()) as PremiumBondNationalWinners
+      } catch (err: any) {
+        this.error = err.message || 'Unknown error'
+      } finally {
+        this.loading = false
       }
     },
   },

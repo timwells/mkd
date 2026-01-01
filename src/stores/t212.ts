@@ -62,5 +62,40 @@ export const useT212Store = defineStore('t212', {
         this.loading = false
       }
     },
+
+    async cancelOrder(orderId: string, ticker: string): Promise<void> {
+      this.error = null
+      // this.loading = true
+
+      const apiUrl = `${GFC}/t212/equity/orders/${orderId}`
+      console.log(`Cancelling order ${orderId} for ticker ${ticker} @ ${apiUrl}`)
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_KEY,
+            'x-t212-key': T212_KEY,
+          },
+        })
+
+        if (!response.ok) throw new Error('Failed to cancel order')
+        console.log(`Order ${orderId} cancellation requested.${response.json}`)
+      } catch (err: any) {
+        this.error = err.message || 'Unknown error'
+      } finally {
+        this.loading = false
+      }
+
+      // find orders by ticker
+      /*const tickerIndex = this.openOrders2.findIndex((id: any) => id.ticker === ticker)  
+      if (tickerIndex !== -1) {
+        // console.log(`Found ${tickerIndex} for ticker ${ticker}, removing from openOrders`)
+        const orderIndex = this.openOrders2[tickerIndex].orders.findIndex((order: any) => order.id === orderId)  
+        // console.log(`Found ${orderIndex} for ticker ${ticker}, removing from openOrders`)
+        this.openOrders2[tickerIndex].orders.splice(orderIndex, 1)
+        this.openOrders2[tickerIndex].ordersCount -= 1;
+      }*/
+    },
   },
 })

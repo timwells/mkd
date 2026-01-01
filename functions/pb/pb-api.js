@@ -160,7 +160,7 @@ function fmtDate(dateString) {
 
 export const winners = async () => {
   const { data } = await axios.get(PB_WINNERS_PATH)
-  const $ = cheerio.load(data)
+  const $ = load(data)
   const rows = $('#table-prizewinner tr')
   let winners = []
   rows.each((i, e) => {
@@ -190,7 +190,10 @@ export const winners = async () => {
       winners.push(winObj)
     }
   })
-  return winners
+
+  const winnerPeriod = $('#help_category-heading').text().trim()
+
+  return { winners, period: winnerPeriod }
 }
 
 export const winProbability = async (holding) => {

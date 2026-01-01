@@ -5,13 +5,13 @@ import express from 'express'
 import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
-import { OpenOrders, OpenOrders2 } from './t212-api.js'
+import { OpenOrders, OpenOrders2, CancelOrder } from './t212-api.js'
 
 const VERSION = 't212-0.0.1'
 // Optional: Set defaults for all v2 functions in this file
 setGlobalOptions({
   region: 'us-central1',
-  maxInstances: 3,
+  maxInstances: 4,
   timeoutSeconds: 60,
   memory: '512MiB', // or "1GiB", "2GiB" if loading ML models
   cpu: 1,
@@ -30,7 +30,6 @@ app.get('/equity/orders', async (req, res) => {
   if (!t212Key) {
     return res.status(400).json({ error: 'Missing x-t212-key header' })
   }
-
   return res.status(200).json(await OpenOrders(t212Key))
 })
 
@@ -39,8 +38,21 @@ app.get('/equity/orders2', async (req, res) => {
   if (!t212Key) {
     return res.status(400).json({ error: 'Missing x-t212-key header' })
   }
-
   return res.status(200).json(await OpenOrders2(t212Key))
+})
+
+app.delete('/equity/orders/:id', async (req, res) => {
+  const t212Key = req.headers['x-t212-key'] || null
+  if (!t212Key) {
+    return res.status(400).json({ error: 'Missing x-t212-key header' })
+  }
+
+  const orderId = req.params.id
+  if (!orderId) {
+    return res.status(400).json({ error: 'Missing order ID parameter' })
+  }
+
+  return res.status(200).json(await CancelOrder(t212Key, orderId))
 })
 
 export const t212 = onRequest(app)

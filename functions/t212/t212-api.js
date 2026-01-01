@@ -41,12 +41,12 @@ export const OpenOrders2 = async (t212Key) => {
 
     order.createdAt = order.createdAt.split('T')[0] // keep only date part
     // reduce object noise
-    delete order.id
+
+    // delete order.id
     delete order.extendedHours
     delete order.initiatedFrom
 
     grouped.get(key).orders.push({ ...order })
-
     grouped.get(key).totalQuantity += order.quantity
     grouped.get(key).totalValue += order.limitPrice * order.quantity
     grouped.get(key).ordersCount++
@@ -56,4 +56,24 @@ export const OpenOrders2 = async (t212Key) => {
 
   // Convert Map values to array (preserves insertion order)
   return Array.from(grouped.values())
+}
+
+// /36951163310
+// https://demo.trading212.com/api/v0/equity/orders/{id}' \
+//  -H 'Authorization: YOUR_API_KEY_HERE'
+
+export const CancelOrder = async (t212Key, orderId) => {
+  const response = await fetch(`${T212_HOST}/equity/orders/${orderId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Basic ${t212Key}`,
+    },
+  })
+
+  if (!response.ok) {
+    // const errorData = await response.json().catch(() => ({}));
+    return errorData.message || `HTTP ${response.status}`
+  }
+
+  return { status: 'ok', message: 'Order cancelled successfully' }
 }

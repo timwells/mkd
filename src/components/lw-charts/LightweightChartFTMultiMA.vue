@@ -70,7 +70,7 @@ function colorFor(ticker: string, type: 'main' | 'ma50' | 'ma100' | 'ma200' = 'm
 function displayName(ticker: string, suffix = '') {
   const item = itemFor(ticker)
   const base = item?.name ?? ticker
-  return suffix ? `${base} (${suffix})` : base
+  return suffix ? `${base} ${suffix}` : base
 }
 
 // ---------- Series Management ----------
@@ -105,7 +105,7 @@ function addSeriesForTicker(ticker: string) {
   // MA50
   if (item.MA50?.data?.length) {
     const ma50 = chart.value.addSeries(LineSeries, {
-      title: displayName(ticker, 'MA50'),
+      title: displayName('', 'MA50'),
       color: colorFor(ticker, 'ma50'),
       lineWidth: 1.5,
       lineStyle: 2, // dashed
@@ -119,7 +119,8 @@ function addSeriesForTicker(ticker: string) {
   // MA100
   if (item.MA100?.data?.length) {
     const ma100 = chart.value.addSeries(LineSeries, {
-      title: displayName(ticker, 'MA100'),
+      // title: displayName(ticker, 'MA100'),
+      title: displayName('', 'MA100'),
       color: colorFor(ticker, 'ma100'),
       lineWidth: 1.5,
       lineStyle: 2,
@@ -133,7 +134,7 @@ function addSeriesForTicker(ticker: string) {
   // MA200 (prominent)
   if (item.MA200?.data?.length) {
     const ma200 = chart.value.addSeries(LineSeries, {
-      title: displayName(ticker, 'MA200'),
+      title: displayName('', 'MA200'),
       color: colorFor(ticker, 'ma200'),
       lineWidth: 1.5,
       lineStyle: 2, // dash
