@@ -76,7 +76,7 @@ const metalsEtfTickers = [
 ]
 const goldTickers = ['GC.1:CMX&mas=50,100,200']
 const silverTickers = ['US@SI.1:CMX&mas=50,100,200']
-const equityTickers = ['SLP&mas=50,100,200']
+const equityTickers = ['SLP&mas=50,100,200', 'FRES&mas=50,100,200']
 </script>
 
 <style scoped>

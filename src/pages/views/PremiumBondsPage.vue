@@ -46,9 +46,9 @@
                         <h1 class="card-title text-tag text-secondary font-bold uppercase">Next Draw Date</h1>
                       </VaCardTitle>
                       <VaCardContent>
-                        <div class="p-1 bg-black rounded absolute right-4 top-4">
+                        <!--div class="p-1 bg-black rounded absolute right-4 top-4">
                           <VaIcon name="event" color="#fff" size="large" />
-                        </div>
+                        </div-->
                         <div class="text-xs mb-2">
                           {{ nextDrawDate2?.text || 'No draw date available' }}
                         </div>

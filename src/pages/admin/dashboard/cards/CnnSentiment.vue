@@ -24,13 +24,10 @@
   <div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
     <VaCard square outlined class="rounded-xl">
       <VaCardContent>
-        <iframe
-          src="https://studioalpha.substack.com/p/2026-is-not-about-ai-its-about-liquidity"
-          height="600px"
-          width="100%"
-          frameborder="0"
-          scrolling="no"
-        ></iframe>
+        <img
+          src="https://cdn.prod.website-files.com/650486dd4239644e595569c1/68bfeb76070cae95cf0b15c9_smart-money-img.png"
+          alt="Smart Money"
+        />
       </VaCardContent>
     </VaCard>
   </div>
