@@ -65,7 +65,7 @@ import { ref } from 'vue'
 // import LightweightChartFTMulti from '@/components/lw-charts/LightweightChartFTMulti.vue'
 import LightweightChartFTMultiMA from '@/components/lw-charts/LightweightChartFTMultiMA.vue'
 
-const tabs = ['Gold', 'Silver', 'ETFs', 'GVIX','Equities']
+const tabs = ['Gold', 'Silver', 'ETFs', 'GVIX', 'Equities']
 const value = ref('Gold')
 const metalsEtfTickers = [
   'REGB:LSE:GBP&mas=50,100,200',
@@ -77,7 +77,6 @@ const metalsEtfTickers = [
 const goldTickers = ['GC.1:CMX&mas=50,100,200']
 const silverTickers = ['US@SI.1:CMX&mas=50,100,200']
 const equityTickers = ['SLP&mas=50,100,200']
-
 </script>
 
 <style scoped>
