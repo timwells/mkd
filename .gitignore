@@ -14,6 +14,7 @@ dist-ssr
 .env
 firebase.txt
 .firebase/
+mk-d-b59f2-default-rtdb-root-export.json
 
 # Editor directories and files
 .vscode/*

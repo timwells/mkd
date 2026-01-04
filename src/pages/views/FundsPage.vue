@@ -1,321 +1,167 @@
 <template>
-  <div class="demo-container">
-    <div class="controls">
-      <h2>Lightweight Chart Demo</h2>
-
-      <div class="control-group">
-        <button @click="addRandomSeries">Add Random Series</button>
-        <button @click="addRealtimeSeries">Start Realtime Series</button>
-        <button @click="stopRealtime">Stop Realtime</button>
-        <button @click="clearAll">Clear All Series</button>
-      </div>
-
-      <div class="control-group">
-        <label>
-          Series Type:
-          <select v-model="newSeriesType">
-            <option value="line">Line</option>
-            <option value="area">Area</option>
-            <option value="bar">Bar</option>
-            <option value="histogram">Histogram</option>
-            <option value="baseline">Baseline</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="series-list">
-        <h3>Active Series ({{ seriesCount }})</h3>
-        <div v-for="id in activeSeries" :key="id" class="series-item">
-          <span>{{ id }}</span>
-          <button @click="removeSeries(id)">Remove</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="chart-wrapper">
-      <div ref="chartContainer" class="lw-chart"></div>
-    </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <VaCard square outlined class="rounded-xl" v-for="fund in fundinfo" :key="fund.ticker">
+      <VaCardTitle>{{ fund.title }}</VaCardTitle>
+      <VaCardContent>
+        <img :src="makeFundUrl(fund.ticker)" alt="Fund Chart" />
+      </VaCardContent>
+    </VaCard>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick, shallowRef } from 'vue'
-import { createChart, LineSeries, AreaSeries, BarSeries, HistogramSeries, BaselineSeries } from 'lightweight-charts'
-
-// State
-const chartContainer = ref(null)
-const chart = shallowRef(null)
-const seriesMap = shallowRef(new Map())
-const resizeObserver = shallowRef(null)
-const seriesCount = ref(0)
-const activeSeries = ref([])
-const newSeriesType = ref('line')
-const realtimeInterval = ref(null)
-
-// Series type mapping
-const SERIES_TYPE_MAP = {
-  line: LineSeries,
-  area: AreaSeries,
-  bar: BarSeries,
-  histogram: HistogramSeries,
-  baseline: BaselineSeries,
-}
-
-// Chart options
-const chartOptions = {
-  layout: {
-    background: { color: '#ffffff' },
-    textColor: '#333',
+<script setup lang="ts">
+const fundinfo = [
+  {
+    ticker: "FKSFU",
+    title: "UBS S&P 500 INDEX CLASS C-ACCUM GBP",
+    type: "fund"
   },
-  grid: {
-    vertLines: { color: '#e1e1e1' },
-    horzLines: { color: '#e1e1e1' },
+  {
+    ticker: "FQCQM",
+    title: "BLACKROCK MYMAP6 CLASS D-ACCUM GBP",
+    type: "fund"
   },
-  width: 800,
-  height: 400,
-}
-
-// Initialize chart
-function initChart() {
-  if (!chartContainer.value) return
-
-  chart.value = createChart(chartContainer.value, chartOptions)
-
-  // Add initial series
-  addSeries({
-    id: 'initial-line',
-    type: 'line',
-    data: [
-      { time: '2023-01-01', value: 100 },
-      { time: '2023-01-02', value: 105 },
-      { time: '2023-01-03', value: 103 },
-      { time: '2023-01-04', value: 108 },
-      { time: '2023-01-05', value: 112 },
-    ],
-    options: {
-      color: '#2962FF',
-      lineWidth: 2,
-    },
-  })
-
-  chart.value.timeScale().fitContent()
-  updateSeriesList()
-}
-
-// Add series
-function addSeries(config) {
-  if (!chart.value) return null
-
-  const { id, type = 'line', data = [], options = {} } = config
-
-  if (seriesMap.value.has(id)) {
-    console.warn(`Series "${id}" already exists`)
-    return null
+  {
+    ticker  : "FQCQK",
+    title: "BLACKROCK MYMAP5 CLASS D-ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FQCQI",
+    title: "BLACKROCK MYMAP4 CLASS D-ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FQCQG",
+    title: "BLACKROCK MYMAP3 CLASS D-ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FR2QB",
+    title: "BLACKROCK MYMAP5 ESG CLASS D-ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FK4VD",
+    title: "LINDS TRAIN UK EQUITY CLASS D-ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FK6WV",
+    title: "LINDS TRAIN GLB EQUITY-DIST CLASS D-INCOME GBP",
+    type: "fund"
+  },
+  {
+    ticker: "B65TLW2",
+    title: "DIVERSE INCOME TRUST PLC",
+    type: "equity"
+  },
+  {
+    ticker: "FLGITA",
+    title: "L&G ACTIVE GLOBAL HIGH YIELD CLASS I - ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FJXZ1",
+    title: "Artemis Global INCOME - GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FJXZ1",
+    title: "Artemis Global INCOME - GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FJXZ1",
+    title: "Artemis Global INCOME - GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FQXBQ",
+    title: "L&G Gbl Robotics & Automation Index - ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "BPK4C11",
+    title: "BTC London Company GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FG18U",
+    title: "HSBC FTSE 100 INDEX CLASS C - ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FM2DN",
+    title: "HSBC FTSE 250 Index CLASS S - ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FKLDQ",
+    title: "HSBC FTSE All-World Idx Class C- ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FBGAMAB",
+    title: "BAILLIE GIFFORD AMERICAN CLASS B - ACCUM GBP",
+    type: "fund"
+  },
+  {
+    ticker: "FLSX6",
+    title: "Fundsmith Equity CLASS I ACCUM",
+    type: "fund"
+  },
+  {
+    ticker: "FOA4T",
+    title: "Fundsmith Sustainable Equity CLASS I ACCUM",
+    type: "fund"
+  },
+  {
+    ticker: "FNCNN",
+    title: "Jupiter India (Class X)",
+    type: "fund"
+  },
+  {
+    ticker: "FQQTT",
+    title: "Alquity Indian Subcontinent (Class I)",
+    type: "fund"
+  },
+  {
+    ticker: "FQF1R",
+    title: "Schroder India Equity (Class Z)",
+    type: "fund"
+  },
+  {
+    ticker: "FW97J",
+    title: "Legal & General Future World ESG Asia Pacific Indx",
+    type: "fund"
+  },
+  {
+    ticker: "FOVCU",
+    title: "FSSA Indian Subcontinent All-Cap Fund (E)",
+    type: "fund"
+  },
+  {
+    ticker: "FN924",
+    title: "Liontrust India (Class C)",
+    type: "fund"
+  },
+  {
+    ticker: "FOS1H",
+    title: "L&G Global Infrastructure Index (C)",
+    type: "fund"
   }
+]
 
-  try {
-    const SeriesDef = SERIES_TYPE_MAP[type.toLowerCase()] || LineSeries
-    const seriesInstance = chart.value.addSeries(SeriesDef, options)
-
-    if (data.length > 0) {
-      seriesInstance.setData(data)
-    }
-
-    seriesMap.value.set(id, {
-      instance: seriesInstance,
-      type,
-    })
-
-    updateSeriesList()
-    return seriesInstance
-  } catch (error) {
-    console.error(`Failed to add series "${id}":`, error)
-    return null
-  }
+const makeFundUrl = (code : String) => {
+  const HOST = 'https://webfund6.financialexpress.net'
+  const PATH = '/clients/Hargreaves/chartbuilder.aspx'
+  const PARAMS = `codes=${code}&color=0047AB&hide=&span=M120&plotSingleAsPrice=true&totalReturn=false&yAxisLabel=_`
+  return `${HOST}${PATH}?${PARAMS}`
 }
 
-// Remove series
-function removeSeries(id) {
-  if (!chart.value || !seriesMap.value.has(id)) {
-    console.warn(`Series "${id}" not found`)
-    return
-  }
-
-  const seriesData = seriesMap.value.get(id)
-  chart.value.removeSeries(seriesData.instance)
-  seriesMap.value.delete(id)
-  updateSeriesList()
-}
-
-// Append data point
-function appendSeriesData(id, dataPoint) {
-  const seriesData = seriesMap.value.get(id)
-  if (!seriesData) {
-    console.warn(`Series "${id}" not found`)
-    return
-  }
-
-  try {
-    seriesData.instance.update(dataPoint)
-  } catch (error) {
-    console.error(`Failed to append to series "${id}":`, error)
-  }
-}
-
-// Update series list
-function updateSeriesList() {
-  activeSeries.value = Array.from(seriesMap.value.keys())
-  seriesCount.value = activeSeries.value.length
-}
-
-// Generate random data
-function generateRandomData(days = 20) {
-  const data = []
-  let value = Math.random() * 100 + 50
-  const today = new Date()
-
-  for (let i = days; i >= 0; i--) {
-    const date = new Date(today)
-    date.setDate(date.getDate() - i)
-    const timeStr = date.toISOString().split('T')[0]
-
-    value += (Math.random() - 0.5) * 10
-    value = Math.max(10, value)
-
-    data.push({
-      time: timeStr,
-      value: Math.round(value * 100) / 100,
-    })
-  }
-
-  return data
-}
-
-// Random color
-function randomColor() {
-  const colors = ['#2962FF', '#FF6D00', '#00C853', '#AA00FF', '#00B8D4', '#FF5252', '#FFD600', '#00BFA5']
-  return colors[Math.floor(Math.random() * colors.length)]
-}
-
-// Add random series
-function addRandomSeries() {
-  const seriesId = `series-${Date.now()}`
-  const data = generateRandomData()
-
-  addSeries({
-    id: seriesId,
-    type: newSeriesType.value,
-    data: data,
-    options: {
-      color: randomColor(),
-      lineWidth: 2,
-    },
-  })
-}
-
-// Start realtime series
-function addRealtimeSeries() {
-  if (realtimeInterval.value) return
-
-  const seriesId = 'realtime-series'
-  const startDate = new Date()
-  let counter = 0
-  let value = 100
-
-  // Remove if exists
-  if (seriesMap.value.has(seriesId)) {
-    removeSeries(seriesId)
-  }
-
-  // Add initial series
-  addSeries({
-    id: seriesId,
-    type: 'line',
-    data: [
-      {
-        time: startDate.toISOString().split('T')[0],
-        value: value,
-      },
-    ],
-    options: {
-      color: '#FF6D00',
-      lineWidth: 3,
-    },
-  })
-
-  // Update every second
-  realtimeInterval.value = setInterval(() => {
-    counter++
-    value += (Math.random() - 0.5) * 5
-
-    const date = new Date(startDate)
-    date.setDate(date.getDate() + counter)
-
-    appendSeriesData(seriesId, {
-      time: date.toISOString().split('T')[0],
-      value: Math.round(value * 100) / 100,
-    })
-  }, 1000)
-}
-
-// Stop realtime
-function stopRealtime() {
-  if (realtimeInterval.value) {
-    clearInterval(realtimeInterval.value)
-    realtimeInterval.value = null
-  }
-}
-
-// Clear all
-function clearAll() {
-  stopRealtime()
-  const ids = Array.from(seriesMap.value.keys())
-  ids.forEach((id) => removeSeries(id))
-}
-
-// Resize handling
-function enableResize() {
-  if (!chartContainer.value) return
-
-  resizeObserver.value = new ResizeObserver((entries) => {
-    if (!chart.value || !entries.length) return
-    const { width, height } = entries[0].contentRect
-    chart.value.resize(width, height)
-  })
-
-  resizeObserver.value.observe(chartContainer.value)
-
-  nextTick(() => {
-    if (chart.value && chartContainer.value) {
-      const rect = chartContainer.value.getBoundingClientRect()
-      chart.value.resize(rect.width, rect.height)
-    }
-  })
-}
-
-// Cleanup
-function cleanup() {
-  stopRealtime()
-
-  if (resizeObserver.value) {
-    resizeObserver.value.disconnect()
-  }
-
-  if (chart.value) {
-    chart.value.remove()
-  }
-}
-
-// Lifecycle
-onMounted(() => {
-  initChart()
-  enableResize()
-})
-
-onBeforeUnmount(() => {
-  cleanup()
-})
 </script>
+
 
 <style scoped>
 .demo-container {
