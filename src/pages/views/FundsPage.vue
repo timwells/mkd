@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-    <VaCard square outlined class="rounded-xl" v-for="fund in fundinfo" :key="fund.ticker">
+    <VaCard v-for="fund in fundinfo" :key="fund.ticker" square outlined class="rounded-xl">
       <VaCardTitle>{{ fund.title }}</VaCardTitle>
       <VaCardContent>
         <img :src="makeFundUrl(fund.ticker)" alt="Fund Chart" />
@@ -12,156 +12,154 @@
 <script setup lang="ts">
 const fundinfo = [
   {
-    ticker: "FKSFU",
-    title: "UBS S&P 500 INDEX CLASS C-ACCUM GBP",
-    type: "fund"
+    ticker: 'FKSFU',
+    title: 'UBS S&P 500 INDEX CLASS C-ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FQCQM",
-    title: "BLACKROCK MYMAP6 CLASS D-ACCUM GBP",
-    type: "fund"
+    ticker: 'FQCQM',
+    title: 'BLACKROCK MYMAP6 CLASS D-ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker  : "FQCQK",
-    title: "BLACKROCK MYMAP5 CLASS D-ACCUM GBP",
-    type: "fund"
+    ticker: 'FQCQK',
+    title: 'BLACKROCK MYMAP5 CLASS D-ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FQCQI",
-    title: "BLACKROCK MYMAP4 CLASS D-ACCUM GBP",
-    type: "fund"
+    ticker: 'FQCQI',
+    title: 'BLACKROCK MYMAP4 CLASS D-ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FQCQG",
-    title: "BLACKROCK MYMAP3 CLASS D-ACCUM GBP",
-    type: "fund"
+    ticker: 'FQCQG',
+    title: 'BLACKROCK MYMAP3 CLASS D-ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FR2QB",
-    title: "BLACKROCK MYMAP5 ESG CLASS D-ACCUM GBP",
-    type: "fund"
+    ticker: 'FR2QB',
+    title: 'BLACKROCK MYMAP5 ESG CLASS D-ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FK4VD",
-    title: "LINDS TRAIN UK EQUITY CLASS D-ACCUM GBP",
-    type: "fund"
+    ticker: 'FK4VD',
+    title: 'LINDS TRAIN UK EQUITY CLASS D-ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FK6WV",
-    title: "LINDS TRAIN GLB EQUITY-DIST CLASS D-INCOME GBP",
-    type: "fund"
+    ticker: 'FK6WV',
+    title: 'LINDS TRAIN GLB EQUITY-DIST CLASS D-INCOME GBP',
+    type: 'fund',
   },
   {
-    ticker: "B65TLW2",
-    title: "DIVERSE INCOME TRUST PLC",
-    type: "equity"
+    ticker: 'B65TLW2',
+    title: 'DIVERSE INCOME TRUST PLC',
+    type: 'equity',
   },
   {
-    ticker: "FLGITA",
-    title: "L&G ACTIVE GLOBAL HIGH YIELD CLASS I - ACCUM GBP",
-    type: "fund"
+    ticker: 'FLGITA',
+    title: 'L&G ACTIVE GLOBAL HIGH YIELD CLASS I - ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FJXZ1",
-    title: "Artemis Global INCOME - GBP",
-    type: "fund"
+    ticker: 'FJXZ1',
+    title: 'Artemis Global INCOME - GBP',
+    type: 'fund',
   },
   {
-    ticker: "FJXZ1",
-    title: "Artemis Global INCOME - GBP",
-    type: "fund"
+    ticker: 'FJXZ1',
+    title: 'Artemis Global INCOME - GBP',
+    type: 'fund',
   },
   {
-    ticker: "FJXZ1",
-    title: "Artemis Global INCOME - GBP",
-    type: "fund"
+    ticker: 'FJXZ1',
+    title: 'Artemis Global INCOME - GBP',
+    type: 'fund',
   },
   {
-    ticker: "FQXBQ",
-    title: "L&G Gbl Robotics & Automation Index - ACCUM GBP",
-    type: "fund"
+    ticker: 'FQXBQ',
+    title: 'L&G Gbl Robotics & Automation Index - ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "BPK4C11",
-    title: "BTC London Company GBP",
-    type: "fund"
+    ticker: 'BPK4C11',
+    title: 'BTC London Company GBP',
+    type: 'fund',
   },
   {
-    ticker: "FG18U",
-    title: "HSBC FTSE 100 INDEX CLASS C - ACCUM GBP",
-    type: "fund"
+    ticker: 'FG18U',
+    title: 'HSBC FTSE 100 INDEX CLASS C - ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FM2DN",
-    title: "HSBC FTSE 250 Index CLASS S - ACCUM GBP",
-    type: "fund"
+    ticker: 'FM2DN',
+    title: 'HSBC FTSE 250 Index CLASS S - ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FKLDQ",
-    title: "HSBC FTSE All-World Idx Class C- ACCUM GBP",
-    type: "fund"
+    ticker: 'FKLDQ',
+    title: 'HSBC FTSE All-World Idx Class C- ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FBGAMAB",
-    title: "BAILLIE GIFFORD AMERICAN CLASS B - ACCUM GBP",
-    type: "fund"
+    ticker: 'FBGAMAB',
+    title: 'BAILLIE GIFFORD AMERICAN CLASS B - ACCUM GBP',
+    type: 'fund',
   },
   {
-    ticker: "FLSX6",
-    title: "Fundsmith Equity CLASS I ACCUM",
-    type: "fund"
+    ticker: 'FLSX6',
+    title: 'Fundsmith Equity CLASS I ACCUM',
+    type: 'fund',
   },
   {
-    ticker: "FOA4T",
-    title: "Fundsmith Sustainable Equity CLASS I ACCUM",
-    type: "fund"
+    ticker: 'FOA4T',
+    title: 'Fundsmith Sustainable Equity CLASS I ACCUM',
+    type: 'fund',
   },
   {
-    ticker: "FNCNN",
-    title: "Jupiter India (Class X)",
-    type: "fund"
+    ticker: 'FNCNN',
+    title: 'Jupiter India (Class X)',
+    type: 'fund',
   },
   {
-    ticker: "FQQTT",
-    title: "Alquity Indian Subcontinent (Class I)",
-    type: "fund"
+    ticker: 'FQQTT',
+    title: 'Alquity Indian Subcontinent (Class I)',
+    type: 'fund',
   },
   {
-    ticker: "FQF1R",
-    title: "Schroder India Equity (Class Z)",
-    type: "fund"
+    ticker: 'FQF1R',
+    title: 'Schroder India Equity (Class Z)',
+    type: 'fund',
   },
   {
-    ticker: "FW97J",
-    title: "Legal & General Future World ESG Asia Pacific Indx",
-    type: "fund"
+    ticker: 'FW97J',
+    title: 'Legal & General Future World ESG Asia Pacific Indx',
+    type: 'fund',
   },
   {
-    ticker: "FOVCU",
-    title: "FSSA Indian Subcontinent All-Cap Fund (E)",
-    type: "fund"
+    ticker: 'FOVCU',
+    title: 'FSSA Indian Subcontinent All-Cap Fund (E)',
+    type: 'fund',
   },
   {
-    ticker: "FN924",
-    title: "Liontrust India (Class C)",
-    type: "fund"
+    ticker: 'FN924',
+    title: 'Liontrust India (Class C)',
+    type: 'fund',
   },
   {
-    ticker: "FOS1H",
-    title: "L&G Global Infrastructure Index (C)",
-    type: "fund"
-  }
+    ticker: 'FOS1H',
+    title: 'L&G Global Infrastructure Index (C)',
+    type: 'fund',
+  },
 ]
 
-const makeFundUrl = (code : String) => {
+const makeFundUrl = (code: string) => {
   const HOST = 'https://webfund6.financialexpress.net'
   const PATH = '/clients/Hargreaves/chartbuilder.aspx'
   const PARAMS = `codes=${code}&color=0047AB&hide=&span=M120&plotSingleAsPrice=true&totalReturn=false&yAxisLabel=_`
   return `${HOST}${PATH}?${PARAMS}`
 }
-
 </script>
-
 
 <style scoped>
 .demo-container {

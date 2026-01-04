@@ -25,7 +25,8 @@
     "src/**/*.vue",
     "vite.config.ts",
     "node_modules/vuestic-ui",
-    "src/pages/views/MetalsPage.bak"
-, "src/pages/views/FundsPage.bak"  ],
+    "src/pages/views/MetalsPage.bak",
+    "src/pages/views/FundsPage.bak"
+  ],
   "exclude": ["node_modules/**/*"]
 }
