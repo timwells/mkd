@@ -80,10 +80,8 @@ export const usePbStore = defineStore('pb', {
       if (this.nextReq === 0.0 || now >= this.nextReq) {
         this.nextReq = moment().add(REQ_AGE_THRESHOLD, 'minutes').valueOf()
 
-        this.loading = true
-        this.error = null
-
         try {
+          this.error = null
           this.loadingResults = true
           const response = await fetch(`${GFC}/pb/results?holders=${holders}`, {
             method: 'GET',
