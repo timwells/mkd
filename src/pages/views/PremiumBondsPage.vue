@@ -18,7 +18,7 @@
           :headers="nationalWinnersHeader"
           :items="pbStore.nationalWinners?.winners ?? []"
           alternating
-          :loading="isLoading"
+          :loading="isLoadingWinners"
           :rows-per-page="5000"
           pagination="false"
         />
@@ -129,7 +129,7 @@
                         :headers="prizeHeader"
                         :items="currentTabData?.prizes ?? []"
                         alternating
-                        :loading="isLoading"
+                        :loading="isLoadingResults"
                         :rows-per-page="200"
                         :pagination="false"
                       />
@@ -157,11 +157,11 @@ const pbStore = usePbStore()
 
 const mainTab1 = 'National Winners'
 const mainTab2 = 'Holder Results'
-const mainTabs = [mainTab1, mainTab2]
-const selectedTab = ref(mainTab1)
+const mainTabs = [mainTab2, mainTab1]
+const selectedTab = ref(mainTab2)
 
 // Reactive refs from the store (recommended pattern)
-const { isLoading, getHolderNames } = storeToRefs(pbStore)
+const { isLoadingResults, getHolderNames, isLoadingWinners } = storeToRefs(pbStore)
 
 const holderSelectedTab = ref(pbStore.getHolderNames[0] || 'Tim')
 

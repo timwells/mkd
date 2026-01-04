@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import moment from 'moment'
-
 const GFC = import.meta.env.VITE_GCF_URL
 const API_KEY = import.meta.env.VITE_API_KEY
 const REQ_AGE_THRESHOLD = 12 * 60 * 60 * 1000 // 12 hours
@@ -36,14 +35,18 @@ export const usePbStore = defineStore('pb', {
     results: [] as PremiumBondHolderResults[],
     nextDrawDate: null as PremiumBondsNextDrawDate | null,
     nationalWinners: null as PremiumBondNationalWinners | null,
-    loading: false,
+    loadingResults: false,
+    loadingWinners: false,
     error: null as string | null,
     nextReq: 0.0 as number,
   }),
 
   getters: {
-    isLoading(state): boolean {
-      return state.loading
+    isLoadingResults(state): boolean {
+      return state.loadingResults
+    },
+    isLoadingWinners(state): boolean {
+      return state.loadingWinners
     },
     getError(state): string | null {
       return state.error
@@ -69,7 +72,7 @@ export const usePbStore = defineStore('pb', {
       } catch (err: any) {
         this.error = err.message || 'Unknown error'
       } finally {
-        this.loading = false
+        this.loadingResults = false
       }
     },
     async getAllResults(holders: string): Promise<void> {
@@ -81,6 +84,7 @@ export const usePbStore = defineStore('pb', {
         this.error = null
 
         try {
+          this.loadingResults = true
           const response = await fetch(`${GFC}/pb/results?holders=${holders}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
@@ -88,17 +92,17 @@ export const usePbStore = defineStore('pb', {
 
           if (!response.ok) throw new Error('Failed to fetch items')
           this.results = (await response.json()) as PremiumBondHolderResults[]
-          this.loading = false
         } catch (err: any) {
           this.error = err.message || 'Unknown error'
         } finally {
-          this.loading = false
+          this.loadingResults = false
         }
       }
     },
 
     async getNationalWinners(): Promise<void> {
       try {
+        this.loadingWinners = true
         const response = await fetch(`${GFC}/pb/winners`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
@@ -109,7 +113,7 @@ export const usePbStore = defineStore('pb', {
       } catch (err: any) {
         this.error = err.message || 'Unknown error'
       } finally {
-        this.loading = false
+        this.loadingWinners = false
       }
     },
   },
