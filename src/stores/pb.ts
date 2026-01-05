@@ -32,11 +32,13 @@ export interface PremiumBondNationalWinners {
 
 export const usePbStore = defineStore('pb', {
   state: () => ({
+    loadingResults: false,
     results: [] as PremiumBondHolderResults[],
     nextDrawDate: null as PremiumBondsNextDrawDate | null,
-    nationalWinners: null as PremiumBondNationalWinners | null,
-    loadingResults: false,
+
     loadingWinners: false,
+    nationalWinners: null as PremiumBondNationalWinners | null,
+
     error: null as string | null,
     nextReq: 0.0 as number,
   }),
@@ -71,8 +73,6 @@ export const usePbStore = defineStore('pb', {
         this.nextDrawDate = (await response.json()) as PremiumBondsNextDrawDate
       } catch (err: any) {
         this.error = err.message || 'Unknown error'
-      } finally {
-        this.loadingResults = false
       }
     },
     async getAllResults(holders: string): Promise<void> {
