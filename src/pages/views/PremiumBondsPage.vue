@@ -18,10 +18,30 @@
           :headers="nationalWinnersHeader"
           :items="pbStore.nationalWinners?.winners ?? []"
           alternating
+          show-index
           :loading="isLoadingWinners"
           :rows-per-page="5000"
           pagination="false"
-        />
+          :filter-options="filterOptions"
+          >          
+          <template #header-area="header">
+             <div class="filter-column">
+                <img src="../../assets/eglass-filter.png" 
+                    class="filter-icon" 
+                    @click="showAreaWinningFilter=!showAreaWinningFilter">
+                {{ header.text }}
+                <div class="filter-menu" v-if="showAreaWinningFilter">
+                  <input
+                    type="text"
+                    v-model="areaWinningFilter"
+                    placeholder="Search area..."
+                    class="filter-input"
+                  />
+                </div>  
+            </div>
+          </template>
+        </EasyDataTable>
+        <pre>{{ pbStore.nationalWinners }}</pre>    
       </VaCard>
     </div>
 
@@ -146,12 +166,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed} from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePbStore } from '@/stores/pb'
-import { Header } from 'vue3-easy-data-table'
+import type { Header, FilterOption } from "vue3-easy-data-table";
+import 'vue3-easy-data-table/dist/style.css';
 
 import type { PremiumBondHolderResults, PremiumBondsNextDrawDate } from '@/stores/pb'
+
 const PREMIUM_BOND_HOLDERS = import.meta.env.VITE_PREMIUM_BOND_HOLDERS
 const pbStore = usePbStore()
 
@@ -173,11 +195,29 @@ const prizeHeader: Header[] = [
 
 const nationalWinnersHeader: Header[] = [
   { text: 'Prize', value: 'prize', sortable: true },
-  { text: 'Holdings', value: 'holdings', sortable: true },
   { text: 'Area', value: 'area', sortable: true },
   { text: 'Holdings', value: 'holdings', sortable: true },
   { text: 'Purchase Date', value: 'purchaseDate' },
 ]
+
+const areaWinningFilter = ref('');
+
+const showAreaWinningFilter = ref(false);
+
+const filterOptions = computed((): FilterOption[] => {
+  let filterOptionsArray: FilterOption[] = [];
+
+  filterOptionsArray.push({
+    field: 'area',
+    criteria: areaWinningFilter.value,
+    comparison: (value:any, criteria:any): boolean => {
+      return (value != null && criteria != null &&
+        typeof value === 'string' && value.toLowerCase().includes(criteria.toLowerCase()))
+    }
+  });
+
+  return filterOptionsArray;
+});
 
 const currentTabData = computed(
   () => pbStore.results[pbStore.getHolderNames.indexOf(holderSelectedTab.value)] ?? null,
@@ -202,5 +242,31 @@ onMounted(() => {
 
 .tab-content {
   margin-top: 1rem;
+}
+
+.filter-column {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  position: relative;
+}
+.filter-icon {
+  cursor: pointer;
+  display: inline-block;
+  width: 15px !important;
+  height: 15px !important;
+  margin-right: 4px;
+}
+.filter-menu {
+  padding: 15px 30px;
+  z-index: 1;
+  position: absolute;
+  top: 30px;
+  width: 250px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+}
+.slider {
+  margin-top: 36px;
 }
 </style>
