@@ -72,11 +72,6 @@ const fundinfo = [
     type: 'fund',
   },
   {
-    ticker: 'FJXZ1',
-    title: 'Artemis Global INCOME - GBP',
-    type: 'fund',
-  },
-  {
     ticker: 'FQXBQ',
     title: 'L&G Gbl Robotics & Automation Index - ACCUM GBP',
     type: 'fund',
