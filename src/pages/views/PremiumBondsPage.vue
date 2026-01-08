@@ -23,25 +23,22 @@
           :rows-per-page="5000"
           pagination="false"
           :filter-options="filterOptions"
-          >          
+        >
           <template #header-area="header">
-             <div class="filter-column">
-                <img src="../../assets/eglass-filter.png" 
-                    class="filter-icon" 
-                    @click="showAreaWinningFilter=!showAreaWinningFilter">
-                {{ header.text }}
-                <div class="filter-menu" v-if="showAreaWinningFilter">
-                  <input
-                    type="text"
-                    v-model="areaWinningFilter"
-                    placeholder="Search area..."
-                    class="filter-input"
-                  />
-                </div>  
+            <div class="filter-column">
+              <img
+                src="../../assets/eglass-filter.png"
+                class="filter-icon"
+                @click="showAreaWinningFilter = !showAreaWinningFilter"
+              />
+              {{ header.text }}
+              <div v-if="showAreaWinningFilter" class="filter-menu">
+                <input v-model="areaWinningFilter" type="text" placeholder="Search area..." class="filter-input" />
+              </div>
             </div>
           </template>
         </EasyDataTable>
-        <pre>{{ pbStore.nationalWinners }}</pre>    
+        <pre>{{ pbStore.nationalWinners }}</pre>
       </VaCard>
     </div>
 
@@ -166,11 +163,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed} from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePbStore } from '@/stores/pb'
-import type { Header, FilterOption } from "vue3-easy-data-table";
-import 'vue3-easy-data-table/dist/style.css';
+import type { Header, FilterOption } from 'vue3-easy-data-table'
+import 'vue3-easy-data-table/dist/style.css'
 
 import type { PremiumBondHolderResults, PremiumBondsNextDrawDate } from '@/stores/pb'
 
@@ -200,24 +197,28 @@ const nationalWinnersHeader: Header[] = [
   { text: 'Purchase Date', value: 'purchaseDate' },
 ]
 
-const areaWinningFilter = ref('');
+const areaWinningFilter = ref('')
 
-const showAreaWinningFilter = ref(false);
+const showAreaWinningFilter = ref(false)
 
 const filterOptions = computed((): FilterOption[] => {
-  let filterOptionsArray: FilterOption[] = [];
+  const filterOptionsArray: FilterOption[] = []
 
   filterOptionsArray.push({
     field: 'area',
     criteria: areaWinningFilter.value,
-    comparison: (value:any, criteria:any): boolean => {
-      return (value != null && criteria != null &&
-        typeof value === 'string' && value.toLowerCase().includes(criteria.toLowerCase()))
-    }
-  });
+    comparison: (value: any, criteria: any): boolean => {
+      return (
+        value != null &&
+        criteria != null &&
+        typeof value === 'string' &&
+        value.toLowerCase().includes(criteria.toLowerCase())
+      )
+    },
+  })
 
-  return filterOptionsArray;
-});
+  return filterOptionsArray
+})
 
 const currentTabData = computed(
   () => pbStore.results[pbStore.getHolderNames.indexOf(holderSelectedTab.value)] ?? null,
