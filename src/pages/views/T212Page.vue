@@ -15,7 +15,7 @@
       <VaCardContent>
         <EasyDataTable
           :headers="orderSummaryHeader"
-          :items="t212Store.openOrders2"
+          :items="t212Store.openOrders"
           alternating
           :loading="t212Store.loading"
           pagination="false"
@@ -44,6 +44,13 @@
         <pre>{{ t212Store.dividendHistory }}</pre>
       </VaCardContent>
     </VaCard>
+
+    <VaCard v-if="tabSelect === 'Periods'" class="tab-content rounded-xl" outlined>
+      <VaCardTitle>Dividend Periods</VaCardTitle>
+      <VaCardContent>
+        <pre>{{ t212Store.dividendHistoryByPeriod }}</pre>
+      </VaCardContent>
+    </VaCard>
   </div>  
 </template>
 
@@ -52,7 +59,7 @@ import { ref, onMounted } from 'vue'
 import type { Header, Item } from 'vue3-easy-data-table'
 import { useT212Store } from '@/stores/t212'
 
-const tabs = ['Orders', 'Dividends', 'Other-1', 'Other-2']
+const tabs = ['Orders', 'Dividends', 'Periods', 'Other-2']
 const tabSelect = ref('Orders')
 
 const orderSummaryHeader: Header[] = [
@@ -76,9 +83,10 @@ const ordersHeader: Header[] = [
 ]
 
 const t212Store = useT212Store()
-onMounted(() => {
-  t212Store.getOpenOrders2()
-  t212Store.getDividendHistory()
+onMounted(async () => {
+  t212Store.getOpenOrders();
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  t212Store.getDividendHistory();
 })
 </script>
 
