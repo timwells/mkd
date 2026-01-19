@@ -1,4 +1,7 @@
-const T212_HOST = `https://live.trading212.com/api/v0`
+const T212_HOST  = `https://live.trading212.com/api/v0`
+const T212_HOST2 = `https://live.trading212.com`
+
+import { setTimeout } from 'node:timers/promises';
 
 export const OpenOrders = async (t212Key) => {
   const response = await fetch(`${T212_HOST}/equity/orders`, {
@@ -76,4 +79,102 @@ export const CancelOrder = async (t212Key, orderId) => {
   }
 
   return { status: 'ok', message: 'Order cancelled successfully' }
+}
+
+// const T212_HOST = `https://live.trading212.com/api/v0`
+// https://live.trading212.com/api/v0/equity/history/dividends?limit=50
+export const DividendHistory = async (t212Key) => {
+  let allDividends = []
+  let nextPagePath = `/api/v0/equity/history/dividends`
+  do {
+    const reqPath = `${T212_HOST2}${nextPagePath}`
+    const response = await fetch(reqPath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
+    })
+
+    const data = await response.json();
+    allDividends.push(...data.items)
+
+    nextPagePath = data.nextPagePath
+    
+    if( nextPagePath != null) {
+      // simple rate limit
+      await setTimeout(100)
+    }
+  } while (nextPagePath !== null)
+
+
+  return allDividends.map((order) => {
+      order.name = order.instrument.name
+      order.paid = order.paidOn.split('T')[0] // keep only date part
+      const dateParts = order.paid.split('-')
+      order.period = (dateParts[0] + dateParts[1]).toString()
+
+      delete order.reference
+      delete order.amountInEuro
+      delete order.instrument
+      delete order.quantity
+      delete order.grossAmountPerShare
+      delete order.paidOn
+
+      return order
+  }).sort((a, b) => new Date(a.paid) - new Date(b.paid));
+}
+
+export const DividendHistoryByPeriod = async (t212Key) => {
+  let allDividends = []
+  let nextPagePath = `/api/v0/equity/history/dividends`
+  do {
+    const reqPath = `${T212_HOST2}${nextPagePath}`
+    const response = await fetch(reqPath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
+    })
+
+    const data = await response.json();
+    allDividends.push(...data.items)
+
+    nextPagePath = data.nextPagePath
+    
+    if( nextPagePath != null) {
+      // simple rate limit
+      await setTimeout(100)
+    }
+  } while (nextPagePath !== null)
+
+
+  const subSetDvidends = allDividends.map((order) => {
+      order.name = order.instrument.name
+      order.paid = order.paidOn.split('T')[0] // keep only date part
+      const dateParts = order.paid.split('-')
+      order.period = (dateParts[0] + dateParts[1]).toString()
+
+      delete order.reference
+      delete order.amountInEuro
+      delete order.instrument
+      delete order.quantity
+      delete order.grossAmountPerShare
+      delete order.paidOn
+
+      return order
+  })
+  subSetDvidends.sort((a, b) => new Date(a.paid) - new Date(b.paid));
+
+  // return subSetDvidends  
+  const periodMap = new Map();
+  subSetDvidends.forEach((order) => {
+    const period = order.period;
+    if (!periodMap.has(period)) {
+      periodMap.set(period, []);
+    }
+    periodMap.get(period).push(order);
+  });
+
+  const periodTotals = Array.from(periodMap.entries()).map(([period, orders]) => {
+    const total = orders.reduce((sum, order) => sum + order.amount, 0).toFixed(2);
+    return { period, total};
+  });
+
+  return periodTotals;
 }

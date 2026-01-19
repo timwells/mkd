@@ -5,7 +5,13 @@ import express from 'express'
 import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
-import { OpenOrders, OpenOrders2, CancelOrder } from './t212-api.js'
+import { 
+  OpenOrders, 
+  OpenOrders2, 
+  CancelOrder,
+  DividendHistory,
+  DividendHistoryByPeriod
+} from './t212-api.js'
 
 const VERSION = 't212-0.0.1'
 // Optional: Set defaults for all v2 functions in this file
@@ -53,6 +59,23 @@ app.delete('/equity/orders/:id', async (req, res) => {
   }
 
   return res.status(200).json(await CancelOrder(t212Key, orderId))
+})
+
+// https://live.trading212.com/api/v0/equity/history/dividends?limit=50
+app.get('/equity/history/dividends', async (req, res) => {
+  const t212Key = req.headers['x-t212-key'] || null
+  if (!t212Key) {
+    return res.status(400).json({ error: 'Missing x-t212-key header' })
+  }
+  return res.status(200).json(await DividendHistory(t212Key))
+})
+
+app.get('/equity/history/dividends/periods', async (req, res) => {
+  const t212Key = req.headers['x-t212-key'] || null
+  if (!t212Key) {
+    return res.status(400).json({ error: 'Missing x-t212-key header' })
+  }
+  return res.status(200).json(await DividendHistoryByPeriod(t212Key))
 })
 
 export const t212 = onRequest(app)

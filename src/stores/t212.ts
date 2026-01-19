@@ -8,6 +8,7 @@ export const useT212Store = defineStore('t212', {
   state: () => ({
     openOrders: [],
     openOrders2: [],
+    dividendHistory: [],
     loading: false,
     error: null as string | null,
     nextReq: 0.0 as number,
@@ -62,7 +63,6 @@ export const useT212Store = defineStore('t212', {
         this.loading = false
       }
     },
-
     async cancelOrder(orderId: string, ticker: string): Promise<void> {
       this.error = null
       // this.loading = true
@@ -96,6 +96,29 @@ export const useT212Store = defineStore('t212', {
         this.openOrders2[tickerIndex].orders.splice(orderIndex, 1)
         this.openOrders2[tickerIndex].ordersCount -= 1;
       }*/
+    },
+    async getDividendHistory(): Promise<void> {
+      this.error = null
+      this.loading = true
+
+      try {
+        const response = await fetch(`${GFC}/t212/equity/history/dividends`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_KEY,
+            'x-t212-key': T212_KEY,
+          },
+        })
+
+        if (!response.ok) throw new Error('Failed to fetch items')
+        this.dividendHistory = await response.json()
+        this.loading = false
+      } catch (err: any) {
+        this.error = err.message || 'Unknown error'
+      } finally {
+        this.loading = false
+      }
     },
   },
 })
