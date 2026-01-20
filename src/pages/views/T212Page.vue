@@ -54,7 +54,7 @@
     <VaCard v-if="tabSelect === 'Periods'" class="tab-content rounded-xl" outlined>
       <VaCardTitle>Dividend Periods</VaCardTitle>
       <VaCardContent class="w-full" style="height: 600px">
-        <p>Grand Total: £{{t212Store.dividendGrandTotal}}</p>
+        <p>Grand Total: £{{ t212Store.dividendGrandTotal }} / {{ t212Store.dividendHistoryByPeriod.length }} mths</p>
         <AgCharts :options="dividendHistoryByPeriodChartOptions" style="display: grid; width: 100%; height: 550px" />
       </VaCardContent>
     </VaCard>
@@ -145,11 +145,11 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
       label: {
         enabled: true,
         fontSize: 14,
-        fontWeight: 'normal',     // or 'bold'
-        color: '#333',            // dark gray — good contrast on light bars
+        fontWeight: 'normal', // or 'bold'
+        color: '#333', // dark gray — good contrast on light bars
         placement: 'outside-end',
-        formatter: (params:any) => {
-          return '£' + params.value.toFixed(2);
+        formatter: (params: any) => {
+          return '£' + params.value.toFixed(2)
         },
       },
       tooltip: {

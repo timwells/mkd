@@ -11,7 +11,7 @@ export const useT212Store = defineStore('t212', {
     dividendHistory: [],
     dividendHistoryByPeriod: [],
     dividendGrandTotal: 0.0,
-    
+
     loading: false,
     error: null as string | null,
     nextReq: 0.0 as number,
