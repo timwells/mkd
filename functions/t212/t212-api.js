@@ -132,10 +132,12 @@ export const DividendHistory = async (t212Key) => {
     periodMap.get(period).push(order)
   })
 
+  let runningTotal = 0.0
   const periodTotals = Array.from(periodMap.entries()).map(([period, orders]) => {
     const total = +orders.reduce((sum, order) => sum + order.amount, 0).toFixed(2)
-    return { period, total }
+    runningTotal += total;
+    return { period, total, runningTotal: +runningTotal.toFixed(2) }
   })
 
-  return { dividends, periodTotals }
+  return { dividends, periodTotals, grandDividendTotal: +runningTotal.toFixed(2) }
 }

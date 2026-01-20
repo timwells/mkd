@@ -10,7 +10,8 @@ export const useT212Store = defineStore('t212', {
     openOrders: [],
     dividendHistory: [],
     dividendHistoryByPeriod: [],
-
+    dividendGrandTotal: 0.0,
+    
     loading: false,
     error: null as string | null,
     nextReq: 0.0 as number,
@@ -93,6 +94,7 @@ export const useT212Store = defineStore('t212', {
         const data = await response.json()
         this.dividendHistory = data.dividends
         this.dividendHistoryByPeriod = data.periodTotals
+        this.dividendGrandTotal = data.grandDividendTotal
 
         this.loading = false
       } catch (err: any) {

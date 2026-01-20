@@ -53,8 +53,9 @@
 
     <VaCard v-if="tabSelect === 'Periods'" class="tab-content rounded-xl" outlined>
       <VaCardTitle>Dividend Periods</VaCardTitle>
-      <VaCardContent class="w-full" style="height: 500px">
-        <AgCharts :options="dividendHistoryByPeriodChartOptions" style="display: grid; width: 100%; height: 100%" />
+      <VaCardContent class="w-full" style="height: 600px">
+        <p>Grand Total: £{{t212Store.dividendGrandTotal}}</p>
+        <AgCharts :options="dividendHistoryByPeriodChartOptions" style="display: grid; width: 100%; height: 550px" />
       </VaCardContent>
     </VaCard>
   </div>
@@ -125,6 +126,12 @@ function formatPeriod(periodStr: string): string {
 const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(() => ({
   data: dividendHistoryByPeriodChartData.value,
   title: { text: 'Monthly Totals' },
+  // subtitle: {
+  //  text: 'Dividend payments received per month (£)',
+  //  fontSize: 13,
+  //  fontWeight: 'normal',
+  //  color: '#555',           // slightly muted vs title
+  //},
   series: [
     {
       type: 'bar',
@@ -134,6 +141,17 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
       fill: '#4e79a7', // nice blue
       stroke: '#2c4f7c',
       strokeWidth: 1,
+      cornerRadius: 6,
+      label: {
+        enabled: true,
+        fontSize: 14,
+        fontWeight: 'normal',     // or 'bold'
+        color: '#333',            // dark gray — good contrast on light bars
+        placement: 'outside-end',
+        formatter: (params:any) => {
+          return '£' + params.value.toFixed(2);
+        },
+      },
       tooltip: {
         renderer: ({ datum }) => ({
           content: `${datum.period}: <b>${datum.total.toFixed(2)}</b>`,
@@ -165,9 +183,9 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
   legend: {
     enabled: false, // only one series, no need for legend
   },
-
   background: {
-    fill: '#f8f9fa',
+    //fill: '#f8f9fa',
+    fill: '#ffffff',
   },
 }))
 
