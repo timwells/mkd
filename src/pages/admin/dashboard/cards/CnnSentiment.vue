@@ -34,13 +34,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { AgCharts } from 'ag-charts-vue3'
 import type { AgChartOptions, AgLineSeriesOptions, AgTimeAxisOptions, AgNumberAxisOptions } from 'ag-charts-community'
 import { useCnnStore } from '@/stores/cnn'
 
 const store = useCnnStore()
-store.getMarketSentiment()
+onMounted(async () => {
+  store.getMarketSentiment()
+})
 
 // ----------------------------
 // Helpers
@@ -170,7 +172,6 @@ const fgOptions = computed(() =>
   buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'SP500: Fear & Greed Index'),
 )
 const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX: Index'))
-
 const sp500Options = computed(() =>
   buildChartOptions2(
     sp500Data.value,

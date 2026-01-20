@@ -91,8 +91,8 @@ export const useT212Store = defineStore('t212', {
 
         if (!response.ok) throw new Error('Failed to fetch items')
         const data = await response.json()
-        this.dividendHistory = data.subSetDvidends
-        this.dividendHistoryByPeriod = data.periodTotals  
+        this.dividendHistory = data.dividends
+        this.dividendHistoryByPeriod = data.periodTotals
 
         this.loading = false
       } catch (err: any) {

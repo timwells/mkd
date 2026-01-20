@@ -34,33 +34,47 @@
               </VaCard>
             </div>
           </template>
-        </EasyDataTable>    
+        </EasyDataTable>
       </VaCardContent>
     </VaCard>
 
     <VaCard v-if="tabSelect === 'Dividends'" class="tab-content rounded-xl" outlined>
       <VaCardTitle>Dividends</VaCardTitle>
       <VaCardContent>
-        <pre>{{ t212Store.dividendHistory }}</pre>
+        <EasyDataTable
+          :headers="dividendHistoryHeader"
+          :items="t212Store.dividendHistory"
+          pagination="false"
+          :rows-per-page="500"
+          alternating
+        />
       </VaCardContent>
     </VaCard>
 
     <VaCard v-if="tabSelect === 'Periods'" class="tab-content rounded-xl" outlined>
       <VaCardTitle>Dividend Periods</VaCardTitle>
-      <VaCardContent>
-        <pre>{{ t212Store.dividendHistoryByPeriod }}</pre>
+      <VaCardContent class="w-full" style="height: 600px">
+        <AgCharts :options="dividendHistoryByPeriodChartOptions" style="display: grid; width: 100%; height: 100%" />
       </VaCardContent>
     </VaCard>
-  </div>  
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import type { Header, Item } from 'vue3-easy-data-table'
+import { AgCharts } from 'ag-charts-vue3'
+import type { AgCartesianChartOptions, AgBarSeriesOptions } from 'ag-charts-community'
+
 import { useT212Store } from '@/stores/t212'
 
 const tabs = ['Orders', 'Dividends', 'Periods', 'Other-2']
 const tabSelect = ref('Orders')
+
+// ----------------------------
+// Helpers
+// ----------------------------
+const toXY = (arr: [number, number][]) => arr.map(([x, y]) => ({ x, y }))
 
 const orderSummaryHeader: Header[] = [
   { text: 'Name', value: 'name', sortable: true },
@@ -82,11 +96,86 @@ const ordersHeader: Header[] = [
   { text: 'Actions', value: 'action' },
 ]
 
+const dividendHistoryHeader: Header[] = [
+  { text: 'Name', value: 'name', sortable: true },
+  { text: 'Ticker', value: 'ticker', sortable: true },
+  { text: 'Amount', value: 'amount' },
+  { text: 'Currency', value: 'currency' },
+  { text: 'Type', value: 'type', sortable: true },
+  { text: 'Date', value: 'date', sortable: true },
+  { text: 'Paid', value: 'paid' },
+  { text: 'Period', value: 'period', sortable: true },
+]
+
+// Transform data for better chart labels (optional but recommended)
+const dividendHistoryByPeriodChartData = computed(() => {
+  return t212Store.dividendHistoryByPeriod.map((item: any) => ({
+    period: formatPeriod(item.period),
+    total: item.total,
+  }))
+})
+
+function formatPeriod(periodStr: string): string {
+  const year = periodStr.slice(2, 4)
+  const month = String(Number(periodStr.slice(4, 6))).padStart(2, '0')
+  return `${month}-${year}`
+}
+
+// AG Charts configuration
+const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(() => ({
+  data: dividendHistoryByPeriodChartData.value,
+  title: { text: 'Monthly Totals' },
+  series: [
+    {
+      type: 'bar',
+      xKey: 'period',
+      yKey: 'total',
+      yName: 'Total',
+      fill: '#4e79a7', // nice blue
+      stroke: '#2c4f7c',
+      strokeWidth: 1,
+      tooltip: {
+        renderer: ({ datum }) => ({
+          content: `${datum.period}: <b>${datum.total.toFixed(2)}</b>`,
+        }),
+      },
+    } as AgBarSeriesOptions,
+  ],
+
+  axes: [
+    {
+      type: 'category',
+      position: 'bottom',
+      title: { text: 'Period' },
+      label: {
+        rotation: 0,
+        formatter: (params: any) => params.value, // already formatted
+      },
+    },
+    {
+      type: 'number',
+      position: 'left',
+      title: { text: '£ Totals' },
+      label: {
+        formatter: (params: any) => params.value.toFixed(2),
+      },
+    },
+  ],
+
+  legend: {
+    enabled: false, // only one series, no need for legend
+  },
+
+  background: {
+    fill: '#f8f9fa',
+  },
+}))
+
 const t212Store = useT212Store()
 onMounted(async () => {
-  t212Store.getOpenOrders();
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  t212Store.getDividendHistory();
+  t212Store.getOpenOrders()
+  await new Promise((resolve) => setTimeout(resolve, 900))
+  t212Store.getDividendHistory()
 })
 </script>
 
@@ -100,5 +189,12 @@ onMounted(async () => {
 
 .tab-content {
   margin-top: 1rem;
+}
+
+.chart-container {
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 </style>

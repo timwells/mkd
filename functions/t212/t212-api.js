@@ -1,7 +1,7 @@
-const T212_HOST  = `https://live.trading212.com/api/v0`
+const T212_HOST = `https://live.trading212.com/api/v0`
 const T212_HOST2 = `https://live.trading212.com`
 
-import { setTimeout } from 'node:timers/promises';
+import { setTimeout } from 'node:timers/promises'
 
 export const OpenOrders = async (t212Key) => {
   const response = await fetch(`${T212_HOST}/equity/orders`, {
@@ -78,22 +78,25 @@ export const DividendHistory = async (t212Key) => {
       headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
     })
 
-    const data = await response.json();
+    const data = await response.json()
     allDividends.push(...data.items)
 
     nextPagePath = data.nextPagePath
-    
-    if( nextPagePath != null) {
+
+    if (nextPagePath != null) {
       // simple rate limit
       await setTimeout(250)
     }
   } while (nextPagePath !== null)
 
-  const subSetDvidends = allDividends.map((order) => {
+  const dividends = allDividends
+    .map((order) => {
       order.name = order.instrument.name
       order.paid = order.paidOn.split('T')[0] // keep only date part
       const dateParts = order.paid.split('-')
       order.period = (dateParts[0] + dateParts[1]).toString()
+      order.year = parseInt(dateParts[0])
+      order.month = parseInt(dateParts[1])
 
       delete order.reference
       delete order.amountInEuro
@@ -103,24 +106,36 @@ export const DividendHistory = async (t212Key) => {
       delete order.paidOn
 
       return order
+    })
+    .sort((a, b) => new Date(a.paid) - new Date(b.paid))
+  // const sortedSubSetDividends = subSetDividends.sort((a, b) => new Date(a.paid) - new Date(b.paid))
+  const periodMap = new Map()
+
+  // Pad YYYYMM periods with no dividends to zero totals
+  const startYear = dividends[0].year
+  const endYear = dividends[dividends.length - 1].year
+  const startMonth = dividends[0].month
+  const endMonth = dividends[dividends.length - 1].month
+
+  for (let year = startYear; year <= endYear; year++) {
+    const monthStart = year === startYear ? startMonth : 1
+    const monthEnd = year === endYear ? endMonth : 12
+
+    for (let month = monthStart; month <= monthEnd; month++) {
+      const period = `${year}${month.toString().padStart(2, '0')}`
+      periodMap.set(period, periodMap.get(period) ?? [])
+    }
+  }
+
+  dividends.forEach((order) => {
+    const period = order.period
+    periodMap.get(period).push(order)
   })
 
-  subSetDvidends.sort((a, b) => new Date(a.paid) - new Date(b.paid));
-
-  // return subSetDvidends  
-  const periodMap = new Map();
-  subSetDvidends.forEach((order) => {
-    const period = order.period;
-    if (!periodMap.has(period)) {
-      periodMap.set(period, []);
-    }
-    periodMap.get(period).push(order);
-  });
-
   const periodTotals = Array.from(periodMap.entries()).map(([period, orders]) => {
-    const total = +orders.reduce((sum, order) => sum + order.amount, 0).toFixed(2);
-    return { period, total};
-  });
+    const total = +orders.reduce((sum, order) => sum + order.amount, 0).toFixed(2)
+    return { period, total }
+  })
 
-  return { subSetDvidends, periodTotals };
+  return { dividends, periodTotals }
 }
