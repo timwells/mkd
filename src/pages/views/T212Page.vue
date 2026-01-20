@@ -53,7 +53,7 @@
 
     <VaCard v-if="tabSelect === 'Periods'" class="tab-content rounded-xl" outlined>
       <VaCardTitle>Dividend Periods</VaCardTitle>
-      <VaCardContent class="w-full" style="height: 600px">
+      <VaCardContent class="w-full" style="height: 500px">
         <AgCharts :options="dividendHistoryByPeriodChartOptions" style="display: grid; width: 100%; height: 100%" />
       </VaCardContent>
     </VaCard>
