@@ -106,9 +106,8 @@ export const DividendHistory = async (t212Key) => {
       delete order.paidOn
 
       return order
-    })
-    .sort((a, b) => new Date(a.paid) - new Date(b.paid))
-  // const sortedSubSetDividends = subSetDividends.sort((a, b) => new Date(a.paid) - new Date(b.paid))
+    }).sort((a, b) => new Date(a.paid) - new Date(b.paid))
+  
   const periodMap = new Map()
 
   // Pad YYYYMM periods with no dividends to zero totals
@@ -140,4 +139,37 @@ export const DividendHistory = async (t212Key) => {
   })
 
   return { dividends, periodTotals, grandDividendTotal: +runningTotal.toFixed(2) }
+}
+
+export const AccountSummary = async (t212Key) => {
+  const accountSummaryPath = `/api/v0/equity/account/summary`
+
+  const response = await fetch(`${T212_HOST2}${accountSummaryPath}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
+    })
+
+    const data = await response.json()
+
+    return data;
+}
+
+export const TransactionHistory = async (t212Key) => {
+  const query = new URLSearchParams({
+    cursor: 'string',
+    time: '2025-01-01T00:00:00Z',
+    limit: '21'
+  }).toString();
+
+  //const transactionHistoryPath = `/api/v0/equity/history/transactions?${query}`
+  const transactionHistoryPath = `/api/v0/equity/history/transactions?limit=50`
+  
+  const response = await fetch(`${T212_HOST2}${transactionHistoryPath}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
+    })
+
+    const data = await response.json()
+
+    return data;
 }

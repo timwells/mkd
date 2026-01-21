@@ -7,6 +7,7 @@ const API_KEY = import.meta.env.VITE_API_KEY
 // https://docs.trading212.com/api/section/general-information
 export const useT212Store = defineStore('t212', {
   state: () => ({
+    accountSummary :null,
     openOrders: [],
     dividendHistory: [],
     dividendHistoryByPeriod: [],
@@ -20,6 +21,27 @@ export const useT212Store = defineStore('t212', {
   getters: {},
 
   actions: {
+    async getAccountSummary(): Promise<void> {
+      this.error = null
+      this.loading = true
+      try {
+        const response = await fetch(`${GFC}/t212/equity/account/summary`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_KEY,
+            'x-t212-key': T212_KEY,
+          },
+        })
+        if (!response.ok) throw new Error('Failed to fetch items')
+        this.accountSummary = await response.json()
+        this.loading = false
+      } catch (err: any) {
+        this.error = err.message || 'Unknown error'
+      } finally {
+        this.loading = false
+      }
+    },
     async getOpenOrders(): Promise<void> {
       this.error = null
       this.loading = true
@@ -92,6 +114,7 @@ export const useT212Store = defineStore('t212', {
 
         if (!response.ok) throw new Error('Failed to fetch items')
         const data = await response.json()
+      
         this.dividendHistory = data.dividends
         this.dividendHistoryByPeriod = data.periodTotals
         this.dividendGrandTotal = data.grandDividendTotal

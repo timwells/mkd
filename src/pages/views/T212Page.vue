@@ -10,6 +10,32 @@
     </VaTabs>
 
     <!-- Tab Content -->
+    <div v-if="tabSelect === 'Summary' && t212Store.accountSummary" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <VaCard square outlined class="rounded-xl">
+        <VaCardTitle>Investment</VaCardTitle> 
+        <VaCardContent>
+          <div class="text-xl mb-2">
+            Total Value: {{ formatValue(t212Store.accountSummary.totalValue) }}
+          </div>
+        </VaCardContent>
+      </VaCard>
+      <VaCard square outlined class="rounded-xl">
+        <VaCardTitle>Tradeable</VaCardTitle> 
+        <VaCardContent>
+          <div class="text-xl mb-2">
+            Available: {{ formatValue(t212Store.accountSummary.cash.availableToTrade) }}
+          </div>
+          <div class="text-xl mb-2">
+            Reserved: {{ formatValue(t212Store.accountSummary.cash.reservedForOrders) }}
+          </div>
+        </VaCardContent>
+      </VaCard>
+      <VaCard square outlined class="rounded-xl">
+        <VaCardContent>
+          <pre>{{ t212Store.accountSummary.investments }}</pre>
+        </VaCardContent>
+      </VaCard>
+    </div>
     <VaCard v-if="tabSelect === 'Orders'" class="tab-content rounded-xl" outlined>
       <VaCardTitle>Open Orders</VaCardTitle>
       <VaCardContent>
@@ -65,17 +91,21 @@
 import { ref, onMounted, computed } from 'vue'
 import type { Header, Item } from 'vue3-easy-data-table'
 import { AgCharts } from 'ag-charts-vue3'
-import type { AgCartesianChartOptions, AgBarSeriesOptions } from 'ag-charts-community'
+import type { 
+  AgCartesianChartOptions, 
+  AgBarSeriesOptions, 
+  AgLineSeriesOptions
+} from 'ag-charts-community'
 
 import { useT212Store } from '@/stores/t212'
 
-const tabs = ['Orders', 'Dividends', 'Periods', 'Other-2']
-const tabSelect = ref('Orders')
+const tabs = ['Summary','Orders', 'Dividends', 'Periods']
+const tabSelect = ref('Summary')
 
 // ----------------------------
 // Helpers
 // ----------------------------
-const toXY = (arr: [number, number][]) => arr.map(([x, y]) => ({ x, y }))
+// const toXY = (arr: [number, number][]) => arr.map(([x, y]) => ({ x, y }))
 
 const orderSummaryHeader: Header[] = [
   { text: 'Name', value: 'name', sortable: true },
@@ -103,7 +133,6 @@ const dividendHistoryHeader: Header[] = [
   { text: 'Amount', value: 'amount' },
   { text: 'Currency', value: 'currency' },
   { text: 'Type', value: 'type', sortable: true },
-  { text: 'Date', value: 'date', sortable: true },
   { text: 'Paid', value: 'paid' },
   { text: 'Period', value: 'period', sortable: true },
 ]
@@ -113,6 +142,7 @@ const dividendHistoryByPeriodChartData = computed(() => {
   return t212Store.dividendHistoryByPeriod.map((item: any) => ({
     period: formatPeriod(item.period),
     total: item.total,
+    runningTotal: item.runningTotal
   }))
 })
 
@@ -122,16 +152,19 @@ function formatPeriod(periodStr: string): string {
   return `${month}-${year}`
 }
 
+function formatValue(value: number): string {
+  return '£' + value.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 // AG Charts configuration
 const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(() => ({
   data: dividendHistoryByPeriodChartData.value,
   title: { text: 'Monthly Totals' },
-  // subtitle: {
-  //  text: 'Dividend payments received per month (£)',
-  //  fontSize: 13,
-  //  fontWeight: 'normal',
-  //  color: '#555',           // slightly muted vs title
-  //},
+  subtitle: { 
+    text: 'Dividend payments received per month (£) + Cumulative Total',
+    fontSize: 13,
+    color: '#555',
+  },
   series: [
     {
       type: 'bar',
@@ -158,30 +191,67 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
         }),
       },
     } as AgBarSeriesOptions,
-  ],
-
-  axes: [
     {
+      type: 'line',
+      xKey: 'period',
+      yKey: 'runningTotal',
+      yName: 'Running Total',
+      stroke: '#f28e2b',          // nice contrasting orange
+      strokeWidth: 2,
+      marker: {
+        enabled: true,
+        shape: 'circle',
+        size: 7,
+        fill: '#f28e2b',
+        stroke: '#c15d00',
+      },
+      label: {
+        enabled: true,
+        fontSize: 12,
+        color: '#c15d00',
+        // placement: 'outside-end',
+        formatter: (p: any) => '£' + p.value.toFixed(2), // whole pounds for cumulative
+      },
+      tooltip: {
+        renderer: ({ datum }) => ({
+          content: `${datum.period}<br>Monthly: £${datum.total.toFixed(2)}<br><b>Cumulative: £${datum.runningTotal.toFixed(2)}</b>`,
+        }),
+      },
+    } as AgLineSeriesOptions,
+  ],
+  axes: [
+    { 
       type: 'category',
       position: 'bottom',
       title: { text: 'Period' },
       label: {
         rotation: 0,
-        formatter: (params: any) => params.value, // already formatted
+        formatter: (p: any) => p.value, // already formatted
       },
     },
-    {
+    { // Primary left axis (for bars / monthly values)
       type: 'number',
       position: 'left',
-      title: { text: '£ Totals' },
+      title: { text: 'Monthly £' },
       label: {
-        formatter: (params: any) => params.value.toFixed(2),
+        formatter: (p: any) => p.value.toFixed(2),
       },
+      keys: ['total'],  // explicitly bind bar series to this axis (optional but clearer)
+    },
+    { // Secondary right axis (for cumulative line – different scale)
+      type: 'number',
+      position: 'right',
+      title: { text: 'Cumulative £' },
+      label: { formatter: (p: any) => '£' + p.value.toFixed(0) },
+      keys: ['runningTotal'],  // bind line to this axis
     },
   ],
-
   legend: {
-    enabled: false, // only one series, no need for legend
+    enabled: true,
+    position: 'bottom',
+    item: {
+      marker: { shape: 'square' },   // or 'line' for the cumulative
+    },
   },
   background: {
     //fill: '#f8f9fa',
@@ -191,9 +261,11 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
 
 const t212Store = useT212Store()
 onMounted(async () => {
-  t212Store.getOpenOrders()
-  await new Promise((resolve) => setTimeout(resolve, 900))
-  t212Store.getDividendHistory()
+  t212Store.getAccountSummary();
+  await new Promise((resolve) => setTimeout(resolve, 900));
+  t212Store.getOpenOrders();
+  await new Promise((resolve) => setTimeout(resolve, 900));
+  t212Store.getDividendHistory();
 })
 </script>
 
