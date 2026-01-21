@@ -1,13 +1,30 @@
-import { delay } from 'medium-editor'
 import { defineStore } from 'pinia'
 const T212_KEY = import.meta.env.VITE_T212_KEY
 const GFC = import.meta.env.VITE_GCF_URL
 const API_KEY = import.meta.env.VITE_API_KEY
 
+export interface T212CashSummary {
+  availableToTrade: number
+  reservedForOrders: number
+  inPies: number
+}
+export interface T212InvestmentSummary {
+  currentValue: number
+  totalCost: number
+  realizedProfitLoss: number
+  unrealizedProfitLoss: number
+}
+
+export interface T212AccountSummary {
+  totalValue: number // ← add this
+  cash: T212CashSummary
+  investments: T212InvestmentSummary
+}
+
 // https://docs.trading212.com/api/section/general-information
 export const useT212Store = defineStore('t212', {
   state: () => ({
-    accountSummary :null,
+    accountSummary: null as T212AccountSummary | null,
     openOrders: [],
     dividendHistory: [],
     dividendHistoryByPeriod: [],
@@ -114,7 +131,7 @@ export const useT212Store = defineStore('t212', {
 
         if (!response.ok) throw new Error('Failed to fetch items')
         const data = await response.json()
-      
+
         this.dividendHistory = data.dividends
         this.dividendHistoryByPeriod = data.periodTotals
         this.dividendGrandTotal = data.grandDividendTotal

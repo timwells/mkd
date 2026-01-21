@@ -8,10 +8,7 @@
             "type": "string"
           },
           "dividendCashAction": {
-            "enum": [
-              "REINVEST",
-              "TO_ACCOUNT_CASH"
-            ],
+            "enum": ["REINVEST", "TO_ACCOUNT_CASH"],
             "type": "string"
           },
           "endDate": {
@@ -110,11 +107,7 @@
           },
           "status": {
             "description": "Status of the pie based on the set goal",
-            "enum": [
-              "AHEAD",
-              "ON_TRACK",
-              "BEHIND"
-            ],
+            "enum": ["AHEAD", "ON_TRACK", "BEHIND"],
             "type": "string"
           }
         },
@@ -230,10 +223,7 @@
             "type": "number"
           },
           "tradingMethod": {
-            "enum": [
-              "TOTV",
-              "OTC"
-            ],
+            "enum": ["TOTV", "OTC"],
             "type": "string"
           },
           "type": {
@@ -409,12 +399,7 @@
             "type": "string"
           },
           "type": {
-            "enum": [
-              "WITHDRAW",
-              "DEPOSIT",
-              "FEE",
-              "TRANSFER"
-            ],
+            "enum": ["WITHDRAW", "DEPOSIT", "FEE", "TRANSFER"],
             "type": "string"
           }
         },
@@ -458,11 +443,7 @@
             "type": "string"
           },
           "severity": {
-            "enum": [
-              "IRREVERSIBLE",
-              "REVERSIBLE",
-              "INFORMATIVE"
-            ],
+            "enum": ["IRREVERSIBLE", "REVERSIBLE", "INFORMATIVE"],
             "type": "string"
           }
         },
@@ -576,14 +557,7 @@
           },
           "initiatedFrom": {
             "description": "How the order was initiated.",
-            "enum": [
-              "API",
-              "IOS",
-              "ANDROID",
-              "WEB",
-              "SYSTEM",
-              "AUTOINVEST"
-            ],
+            "enum": ["API", "IOS", "ANDROID", "WEB", "SYSTEM", "AUTOINVEST"],
             "type": "string"
           },
           "instrument": {
@@ -599,10 +573,7 @@
           },
           "side": {
             "description": "Indicates whether the order is BUY or SELL.",
-            "enum": [
-              "BUY",
-              "SELL"
-            ],
+            "enum": ["BUY", "SELL"],
             "type": "string"
           },
           "status": {
@@ -628,10 +599,7 @@
           },
           "strategy": {
             "description": "The strategy used to place the order, either by QUANTITY or VALUE. The API currently only supports placing orders by QUANTITY.",
-            "enum": [
-              "QUANTITY",
-              "VALUE"
-            ],
+            "enum": ["QUANTITY", "VALUE"],
             "type": "string"
           },
           "ticker": {
@@ -643,12 +611,7 @@
             "$ref": "#/components/schemas/TimeValidity"
           },
           "type": {
-            "enum": [
-              "LIMIT",
-              "STOP",
-              "MARKET",
-              "STOP_LIMIT"
-            ],
+            "enum": ["LIMIT", "STOP", "MARKET", "STOP_LIMIT"],
             "type": "string"
           },
           "value": {
@@ -703,10 +666,7 @@
       "PieRequest": {
         "properties": {
           "dividendCashAction": {
-            "enum": [
-              "REINVEST",
-              "TO_ACCOUNT_CASH"
-            ],
+            "enum": ["REINVEST", "TO_ACCOUNT_CASH"],
             "type": "string"
           },
           "endDate": {
@@ -844,14 +804,7 @@
             "type": "integer"
           },
           "status": {
-            "enum": [
-              "Queued",
-              "Processing",
-              "Running",
-              "Canceled",
-              "Failed",
-              "Finished"
-            ],
+            "enum": ["Queued", "Processing", "Running", "Canceled", "Failed", "Finished"],
             "type": "string"
           },
           "timeFrom": {
@@ -965,10 +918,7 @@
       },
       "TimeValidity": {
         "description": "Specifies how long the order remains active: \n* DAY: The order will automatically expire if not executed by midnight in the time zone of the instrument's exchange.\n* GOOD_TILL_CANCEL: The order remains active indefinitely until it is either filled or explicitly cancelled by you.",
-        "enum": [
-          "DAY",
-          "GOOD_TILL_CANCEL"
-        ],
+        "enum": ["DAY", "GOOD_TILL_CANCEL"],
         "type": "string"
       },
       "TradableInstrument": {
@@ -1100,9 +1050,7 @@
           }
         ],
         "summary": "Get account summary",
-        "tags": [
-          "Accounts"
-        ]
+        "tags": ["Accounts"]
       }
     },
     "/api/v0/equity/history/dividends": {
@@ -1176,9 +1124,7 @@
           }
         ],
         "summary": "Get paid out dividends",
-        "tags": [
-          "Historical events"
-        ]
+        "tags": ["Historical events"]
       }
     },
     "/api/v0/equity/history/exports": {
@@ -1222,9 +1168,7 @@
           }
         ],
         "summary": "List generated reports",
-        "tags": [
-          "Historical events"
-        ]
+        "tags": ["Historical events"]
       },
       "post": {
         "description": "Initiates the generation of a CSV report containing historical account\ndata. This is an asynchronous operation. The response will include a\n`reportId` which you can use to track the status of the generation\nprocess using the `GET /history/exports` endpoint.\n\n**Rate limit:** 1 req / 30s",
@@ -1273,9 +1217,7 @@
           }
         ],
         "summary": "Request a CSV report",
-        "tags": [
-          "Historical events"
-        ]
+        "tags": ["Historical events"]
       }
     },
     "/api/v0/equity/history/orders": {
@@ -1349,9 +1291,7 @@
           }
         ],
         "summary": "Get historical orders data",
-        "tags": [
-          "Historical events"
-        ]
+        "tags": ["Historical events"]
       }
     },
     "/api/v0/equity/history/transactions": {
@@ -1425,9 +1365,7 @@
           }
         ],
         "summary": "Get transactions",
-        "tags": [
-          "Historical events"
-        ]
+        "tags": ["Historical events"]
       }
     },
     "/api/v0/equity/metadata/exchanges": {
@@ -1468,9 +1406,7 @@
           }
         ],
         "summary": "Get exchanges metadata",
-        "tags": [
-          "Instruments"
-        ]
+        "tags": ["Instruments"]
       }
     },
     "/api/v0/equity/metadata/instruments": {
@@ -1511,9 +1447,7 @@
           }
         ],
         "summary": "Get all available instruments",
-        "tags": [
-          "Instruments"
-        ]
+        "tags": ["Instruments"]
       }
     },
     "/api/v0/equity/orders": {
@@ -1554,9 +1488,7 @@
           }
         ],
         "summary": "Get all pending orders",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v0/equity/orders/limit": {
@@ -1607,9 +1539,7 @@
           }
         ],
         "summary": "Place a Limit order",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v0/equity/orders/market": {
@@ -1660,9 +1590,7 @@
           }
         ],
         "summary": "Place a Market order",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v0/equity/orders/stop": {
@@ -1713,9 +1641,7 @@
           }
         ],
         "summary": "Place a Stop order",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v0/equity/orders/stop_limit": {
@@ -1766,9 +1692,7 @@
           }
         ],
         "summary": "Place a StopLimit order",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v0/equity/orders/{id}": {
@@ -1817,9 +1741,7 @@
           }
         ],
         "summary": "Cancel a pending order",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       },
       "get": {
         "description": "Retrieves a single pending order using its unique numerical ID. This is\nuseful for checking the status of a specific order you have previously\nplaced.\n\n**Rate limit:** 1 req / 1s",
@@ -1870,9 +1792,7 @@
           }
         ],
         "summary": "Get a pending order by ID",
-        "tags": [
-          "Orders"
-        ]
+        "tags": ["Orders"]
       }
     },
     "/api/v0/equity/pies": {
@@ -1914,9 +1834,7 @@
           }
         ],
         "summary": "Fetch all pies",
-        "tags": [
-          "Pies (Deprecated)"
-        ]
+        "tags": ["Pies (Deprecated)"]
       },
       "post": {
         "deprecated": true,
@@ -1966,9 +1884,7 @@
           }
         ],
         "summary": "Create pie",
-        "tags": [
-          "Pies (Deprecated)"
-        ]
+        "tags": ["Pies (Deprecated)"]
       }
     },
     "/api/v0/equity/pies/{id}": {
@@ -2014,9 +1930,7 @@
           }
         ],
         "summary": "Delete pie",
-        "tags": [
-          "Pies (Deprecated)"
-        ]
+        "tags": ["Pies (Deprecated)"]
       },
       "get": {
         "deprecated": true,
@@ -2064,9 +1978,7 @@
           }
         ],
         "summary": "Fetch a pie",
-        "tags": [
-          "Pies (Deprecated)"
-        ]
+        "tags": ["Pies (Deprecated)"]
       },
       "post": {
         "deprecated": true,
@@ -2127,9 +2039,7 @@
           }
         ],
         "summary": "Update pie",
-        "tags": [
-          "Pies (Deprecated)"
-        ]
+        "tags": ["Pies (Deprecated)"]
       }
     },
     "/api/v0/equity/pies/{id}/duplicate": {
@@ -2192,9 +2102,7 @@
           }
         ],
         "summary": "Duplicate pie",
-        "tags": [
-          "Pies (Deprecated)"
-        ]
+        "tags": ["Pies (Deprecated)"]
       }
     },
     "/api/v0/equity/positions": {
@@ -2246,9 +2154,7 @@
           }
         ],
         "summary": "Fetch all open positions",
-        "tags": [
-          "Positions"
-        ]
+        "tags": ["Positions"]
       }
     }
   },

@@ -12,27 +12,21 @@
     <!-- Tab Content -->
     <div v-if="tabSelect === 'Summary' && t212Store.accountSummary" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
       <VaCard square outlined class="rounded-xl">
-        <VaCardTitle>Investment</VaCardTitle> 
+        <VaCardTitle>Investment</VaCardTitle>
         <VaCardContent>
-          <div class="text-xl mb-2">
-            Total Value: {{ formatValue(t212Store.accountSummary.totalValue) }}
-          </div>
+          <div class="text-xl mb-2">Total Value: {{ formatValue(t212Store.accountSummary?.totalValue) }}</div>
         </VaCardContent>
       </VaCard>
       <VaCard square outlined class="rounded-xl">
-        <VaCardTitle>Tradeable</VaCardTitle> 
+        <VaCardTitle>Tradeable</VaCardTitle>
         <VaCardContent>
-          <div class="text-xl mb-2">
-            Available: {{ formatValue(t212Store.accountSummary.cash.availableToTrade) }}
-          </div>
-          <div class="text-xl mb-2">
-            Reserved: {{ formatValue(t212Store.accountSummary.cash.reservedForOrders) }}
-          </div>
+          <div class="text-xl mb-2">Available: {{ formatValue(t212Store.accountSummary?.cash?.availableToTrade ) }}</div>
+          <div class="text-xl mb-2">Reserved: {{ formatValue(t212Store.accountSummary?.cash?.reservedForOrders) }}</div>
         </VaCardContent>
       </VaCard>
       <VaCard square outlined class="rounded-xl">
         <VaCardContent>
-          <pre>{{ t212Store.accountSummary.investments }}</pre>
+          <pre>{{ t212Store.accountSummary?.investments }}</pre>
         </VaCardContent>
       </VaCard>
     </div>
@@ -91,15 +85,13 @@
 import { ref, onMounted, computed } from 'vue'
 import type { Header, Item } from 'vue3-easy-data-table'
 import { AgCharts } from 'ag-charts-vue3'
-import type { 
-  AgCartesianChartOptions, 
-  AgBarSeriesOptions, 
-  AgLineSeriesOptions
-} from 'ag-charts-community'
+import type { AgCartesianChartOptions, AgBarSeriesOptions, AgLineSeriesOptions } from 'ag-charts-community'
+
+import type { T212AccountSummary, T212CashSummary, T212InvestmentSummary } from '@/stores/t212'
 
 import { useT212Store } from '@/stores/t212'
 
-const tabs = ['Summary','Orders', 'Dividends', 'Periods']
+const tabs = ['Summary', 'Orders', 'Dividends', 'Periods']
 const tabSelect = ref('Summary')
 
 // ----------------------------
@@ -142,7 +134,7 @@ const dividendHistoryByPeriodChartData = computed(() => {
   return t212Store.dividendHistoryByPeriod.map((item: any) => ({
     period: formatPeriod(item.period),
     total: item.total,
-    runningTotal: item.runningTotal
+    runningTotal: item.runningTotal,
   }))
 })
 
@@ -160,7 +152,7 @@ function formatValue(value: number): string {
 const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(() => ({
   data: dividendHistoryByPeriodChartData.value,
   title: { text: 'Monthly Totals' },
-  subtitle: { 
+  subtitle: {
     text: 'Dividend payments received per month (£) + Cumulative Total',
     fontSize: 13,
     color: '#555',
@@ -196,7 +188,7 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
       xKey: 'period',
       yKey: 'runningTotal',
       yName: 'Running Total',
-      stroke: '#f28e2b',          // nice contrasting orange
+      stroke: '#f28e2b', // nice contrasting orange
       strokeWidth: 2,
       marker: {
         enabled: true,
@@ -214,13 +206,15 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
       },
       tooltip: {
         renderer: ({ datum }) => ({
-          content: `${datum.period}<br>Monthly: £${datum.total.toFixed(2)}<br><b>Cumulative: £${datum.runningTotal.toFixed(2)}</b>`,
+          content: `${datum.period}<br>Monthly: £${datum.total.toFixed(
+            2,
+          )}<br><b>Cumulative: £${datum.runningTotal.toFixed(2)}</b>`,
         }),
       },
     } as AgLineSeriesOptions,
   ],
   axes: [
-    { 
+    {
       type: 'category',
       position: 'bottom',
       title: { text: 'Period' },
@@ -229,28 +223,30 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
         formatter: (p: any) => p.value, // already formatted
       },
     },
-    { // Primary left axis (for bars / monthly values)
+    {
+      // Primary left axis (for bars / monthly values)
       type: 'number',
       position: 'left',
       title: { text: 'Monthly £' },
       label: {
         formatter: (p: any) => p.value.toFixed(2),
       },
-      keys: ['total'],  // explicitly bind bar series to this axis (optional but clearer)
+      keys: ['total'], // explicitly bind bar series to this axis (optional but clearer)
     },
-    { // Secondary right axis (for cumulative line – different scale)
+    {
+      // Secondary right axis (for cumulative line – different scale)
       type: 'number',
       position: 'right',
       title: { text: 'Cumulative £' },
       label: { formatter: (p: any) => '£' + p.value.toFixed(0) },
-      keys: ['runningTotal'],  // bind line to this axis
+      keys: ['runningTotal'], // bind line to this axis
     },
   ],
   legend: {
     enabled: true,
     position: 'bottom',
     item: {
-      marker: { shape: 'square' },   // or 'line' for the cumulative
+      marker: { shape: 'square' }, // or 'line' for the cumulative
     },
   },
   background: {
@@ -261,11 +257,11 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
 
 const t212Store = useT212Store()
 onMounted(async () => {
-  t212Store.getAccountSummary();
-  await new Promise((resolve) => setTimeout(resolve, 900));
-  t212Store.getOpenOrders();
-  await new Promise((resolve) => setTimeout(resolve, 900));
-  t212Store.getDividendHistory();
+  t212Store.getAccountSummary()
+  await new Promise((resolve) => setTimeout(resolve, 900))
+  t212Store.getOpenOrders()
+  await new Promise((resolve) => setTimeout(resolve, 900))
+  t212Store.getDividendHistory()
 })
 </script>
 
