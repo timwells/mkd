@@ -151,9 +151,9 @@ function formatValue(value: number): string {
 // AG Charts configuration
 const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(() => ({
   data: dividendHistoryByPeriodChartData.value,
-  title: { text: 'Monthly Totals' },
+  title: { text: 'Monthly Dividend Totals' },
   subtitle: {
-    text: 'Dividend payments received per month (£) + Cumulative Total',
+    text: 'Payments / month + Cumulative Total',
     fontSize: 13,
     color: '#555',
   },
@@ -199,7 +199,7 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
       },
       label: {
         enabled: true,
-        fontSize: 12,
+        fontSize: 14,
         color: '#c15d00',
         // placement: 'outside-end',
         formatter: (p: any) => '£' + p.value.toFixed(2), // whole pounds for cumulative
@@ -229,7 +229,7 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
       position: 'left',
       title: { text: 'Monthly £' },
       label: {
-        formatter: (p: any) => p.value.toFixed(2),
+        formatter: (p: any) => '£' + p.value.toFixed(0),
       },
       keys: ['total'], // explicitly bind bar series to this axis (optional but clearer)
     },
