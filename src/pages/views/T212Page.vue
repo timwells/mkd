@@ -20,7 +20,7 @@
       <VaCard square outlined class="rounded-xl">
         <VaCardTitle>Tradeable</VaCardTitle>
         <VaCardContent>
-          <div class="text-xl mb-2">Available: {{ formatValue(t212Store.accountSummary?.cash?.availableToTrade ) }}</div>
+          <div class="text-xl mb-2">Available: {{ formatValue(t212Store.accountSummary?.cash?.availableToTrade) }}</div>
           <div class="text-xl mb-2">Reserved: {{ formatValue(t212Store.accountSummary?.cash?.reservedForOrders) }}</div>
         </VaCardContent>
       </VaCard>
