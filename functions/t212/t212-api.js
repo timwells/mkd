@@ -174,3 +174,42 @@ export const TransactionHistory = async (t212Key) => {
 
   return data
 }
+
+export const Positions = async (t212Key) => {
+  const positionsPath = `/api/v0/equity/positions?limit=100`
+  const response = await fetch(`${T212_HOST2}${positionsPath}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
+  })
+
+  const data = await response.json()  
+
+  let _totalCost = 0.0
+  let _currentValue = 0.0
+
+  let _allPositions = data
+    .map((position) => {
+      position.name = position.instrument.name
+      position.ticker = position.instrument.ticker
+      position.totalCost =  position.walletImpact.totalCost
+      position.currentValue = position.walletImpact.currentValue
+      position.unrealizedProfitLoss = position.walletImpact.unrealizedProfitLoss
+      position.createdAt = position.createdAt.split('T')[0]
+
+      _totalCost += position.totalCost
+      _currentValue += position.currentValue
+      
+      delete position.instrument
+      delete position.quantityAvailableForTrading
+      delete position.walletImpact
+      delete position.quantityInPies
+
+      return position
+    }).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+  
+    return { 
+      allPositions : _allPositions, 
+      totalCost : +(_totalCost.toFixed(2)),
+      currentValue : +(_currentValue.toFixed(2))
+    }
+}

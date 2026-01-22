@@ -28,8 +28,20 @@
         <VaCardContent>
           <pre>{{ t212Store.accountSummary?.investments }}</pre>
         </VaCardContent>
-      </VaCard>
+      </VaCard>   
     </div>
+    <VaCard v-if="tabSelect === 'Positions'" class="tab-content rounded-xl" outlined>
+      <VaCardContent>
+        <EasyDataTable
+          :headers="positionsSummaryHeader"
+          :items="t212Store.positions"
+          alternating
+          :loading="t212Store.loading"
+          pagination="false"
+          :rows-per-page="200"
+        />
+        </VaCardContent>
+    </VaCard>
     <VaCard v-if="tabSelect === 'Orders'" class="tab-content rounded-xl" outlined>
       <VaCardTitle>Open Orders</VaCardTitle>
       <VaCardContent>
@@ -91,13 +103,24 @@ import type { T212AccountSummary, T212CashSummary, T212InvestmentSummary } from 
 
 import { useT212Store } from '@/stores/t212'
 
-const tabs = ['Summary', 'Orders', 'Dividends', 'Periods']
+const tabs = ['Summary', 'Positions', 'Orders', 'Dividends', 'Periods']
 const tabSelect = ref('Summary')
 
 // ----------------------------
 // Helpers
 // ----------------------------
 // const toXY = (arr: [number, number][]) => arr.map(([x, y]) => ({ x, y }))
+
+const positionsSummaryHeader: Header[] = [  
+  { text: 'Created', value: 'createdAt', sortable: true},
+  { text: 'Name', value: 'name', sortable: true},
+  { text: 'Ticker', value: 'ticker', sortable: true},
+  { text: 'Current Price', value: 'currentPrice', sortable: true},
+  { text: 'Ave.Price Paid', value: 'averagePricePaid', sortable: true},
+  { text: 'Total Cost', value: 'totalCost', sortable: true},
+  { text: 'Current Value', value: 'currentValue', sortable: true},
+  { text: 'Unrealized Profit Loss', value:'unrealizedProfitLoss', sortable:true}
+]
 
 const orderSummaryHeader: Header[] = [
   { text: 'Name', value: 'name', sortable: true },
@@ -257,11 +280,13 @@ const dividendHistoryByPeriodChartOptions = computed<AgCartesianChartOptions>(()
 
 const t212Store = useT212Store()
 onMounted(async () => {
-  t212Store.getAccountSummary()
+  t212Store.getAccountSummary();
   await new Promise((resolve) => setTimeout(resolve, 900))
-  t212Store.getOpenOrders()
+  t212Store.getOpenOrders();
   await new Promise((resolve) => setTimeout(resolve, 900))
-  t212Store.getDividendHistory()
+  t212Store.getDividendHistory();
+  await new Promise((resolve) => setTimeout(resolve, 900))
+  t212Store.getPositions();
 })
 </script>
 
