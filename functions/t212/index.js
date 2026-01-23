@@ -5,14 +5,7 @@ import express from 'express'
 import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
-import { 
-  OpenOrders, 
-  CancelOrder, 
-  DividendHistory, 
-  TransactionHistory, 
-  AccountSummary,
-  Positions 
-} from './t212-api.js'
+import { OpenOrders, CancelOrder, DividendHistory, TransactionHistory, AccountSummary, Positions } from './t212-api.js'
 
 const VERSION = 't212-0.0.1'
 // Optional: Set defaults for all v2 functions in this file
@@ -90,6 +83,5 @@ app.get('/equity/positions', async (req, res) => {
 
   return res.status(200).json(await Positions(t212Key))
 })
-
 
 export const t212 = onRequest(app)

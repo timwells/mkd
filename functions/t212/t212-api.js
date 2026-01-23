@@ -182,7 +182,7 @@ export const Positions = async (t212Key) => {
     headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
   })
 
-  const data = await response.json()  
+  const data = await response.json()
 
   let _totalCost = 0.0
   let _currentValue = 0.0
@@ -191,25 +191,26 @@ export const Positions = async (t212Key) => {
     .map((position) => {
       position.name = position.instrument.name
       position.ticker = position.instrument.ticker
-      position.totalCost =  position.walletImpact.totalCost
+      position.totalCost = position.walletImpact.totalCost
       position.currentValue = position.walletImpact.currentValue
       position.unrealizedProfitLoss = position.walletImpact.unrealizedProfitLoss
       position.createdAt = position.createdAt.split('T')[0]
 
       _totalCost += position.totalCost
       _currentValue += position.currentValue
-      
+
       delete position.instrument
       delete position.quantityAvailableForTrading
       delete position.walletImpact
       delete position.quantityInPies
 
       return position
-    }).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-  
-    return { 
-      allPositions : _allPositions, 
-      totalCost : +(_totalCost.toFixed(2)),
-      currentValue : +(_currentValue.toFixed(2))
-    }
+    })
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+
+  return {
+    allPositions: _allPositions,
+    totalCost: +_totalCost.toFixed(2),
+    currentValue: +_currentValue.toFixed(2),
+  }
 }

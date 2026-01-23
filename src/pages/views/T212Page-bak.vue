@@ -59,9 +59,9 @@
               <VaCard class="rounded-xl">
                 <VaCardContent class="w-full" style="height: auto">
                   <EasyDataTable :headers="ordersHeader" :items="item.orders" alternating>
-                    <template #item-action="item">
-                      <VaButton size="small">Cancel</VaButton>
-                    </template>
+                    <!--template #item-action="item">
+                      <VaButton size="small" @click="t212Store.cancelOrder(item.id, item.ticker)">Cancel</VaButton>
+                    </template-->
                   </EasyDataTable>
                 </VaCardContent>
               </VaCard>

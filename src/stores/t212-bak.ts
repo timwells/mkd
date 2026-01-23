@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
-// const T212_KEY = import.meta.env.VITE_T212_KEY
-const T212_KEY = import.meta.env.VITE_T212_KEY_Z
 
+const T212_KEY = import.meta.env.VITE_T212_KEY
 const GFC = import.meta.env.VITE_GCF_URL
 const API_KEY = import.meta.env.VITE_API_KEY
 

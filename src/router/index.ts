@@ -60,6 +60,12 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
       },
       {
+        name: 't212-x',
+        path: 't212-x',
+        component: () => import('../pages/views/T212-XPage.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         name: 'nt',
         path: 'nt',
         component: () => import('../pages/views/NtPage.vue'),
