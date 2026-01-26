@@ -1,0 +1,3 @@
+# Exclude file that contains apikeys
+config.js
+

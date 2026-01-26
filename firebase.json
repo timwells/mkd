@@ -14,6 +14,11 @@
   },
   "functions": [
     {
+      "source": "functions/gk",
+      "codebase": "gk",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    },
+    {
       "source": "functions/t212",
       "codebase": "t212",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]

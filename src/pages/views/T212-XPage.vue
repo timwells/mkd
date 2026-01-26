@@ -27,7 +27,7 @@
     <div v-if="tabSelect === 'Positions'">
       <VaCard class="tab-content rounded-xl" outlined>
         <VaCardTitle>Positions txw</VaCardTitle>
-          <VaCollapse color="#158DE3" color-all icon="info">
+          <VaCollapse color="#DEE5F2" color-all icon="info">
             <VaCardContent>
               <EasyDataTable
                 :headers="positionsSummaryHeader"
@@ -41,7 +41,7 @@
       </VaCard>
       <VaCard class="tab-content rounded-xl" outlined>
         <VaCardTitle>Positions zxt</VaCardTitle>
-          <VaCollapse color="#158DE3" color-all icon="info">
+          <VaCollapse color="#DEE5F2" color-all icon="info">
           <VaCardContent>
             <EasyDataTable
               :headers="positionsSummaryHeader"
@@ -57,7 +57,7 @@
     <div v-if="tabSelect === 'Orders'">
       <VaCard class="tab-content rounded-xl" outlined>
         <VaCardTitle>Order txw</VaCardTitle>
-          <VaCollapse color="#158DE3" color-all icon="info">
+          <VaCollapse color="#DEE5F2" color-all icon="info">
           <VaCardContent>
             <EasyDataTable
               :headers="orderSummaryHeader"
@@ -85,7 +85,7 @@
       </VaCard>
       <VaCard class="tab-content rounded-xl" outlined>
         <VaCardTitle>Orders zxt</VaCardTitle>
-          <VaCollapse color="#158DE3" color-all icon="info">
+          <VaCollapse color="#DEE5F2" color-all icon="info">
             <VaCardContent>
               <EasyDataTable
                 :headers="orderSummaryHeader"
@@ -115,7 +115,7 @@
     <div v-if="tabSelect === 'Dividends'">
       <VaCard class="tab-content rounded-xl" outlined>
         <VaCardTitle>Dividends txw</VaCardTitle>
-        <VaCollapse color="#158DE3" color-all icon="info">
+        <VaCollapse color="#DEE5F2" color-all icon="info">
           <VaCardContent>
             <EasyDataTable
               :headers="dividendHistoryHeader"
@@ -128,7 +128,7 @@
       </VaCard>
       <VaCard class="tab-content rounded-xl" outlined>
         <VaCardTitle>Dividends zxt</VaCardTitle>
-        <VaCollapse color="#158DE3" color-all icon="info">
+        <VaCollapse color="#DEE5F2" color-all icon="info">
           <VaCardContent>
             <EasyDataTable
               :headers="dividendHistoryHeader"
