@@ -54,12 +54,6 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
       },
       {
-        name: 't212',
-        path: 't212',
-        component: () => import('../pages/views/T212Page.vue'),
-        meta: { requiresAuth: true },
-      },
-      {
         name: 't212-x',
         path: 't212-x',
         component: () => import('../pages/views/T212-XPage.vue'),
@@ -196,7 +190,7 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
   const isAuthenticated = authStore.isAuthenticated
 
-  console.log('Navigation guard: requiresAuth=', requiresAuth, ' isAuthenticated=', isAuthenticated, ' to=', to.name)
+  // console.log('Navigation guard: requiresAuth=', requiresAuth, ' isAuthenticated=', isAuthenticated, ' to=', to.name)
 
   if (to.name === 'login' && isAuthenticated) {
     console.log('Already authenticated, redirecting to dashboard')

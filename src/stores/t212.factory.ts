@@ -1,11 +1,7 @@
 // stores/t212.factory.ts
 import { defineStore } from 'pinia'
 
-import type {
-  T212CashSummary,
-  T212InvestmentSummary,
-  T212AccountSummary,
-} from '@/types/t212.ts' // adjust path if needed
+import type { T212CashSummary, T212InvestmentSummary, T212AccountSummary } from '@/types/t212.ts' // adjust path if needed
 
 // Reusable factory — call this function with a unique key to get a store instance
 export const createT212Store = (apiKeyId: string) => {
@@ -14,7 +10,11 @@ export const createT212Store = (apiKeyId: string) => {
   return defineStore(storeId, {
     state: () => ({
       accountSummary: null as T212AccountSummary | null,
-      openOrders: [] as any[],           // add proper type when known
+
+      totalValue: 0.0 as number,
+      investmentSummary: null as T212InvestmentSummary | null,
+      cashSummary: null as T212CashSummary | null,
+      openOrders: [] as any[], // add proper type when known
       positions: [] as any[],
       dividendHistory: [] as any[],
       dividendHistoryByPeriod: [] as any[],
@@ -31,27 +31,29 @@ export const createT212Store = (apiKeyId: string) => {
         return {
           'Content-Type': 'application/json',
           'x-api-key': import.meta.env.VITE_API_KEY, // your backend key — shared
-          'x-t212-key': t212Key,                    // per-account key
+          'x-t212-key': t212Key, // per-account key
         }
       },
-
       async getAccountSummary(t212Key: string): Promise<void> {
         this.error = null
         this.loading = true
+
         try {
           const response = await fetch(`${import.meta.env.VITE_GCF_URL}/t212/equity/account/summary`, {
             method: 'GET',
             headers: this.getHeaders(t212Key),
           })
           if (!response.ok) throw new Error(`Failed: ${response.statusText}`)
-          this.accountSummary = await response.json()
+          const data = await response.json()
+          this.totalValue = data.totalValue
+          this.cashSummary = data.cash
+          this.investmentSummary = data.investments
         } catch (err: any) {
           this.error = err.message || 'Unknown error'
         } finally {
           this.loading = false
         }
       },
-
       async getOpenOrders(t212Key: string): Promise<void> {
         this.error = null
         this.loading = true
@@ -91,24 +93,24 @@ export const createT212Store = (apiKeyId: string) => {
       // cancelOrder would also take t212Key + orderId + ticker
       async cancelOrder(t212Key: string, orderId: string, ticker: string): Promise<void> {
         // ... same pattern, use getHeaders(t212Key)
-      },      
+      },
       async getPositions(t212Key: string): Promise<void> {
         this.error = null
         this.loading = true
         try {
-            const response = await fetch(`${import.meta.env.VITE_GCF_URL}/t212/equity/positions`, {
-                method: 'GET',
-                headers: this.getHeaders(t212Key),
-            })
+          const response = await fetch(`${import.meta.env.VITE_GCF_URL}/t212/equity/positions`, {
+            method: 'GET',
+            headers: this.getHeaders(t212Key),
+          })
 
-            if (!response.ok) throw new Error('Failed to fetch items')
-            const data = await response.json()
-            this.positions = data.allPositions
-            this.loading = false
+          if (!response.ok) throw new Error('Failed to fetch items')
+          const data = await response.json()
+          this.positions = data.allPositions
+          this.loading = false
         } catch (err: any) {
-            this.error = err.message || 'Unknown error'
+          this.error = err.message || 'Unknown error'
         } finally {
-            this.loading = false
+          this.loading = false
         }
       },
       // Add reset/clear if needed
