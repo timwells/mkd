@@ -71,6 +71,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/views/DividendPage.vue'),
       },
       {
+        name: 'gk',
+        path: 'gk',
+        component: () => import('../pages/views/GeminiAiPage.vue'),
+      },
+
+      {
         name: 'settings',
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),

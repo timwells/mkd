@@ -14,7 +14,8 @@
   "main": "index.js",
   "type": "module",
   "dependencies": {
-    "@genkit-ai/googleai": "^1.28.0",
+    "@genkit-ai/google-genai": "^1.28.0",
+    "express": "^5.2.1",
     "firebase-functions": "^7.0.3",
     "genkit": "^1.28.0"
   },

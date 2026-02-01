@@ -68,12 +68,19 @@ export default {
       },
     },
     {
+      name: 'gk',
+      displayName: 'menu.gk',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
+    /*{
       name: 'testing',
       displayName: 'menu.testing',
       meta: {
         icon: 'vuestic-iconset-dashboard',
       },
-    },
+    },*/
     /*    {
       name: 'users',
       displayName: 'menu.users',
