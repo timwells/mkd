@@ -6,11 +6,11 @@
       <VaButton @click="makeRequest">Req.</VaButton>
     </VaCardContent>
   </VaCard>
-  
+
   <VaDivider />
-    <VaCard class="rounded-xl">
+  <VaCard class="rounded-xl">
     <VaCardTitle>Response...</VaCardTitle>
-    <VaCardContent style="height: 500px">      
+    <VaCardContent style="height: 500px">
       <div class="markdown-body">
         <VueMarkdown :source="gkStore.content" />
       </div>
@@ -22,8 +22,8 @@
 import VueMarkdown from 'vue-markdown-render'
 import { useGkStore } from '@/stores/gk'
 
-const gkStore = useGkStore();
+const gkStore = useGkStore()
 const makeRequest = async () => {
-  await gkStore.postRequest();
+  await gkStore.postRequest()
 }
 </script>

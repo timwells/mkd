@@ -75,7 +75,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'gk',
         component: () => import('../pages/views/GeminiAiPage.vue'),
       },
-
       {
         name: 'settings',
         path: 'settings',

@@ -11,8 +11,8 @@ import router from './router'
 
 import vuesticGlobalConfig from './services/vuestic-ui/global-config'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
-import 'vue3-easy-data-table/dist/style.css'
 
+import 'vue3-easy-data-table/dist/style.css'
 
 const app = createApp(App)
 //if (import.meta.env.DEV) {
