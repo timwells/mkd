@@ -1,14 +1,75 @@
 import axios from 'axios'
 import moment from 'moment'
 import * as cheerio from 'cheerio'
+import crypto from 'crypto';
+
+import admin from 'firebase-admin';
+admin.initializeApp(); // Cloud Function auto credentials
+const bucket = admin.storage().bucket();
 
 const NT_SITE_URL = 'https://www.nakedtrader.co.uk'
 const NT_SITE_TRADES = NT_SITE_URL + '/trades.htm?type=sh'
 const NT_SITE_ARCHIVES = NT_SITE_URL + '/archive.htm'
+const NT_HEADERS = { headers: { Cookie: 'nt=1;' } }
 
-export const trades = async () => {
-  const { data } = await axios.get(NT_SITE_TRADES, { headers: { Cookie: 'nt=1;' } })
-  const $ = cheerio.load(data)
+const NT_CACHE_FOLDER_PATH = 'cache/nt'
+const NT_HASH_KEY_NAME = 'meta';
+const NT_CONTENT_NAME =  'content';
+
+const _readCacheMeta = async (cacheKey) => {
+  const file = bucket.file(`${NT_CACHE_FOLDER_PATH}/${cacheKey}.json`);
+
+  try {
+    const [buf] = await file.download();
+    return JSON.parse(buf.toString());
+  } catch (err) {
+    if (err.code === 404) 
+      return null;
+    return null;
+  }
+}
+const _writeCacheMeta = async (cacheKey, meta) => {
+  const file = bucket.file(`${NT_CACHE_FOLDER_PATH}/${cacheKey}.json`);
+  await file.save(JSON.stringify(meta, null, 2), {
+    contentType: 'application/json',
+  });
+}
+const _hashContent = async (data) => {
+  return crypto
+    .createHash('sha256')
+    .update(data ?? '')
+    .digest('hex');
+}
+const _readCacheData = async (cacheDataKey) => {
+  const file = bucket.file(`${NT_CACHE_FOLDER_PATH}/${cacheDataKey}.json`);
+  try {
+    const [buf] = await file.download();
+    return JSON.parse(buf.toString());
+  } catch (err) {
+    if (err.code === 404) return null;
+    throw err;
+  }
+}
+const _writeCacheData = async (cacheDataKey, data) => {
+  const file = bucket.file(`${NT_CACHE_FOLDER_PATH}/${cacheDataKey}.json`);
+  await file.save(JSON.stringify(data, null, 2), {
+    contentType: 'application/json',
+  });
+}
+const _extractTradesContent = (html) => {
+  const $ = cheerio.load(html);
+  const raw =
+    $('.trades')
+      .text()                      // ignore markup noise
+      .replace(/\u00a0/g, ' ')     // nbsp
+      .replace(/\s+/g, ' ')        // whitespace
+      .trim()
+      .toLowerCase();              // canonical form
+  return raw ?? '';
+}
+const _tradesProcessor = async (content) => {
+  const $ = cheerio.load(content)
+
   const allTrades = []
   const headers = []
   const openTrades = []
@@ -105,12 +166,58 @@ export const trades = async () => {
       losses: nLosses,
       gainPercent: +((nGains / nClosedTrades) * 100).toFixed(2),
       lossPercent: +((nLosses / nClosedTrades) * 100).toFixed(2),
-    },
+    }
+  }
+  return resObj;
+}
+const _stableHash = (obj) => {
+  return crypto
+    .createHash('sha256')
+    .update(JSON.stringify(obj, Object.keys(obj).sort()))
+    .digest('hex');
+}
+export const trades = async () => {
+  const fetchedAt = new Date().toISOString();
+
+  // 1️⃣ Read previous cache metadata + content
+  const [meta, cached] = await Promise.all([
+    _readCacheMeta(NT_HASH_KEY_NAME),
+    _readCacheData(NT_CONTENT_NAME)
+  ]);
+
+  // 2️⃣ Fetch remote HTML always (needed for new content)
+  const { data } = await axios.get(NT_SITE_TRADES, NT_HEADERS);
+
+  // 3️⃣ Process raw data into canonical object
+  const basicContent = await _extractTradesContent(data);
+
+  // 4️⃣ Compute deterministic hash of processed object
+  const hash = _stableHash(basicContent);
+
+  // 5️⃣ Compare hash to cached hash to determine cache hit
+  if (meta?.hash === hash && cached) {
+    // Cache hit → no need to write anything
+    return {
+      ...cached,
+      cacheHit: true,
+      cacheFetchedAt: meta.fetchedAt
+    };
   }
 
-  return resObj
-}
+  const tradesObj = await _tradesProcessor(data);
 
+  // 6️⃣ Cache miss → persist updated cache (best effort)
+  await Promise.allSettled([
+    _writeCacheData(NT_CONTENT_NAME, tradesObj),
+    _writeCacheMeta(NT_HASH_KEY_NAME, { hash, fetchedAt })
+  ]);
+
+  return {
+    ...tradesObj,
+    cacheHit: false,
+    cacheFetchedAt: fetchedAt
+  };
+};
 export const archives = async () => {
   let records = []
   const { data } = await axios.get(NT_SITE_ARCHIVES, { headers: { Cookie: 'nt=1;' } })
@@ -129,7 +236,6 @@ export const archives = async () => {
   })
   return records
 }
-
 export const archiveContent = async (a) => {
   // const {data} = await axios.get(`${req.query.a}`,{ headers: { Cookie: "nt=1;" } })
   const { data } = await axios.get(`${a}`, { headers: { Cookie: 'nt=1;' } })
