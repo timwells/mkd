@@ -6,11 +6,7 @@ import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
 
-import { 
-  trades, 
-  archives, 
-  archiveContent 
-} from './nt-api.js'
+import { trades, archives, archiveContent } from './nt-api.js'
 
 const VERSION = 'nt-0.0.1'
 // Optional: Set defaults for all v2 functions in this file
