@@ -74,6 +74,13 @@ export default {
         icon: 'vuestic-iconset-dashboard',
       },
     },
+    {
+      name: 'octopus',
+      displayName: 'menu.octopus',
+      meta: {
+        icon: 'vuestic-iconset-dashboard',
+      },
+    },
     /*{
       name: 'testing',
       displayName: 'menu.testing',

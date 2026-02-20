@@ -71,6 +71,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/views/DividendPage.vue'),
       },
       {
+        name: 'octopus',
+        path: 'octopus',
+        component: () => import('../pages/views/OctopusPage.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         name: 'gk',
         path: 'gk',
         component: () => import('../pages/views/GeminiAiPage.vue'),
