@@ -5,17 +5,15 @@ admin.initializeApp()
 
 const bucket = admin.storage().bucket()
 
-const FANDG_SITE_URL = "https://cdn.jmbullion.com/fearandgreed/fearandgreed.json"
+const FANDG_SITE_URL = 'https://cdn.jmbullion.com/fearandgreed/fearandgreed.json'
 const JOB_CACHE_FOLDER_PATH = 'jobs/fearandgreed'
-const FANDG_PREFIX = "fearandgreed"
+const FANDG_PREFIX = 'fearandgreed'
 
-function createTimestampFilename(prefix = "file", ext = "json") {
+function createTimestampFilename(prefix = 'file', ext = 'json') {
   const now = new Date()
 
   const iso = now.toISOString()
-  const safe = iso
-    .replace(/:/g, "-")
-    .replace(/\..+/, "")
+  const safe = iso.replace(/:/g, '-').replace(/\..+/, '')
 
   return `${prefix}_${safe}.json`
 }
@@ -27,7 +25,7 @@ export const getFearAndGreedData = async () => {
     })
 
     if (!data || typeof data !== 'object') {
-      throw new Error("Invalid JSON payload")
+      throw new Error('Invalid JSON payload')
     }
 
     const objectName = createTimestampFilename(FANDG_PREFIX)
@@ -36,11 +34,10 @@ export const getFearAndGreedData = async () => {
 
     await file.save(JSON.stringify(data), {
       contentType: 'application/json',
-      resumable: false
+      resumable: false,
     })
-
   } catch (err) {
-    console.error("Failed to fetch/store Fear & Greed:", err)
+    console.error('Failed to fetch/store Fear & Greed:', err)
     throw err
   }
 }
