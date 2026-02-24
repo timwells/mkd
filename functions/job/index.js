@@ -18,7 +18,7 @@ export const runJobs = onSchedule(
 
   async (event) => {
     await getLatestFearAndGreedData(bucket);
-    await mergeFearAndGreedData(bucket);
+    // await mergeFearAndGreedData(bucket);
     await getMarketSentimentData(bucket);
   },
 )
