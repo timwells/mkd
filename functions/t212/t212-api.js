@@ -175,7 +175,6 @@ export const TransactionHistory0 = async (t212Key) => {
   return data
 }
 
-
 export const TransactionInterestHistory = async (t212Key) => {
   let allTransactions = []
   let nextPagePath = `/api/v0/equity/history/transactions`
