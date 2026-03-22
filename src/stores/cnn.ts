@@ -21,9 +21,9 @@ export interface FearAndGreedData {
   previous_1_year: number
 }
 export interface MarketHistorical {
-  timestamp: number
-  score: number
-  rating: string
+  // timestamp: number
+  // score: number
+  // rating: string
   data: TimeDataPair[]
 }
 
@@ -105,18 +105,20 @@ export const useCnnStore = defineStore('cnn', {
 
         const json = (await response.json()) as unknown
 
-        // Runtime type checks
-        if (isMarketHistorical((json as any)?.fear_and_greed_historical)) {
-          this.marketFearAndGreedHistorical = (json as any).fear_and_greed_historical
-        } else {
-          this.marketFearAndGreedHistorical = null
-        }
+        console.log('Market Sentiment API Response:', json)
 
-        if (isMarketHistorical((json as any)?.market_volatility_vix)) {
-          this.marketVolatilityHistorical = (json as any).market_volatility_vix
-        } else {
-          this.marketVolatilityHistorical = null
-        }
+        // Runtime type checks
+        // if (isMarketHistorical((json as any)?.fear_and_greed_historical)) {
+        this.marketFearAndGreedHistorical = (json as any).fear_and_greed_historical
+        //} else {
+        //  this.marketFearAndGreedHistorical = null
+        //}
+
+        //if (isMarketHistorical((json as any)?.market_volatility_vix)) {
+        this.marketVolatilityHistorical = (json as any).market_volatility_vix
+        //} else {
+        //  this.marketVolatilityHistorical = null
+        //}
 
         this.marketMomentumSp500Historical = (json as any).market_momentum_sp500
         this.marketMomentumSp500MA200 = (json as any).market_momentum_sp500_MA200

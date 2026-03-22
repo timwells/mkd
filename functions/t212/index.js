@@ -5,9 +5,16 @@ import express from 'express'
 import cors from 'cors'
 
 import { apiKeyValidation } from './middleware/auth.js'
-import { OpenOrders, CancelOrder, DividendHistory, TransactionHistory, AccountSummary, Positions } from './t212-api.js'
+import {
+  OpenOrders,
+  CancelOrder,
+  DividendHistory,
+  TransactionInterestHistory,
+  AccountSummary,
+  Positions,
+} from './t212-api.js'
 
-const VERSION = 't212-0.0.1'
+const VERSION = 't212-0.0.2'
 // Optional: Set defaults for all v2 functions in this file
 setGlobalOptions({
   region: 'us-central1',
@@ -72,7 +79,7 @@ app.get('/equity/history/transactions', async (req, res) => {
     return res.status(400).json({ error: 'Missing x-t212-key header' })
   }
 
-  return res.status(200).json(await TransactionHistory(t212Key))
+  return res.status(200).json(await TransactionInterestHistory(t212Key))
 })
 
 app.get('/equity/positions', async (req, res) => {
@@ -85,3 +92,4 @@ app.get('/equity/positions', async (req, res) => {
 })
 
 export const t212 = onRequest(app)
+

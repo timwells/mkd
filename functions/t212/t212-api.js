@@ -155,7 +155,7 @@ export const AccountSummary = async (t212Key) => {
   return data
 }
 
-export const TransactionHistory = async (t212Key) => {
+export const TransactionHistory0 = async (t212Key) => {
   const query = new URLSearchParams({
     cursor: 'string',
     time: '2025-01-01T00:00:00Z',
@@ -174,6 +174,96 @@ export const TransactionHistory = async (t212Key) => {
 
   return data
 }
+
+
+export const TransactionInterestHistory = async (t212Key) => {
+  let allTransactions = []
+  let nextPagePath = `/api/v0/equity/history/transactions`
+  let nextPagePathVariables = `limit=50`
+
+  // https://live.trading212.com`
+  // limit=50&cursor=019baacf-fd57-7678-a6d2-1e34580ba3b0&time=2026-01-11T02:08:36.100Z
+  do {
+    const reqPath = `${T212_HOST2}${nextPagePath}?${nextPagePathVariables}`
+    const response = await fetch(reqPath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
+    })
+
+    const data = await response.json()
+    allTransactions.push(...data.items)
+
+    nextPagePathVariables = data.nextPagePath
+
+    if (nextPagePathVariables != null) {
+      // simple rate limit
+      await setTimeout(250)
+    }
+  } while (nextPagePathVariables !== null)
+
+  //  "type": "DEPOSIT",
+  const interetsPayments = allTransactions
+    .map((transaction) => {
+      transaction.paid = transaction.dateTime.split('T')[0] // keep only date part
+      const dateParts = transaction.paid.split('-')
+      transaction.period = (dateParts[0] + dateParts[1]).toString()
+      transaction.year = parseInt(dateParts[0])
+      transaction.month = parseInt(dateParts[1])
+
+      return transaction
+    })
+    .sort((a, b) => new Date(a.paid) - new Date(b.paid))
+
+  return interetsPayments
+
+  /*
+  const periodMap = new Map()
+
+  // Pad YYYYMM periods with no dividends to zero totals
+  const startYear = dividends[0].year
+  const endYear = dividends[dividends.length - 1].year
+  const startMonth = dividends[0].month
+  const endMonth = dividends[dividends.length - 1].month
+
+  for (let year = startYear; year <= endYear; year++) {
+    const monthStart = year === startYear ? startMonth : 1
+    const monthEnd = year === endYear ? endMonth : 12
+
+    for (let month = monthStart; month <= monthEnd; month++) {
+      const period = `${year}${month.toString().padStart(2, '0')}`
+      periodMap.set(period, periodMap.get(period) ?? [])
+    }
+  }
+
+  dividends.forEach((order) => {
+    const period = order.period
+    periodMap.get(period).push(order)
+  })
+
+  let runningTotal = 0.0
+  const periodTotals = Array.from(periodMap.entries()).map(([period, orders]) => {
+    const total = +orders.reduce((sum, order) => sum + order.amount, 0).toFixed(2)
+    runningTotal += total
+    return { period, total, runningTotal: +runningTotal.toFixed(2) }
+  })
+  
+  return { dividends, periodTotals, grandDividendTotal: +runningTotal.toFixed(2) }
+  */
+}
+
+/*
+const classifyDepositByTime = (item) => {
+  if (item.type !== "DEPOSIT") return "OTHER";
+
+  const hour = new Date(item.dateTime).getUTCHours();
+
+  if (hour >= 1 && hour < 3) {
+    return "INTEREST";
+  }
+
+  return "CASH_DEPOSIT";
+};
+*/
 
 export const Positions = async (t212Key) => {
   const positionsPath = `/api/v0/equity/positions?limit=100`

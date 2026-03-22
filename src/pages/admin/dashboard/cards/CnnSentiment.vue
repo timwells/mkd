@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
     <VaCard square outlined class="rounded-xl">
       <VaCardContent>
         <AgCharts :options="sp500Options" />
@@ -178,7 +178,7 @@ const sp500Options = computed(() =>
     sp500MA50Data.value,
     sp500MA100Data.value,
     sp500MA200Data.value,
-    5200,
+    5000,
     7000,
     // Math.floor(getMinY(sp500Data.value)*0.96),
     // Math.floor(getMaxY(sp500Data.value)*1.04),

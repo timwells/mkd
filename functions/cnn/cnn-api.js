@@ -12,6 +12,12 @@ const HEADERS = {
 }
 
 const JMB_FEAR_AND_GREED = 'https://cdn.jmbullion.com/fearandgreed/fearandgreed.json'
+const MERGED_FOLDER_PATH = 'jobs/fearandgreed-merged'
+const MERGED_FILENAME = 'fearandgreed-merged.json'
+
+const CNN_FANDG_MERGED_FOLDER_PATH = 'jobs/cnn-fearandgreed-merged'
+const CNN_FANDG_MERGED_FILENAME = 'cnn-fearandgreed-merged.json'
+const CNN_FANDG_MERGED_FILENAME1 = 'cnn-fearandgreed-merged1.json'
 
 const goldSentiment = async () => {
   let { data } = await axios.get(JMB_FEAR_AND_GREED)
@@ -20,6 +26,61 @@ const goldSentiment = async () => {
       new Date(date).getTime(), // timestamp in milliseconds
       value,
     ]),
+  }
+}
+
+const goldSentimentCached = async (bucket) => {
+  try {
+    const file = bucket.file(`${MERGED_FOLDER_PATH}/${MERGED_FILENAME}`)
+
+    // Check file exists
+    const [exists] = await file.exists()
+    if (!exists) {
+      throw new Error('Cached file does not exist')
+    }
+
+    // Download file into memory buffer
+    const [buffer] = await file.download()
+
+    // Parse JSON
+    const data = JSON.parse(buffer.toString('utf8'))
+
+    return {
+      data: Object.entries(data).map(([date, value]) => [
+        new Date(date).getTime(), // timestamp in ms
+        value,
+      ]),
+    }
+  } catch (err) {
+    console.error('Error loading cached sentiment:', err)
+    throw err
+  }
+}
+
+const cnnSentiment = async () => {
+  return ({ data } = await axios.get(CNN_FEAR_AND_GREED, { headers: HEADERS }))
+}
+
+const cnnSentimentCached = async (bucket) => {
+  try {
+    const file = bucket.file(`${CNN_FANDG_MERGED_FOLDER_PATH}/${CNN_FANDG_MERGED_FILENAME}`)
+
+    // Check file exists
+    const [exists] = await file.exists()
+    if (!exists) {
+      throw new Error('Cached file does not exist')
+    }
+
+    // Download file into memory buffer
+    const [buffer] = await file.download()
+
+    // Parse JSON
+    const data = JSON.parse(buffer.toString('utf8'))
+
+    return data
+  } catch (err) {
+    console.error('Error loading cached sentiment:', err)
+    throw err
   }
 }
 
@@ -32,15 +93,9 @@ const buildTASeries = (series, sma) => {
   return smaTimeValue
 }
 
-export const marketSentiment = async () => {
+export const marketSentiment = async (bucket) => {
   try {
-    let { data } = await axios.get(CNN_FEAR_AND_GREED, { headers: HEADERS })
-
-    data.fear_and_greed.score = +data.fear_and_greed.score.toFixed(2)
-    data.fear_and_greed.previous_close = +data.fear_and_greed.previous_close.toFixed(2)
-    data.fear_and_greed.previous_1_week = +data.fear_and_greed.previous_1_week.toFixed(2)
-    data.fear_and_greed.previous_1_month = +data.fear_and_greed.previous_1_month.toFixed(2)
-    data.fear_and_greed.previous_1_year = +data.fear_and_greed.previous_1_year.toFixed(2)
+    let data = await cnnSentimentCached(bucket)
 
     // Combine F&G date-time and values
     data.fear_and_greed_historical.data = data.fear_and_greed_historical.data.map((e) => {
@@ -80,7 +135,7 @@ export const marketSentiment = async () => {
     delete data.market_volatility_vix_50
 
     // Gold Fear and Greed
-    data.gold_fear_and_greed = await goldSentiment()
+    data.gold_fear_and_greed = await goldSentimentCached(bucket)
 
     return data
   } catch (e) {
@@ -88,3 +143,65 @@ export const marketSentiment = async () => {
   }
   return null
 }
+
+/*
+export const marketSentiment = async (bucket) => {
+  try {
+    let { data } = await axios.get(CNN_FEAR_AND_GREED, { headers: HEADERS })
+
+    data.fear_and_greed.score = +data.fear_and_greed.score.toFixed(2)
+    data.fear_and_greed.previous_close = +data.fear_and_greed.previous_close.toFixed(2)
+    data.fear_and_greed.previous_1_week = +data.fear_and_greed.previous_1_week.toFixed(2)
+    data.fear_and_greed.previous_1_month = +data.fear_and_greed.previous_1_month.toFixed(2)
+    data.fear_and_greed.previous_1_year = +data.fear_and_greed.previous_1_year.toFixed(2)
+
+    // Combine F&G date-time and values
+    data.fear_and_greed_historical.data = data.fear_and_greed_historical.data.map((e) => {
+      const d = new Date(e.x) // parse original x
+      d.setUTCHours(0, 0, 0, 0) // set time to midnight UTC
+      const ts = d.getTime() // get Unix timestamp in milliseconds
+      return [ts, +e.y.toFixed(2)]
+    })
+
+    // Combine Vix date-time and values
+    data.market_volatility_vix.data = data.market_volatility_vix.data.map((e) => 
+      [e.x, +e.y.toFixed(2)]
+  )
+
+    // Calculate 200 day moving average
+    const series = data.market_momentum_sp500.data.map((e) => +e.y.toFixed(0))
+
+    data.market_momentum_sp500_MA200 = {
+      data: buildTASeries(data.market_momentum_sp500.data, SMA.calculate({ period: 200, values: series })),
+    }
+    data.market_momentum_sp500_MA100 = {
+      data: buildTASeries(data.market_momentum_sp500.data, SMA.calculate({ period: 100, values: series })),
+    }
+    data.market_momentum_sp500_MA50 = {
+      data: buildTASeries(data.market_momentum_sp500.data, SMA.calculate({ period: 50, values: series })),
+    }
+
+    // Combine momentum_sp500 date-time and values
+    data.market_momentum_sp500.data = data.market_momentum_sp500.data.map((e) => [e.x, +e.y.toFixed(0)])
+
+    // Combine stock_price_strength date-time and values
+    data.stock_price_strength.data = data.stock_price_strength.data.map((e) => [e.x, +e.y.toFixed(2)])
+
+    delete data.market_momentum_sp125
+    delete data.safe_haven_demand
+    delete data.junk_bond_demand
+    delete data.stock_price_breadth
+    delete data.put_call_options
+    delete data.market_volatility_vix_50
+
+    // Gold Fear and Greed
+    data.gold_fear_and_greed = await goldSentimentCached(bucket)
+
+    return data;
+
+  } catch (e) {
+    console.log(e.message)
+  }
+  return null
+}
+*/
