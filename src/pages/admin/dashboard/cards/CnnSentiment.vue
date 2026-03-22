@@ -20,8 +20,6 @@
         <AgCharts :options="goldFearAndGreedOptions" />
       </VaCardContent>
     </VaCard>
-  </div>
-  <div class="grid grid-cols-1 lg:grid-cols-1 gap-4">
     <VaCard square outlined class="rounded-xl">
       <VaCardContent>
         <img
