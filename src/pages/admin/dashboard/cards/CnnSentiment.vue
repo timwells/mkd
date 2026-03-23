@@ -169,7 +169,9 @@ const ORANGE = '#ffcc00'
 const fgOptions = computed(() =>
   buildChartOptions(fgData.value, 0, 100, BLUE, 85, GREEN, 15, RED, 'SP500: Fear & Greed Index'),
 )
-const vixOptions = computed(() => buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX: Index'))
+const vixOptions = computed(() =>
+  buildChartOptions(vixData.value, 0, 50, BLUE, 35, RED, 10, GREEN, 'VIX: Volatility Index'),
+)
 const sp500Options = computed(() =>
   buildChartOptions2(
     sp500Data.value,
