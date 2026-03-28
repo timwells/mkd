@@ -164,7 +164,10 @@
         <VaCardContent class="w-full" style="height: 500px">
           <p>
             Grand Total: £{{ storeFor('txw').dividendGrandTotal }} /
-            {{ storeFor('txw').dividendHistoryByPeriod.length }} mths
+            {{ storeFor('txw').dividendHistoryByPeriod.length }} mths / £{{
+              storeFor('txw').dividendPerMonth.toFixed(2)
+            }}
+            avg.mth
           </p>
           <AgCharts
             :options="dividendHistoryByPeriodChartOptions(storeFor('txw').dividendHistoryByPeriod)"
@@ -178,7 +181,10 @@
         <VaCardContent class="w-full" style="height: 600px">
           <p>
             Grand Total: £{{ storeFor('zxt').dividendGrandTotal }} /
-            {{ storeFor('zxt').dividendHistoryByPeriod.length }} mths
+            {{ storeFor('zxt').dividendHistoryByPeriod.length }} mths / £{{
+              storeFor('zxt').dividendPerMonth.toFixed(2)
+            }}
+            avg.mth
           </p>
           <AgCharts
             :options="dividendHistoryByPeriodChartOptions(storeFor('zxt').dividendHistoryByPeriod)"

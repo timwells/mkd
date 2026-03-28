@@ -19,7 +19,7 @@ export const createT212Store = (apiKeyId: string) => {
       dividendHistory: [] as any[],
       dividendHistoryByPeriod: [] as any[],
       dividendGrandTotal: 0.0,
-
+      dividendPerMonth: 0.0,
       loading: false,
       error: null as string | null,
       nextReq: 0.0,
@@ -83,6 +83,7 @@ export const createT212Store = (apiKeyId: string) => {
           this.dividendHistory = data.dividends ?? []
           this.dividendHistoryByPeriod = data.periodTotals ?? []
           this.dividendGrandTotal = data.grandDividendTotal ?? 0.0
+          this.dividendPerMonth = data.grandDividendTotal / (data.periodTotals?.length || 1) // avoid division by zero
         } catch (err: any) {
           this.error = err.message || 'Unknown error'
         } finally {
