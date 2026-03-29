@@ -1,6 +1,5 @@
 const T212_HOST = `https://live.trading212.com/api/v0`
 const T212_HOST2 = `https://live.trading212.com`
-
 import { setTimeout } from 'node:timers/promises'
 
 const RATE_LIMIT_DELAY_MS = 900
