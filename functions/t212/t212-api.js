@@ -76,7 +76,9 @@ export const DividendHistory = async (t212Key) => {
   let bRateLimitHit = false
   do {
     const reqPath = `${T212_HOST2}${nextPagePath}`
-    if(bRateLimitHit) { await setTimeout(RATE_LIMIT_DELAY_MS) } // wait before next request
+    if (bRateLimitHit) {
+      await setTimeout(RATE_LIMIT_DELAY_MS)
+    } // wait before next request
 
     const response = await fetch(reqPath, {
       method: 'GET',
@@ -151,7 +153,7 @@ export const AccountSummary = async (t212Key) => {
     headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
   })
 
-  const data = await response.json();
+  const data = await response.json()
   data.totalCashForInterest = +(data.cash.availableToTrade + data.cash.reservedForOrders).toFixed(2)
   return data
 }
@@ -164,36 +166,39 @@ export const TransactionInterestHistory = async (t212Key) => {
   let bRateLimitHit = false
   do {
     const reqPath = `${T212_HOST2}${nextPagePath}?${nextPagePathVariables}`
-    
-    if(bRateLimitHit) { await setTimeout(RATE_LIMIT_DELAY_MS) } // wait before next request
-    
+
+    if (bRateLimitHit) {
+      await setTimeout(RATE_LIMIT_DELAY_MS)
+    } // wait before next request
+
     const response = await fetch(reqPath, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
     })
 
     const data = await response.json()
-    if(data === null || !data.items) {
-      break; // exit loop if response is invalid
+    if (data === null || !data.items) {
+      break // exit loop if response is invalid
     }
 
     // only keep interest payments;
-    allTransactions.push(...data.items.filter((item) => {
-        if (!item?.dateTime || item.type !== "DEPOSIT") return false;
-        const date = new Date(item.dateTime);
-        if (isNaN(date.getTime())) return false;
-        const hour = date.getUTCHours();
-        return hour >= 0 && hour <= 4;   // 00:00 - 04:00 UTC
-    })) 
+    allTransactions.push(
+      ...data.items.filter((item) => {
+        if (!item?.dateTime || item.type !== 'DEPOSIT') return false
+        const date = new Date(item.dateTime)
+        if (isNaN(date.getTime())) return false
+        const hour = date.getUTCHours()
+        return hour >= 0 && hour <= 4 // 00:00 - 04:00 UTC
+      }),
+    )
 
     nextPagePathVariables = data.nextPagePath
     bRateLimitHit = true
-
   } while (nextPagePathVariables !== null)
 
   const interetsPayments = allTransactions
     .map((transaction) => {
-      transaction.type = transaction.type = "INTEREST";
+      transaction.type = transaction.type = 'INTEREST'
       transaction.paid = transaction.dateTime.split('T')[0] // keep only date part
       const dateParts = transaction.paid.split('-')
       transaction.period = (dateParts[0] + dateParts[1]).toString()
@@ -202,7 +207,8 @@ export const TransactionInterestHistory = async (t212Key) => {
       delete transaction.reference
       delete transaction.dateTime
       return transaction
-    }).sort((a, b) => new Date(a.paid) - new Date(b.paid))
+    })
+    .sort((a, b) => new Date(a.paid) - new Date(b.paid))
 
   const periodMap = new Map()
 
