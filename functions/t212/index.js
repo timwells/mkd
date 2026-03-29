@@ -82,6 +82,15 @@ app.get('/equity/history/transactions', async (req, res) => {
   return res.status(200).json(await TransactionInterestHistory(t212Key))
 })
 
+app.get('/equity/history/transactions/interest', async (req, res) => {
+  const t212Key = req.headers['x-t212-key'] || null
+  if (!t212Key) {
+    return res.status(400).json({ error: 'Missing x-t212-key header' })
+  }
+
+  return res.status(200).json(await TransactionInterestHistory(t212Key))
+})
+
 app.get('/equity/positions', async (req, res) => {
   const t212Key = req.headers['x-t212-key'] || null
   if (!t212Key) {

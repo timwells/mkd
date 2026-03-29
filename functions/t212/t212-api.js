@@ -3,6 +3,8 @@ const T212_HOST2 = `https://live.trading212.com`
 
 import { setTimeout } from 'node:timers/promises'
 
+const RATE_LIMIT_DELAY_MS = 900
+
 export const OpenOrders = async (t212Key) => {
   const response = await fetch(`${T212_HOST}/equity/orders`, {
     method: 'GET',
@@ -71,8 +73,11 @@ export const DividendHistory = async (t212Key) => {
   let allDividends = []
   let nextPagePath = `/api/v0/equity/history/dividends?limit=50`
 
+  let bRateLimitHit = false
   do {
     const reqPath = `${T212_HOST2}${nextPagePath}`
+    if(bRateLimitHit) { await setTimeout(RATE_LIMIT_DELAY_MS) } // wait before next request
+
     const response = await fetch(reqPath, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
@@ -82,11 +87,7 @@ export const DividendHistory = async (t212Key) => {
     allDividends.push(...data.items)
 
     nextPagePath = data.nextPagePath
-
-    if (nextPagePath != null) {
-      // simple rate limit
-      await setTimeout(250)
-    }
+    bRateLimitHit = true
   } while (nextPagePath !== null)
 
   const dividends = allDividends
@@ -155,74 +156,61 @@ export const AccountSummary = async (t212Key) => {
   return data
 }
 
-export const TransactionHistory0 = async (t212Key) => {
-  const query = new URLSearchParams({
-    cursor: 'string',
-    time: '2025-01-01T00:00:00Z',
-    limit: '21',
-  }).toString()
-
-  //const transactionHistoryPath = `/api/v0/equity/history/transactions?${query}`
-  const transactionHistoryPath = `/api/v0/equity/history/transactions?limit=50`
-
-  const response = await fetch(`${T212_HOST2}${transactionHistoryPath}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
-  })
-
-  const data = await response.json()
-
-  return data
-}
-
 export const TransactionInterestHistory = async (t212Key) => {
   let allTransactions = []
   let nextPagePath = `/api/v0/equity/history/transactions`
-  let nextPagePathVariables = `limit=50`
+  let nextPagePathVariables = `limit=30`
 
-  // https://live.trading212.com`
-  // limit=50&cursor=019baacf-fd57-7678-a6d2-1e34580ba3b0&time=2026-01-11T02:08:36.100Z
+  let bRateLimitHit = false
   do {
     const reqPath = `${T212_HOST2}${nextPagePath}?${nextPagePathVariables}`
+    
+    if(bRateLimitHit) { await setTimeout(RATE_LIMIT_DELAY_MS) } // wait before next request
+    
     const response = await fetch(reqPath, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
     })
 
     const data = await response.json()
-    allTransactions.push(...data.items)
+    if(data === null || !data.items) {
+      break; // exit loop if response is invalid
+    }
+
+    // only keep interest payments;
+    allTransactions.push(...data.items.filter((item) => {
+        if (!item?.dateTime || item.type !== "DEPOSIT") return false;
+        const date = new Date(item.dateTime);
+        if (isNaN(date.getTime())) return false;
+        const hour = date.getUTCHours();
+        return hour >= 0 && hour <= 4;   // 00:00 - 04:00 UTC
+    })) 
 
     nextPagePathVariables = data.nextPagePath
+    bRateLimitHit = true
 
-    if (nextPagePathVariables != null) {
-      // simple rate limit
-      await setTimeout(250)
-    }
   } while (nextPagePathVariables !== null)
 
-  //  "type": "DEPOSIT",
   const interetsPayments = allTransactions
     .map((transaction) => {
+      transaction.type = transaction.type = "INTEREST";
       transaction.paid = transaction.dateTime.split('T')[0] // keep only date part
       const dateParts = transaction.paid.split('-')
       transaction.period = (dateParts[0] + dateParts[1]).toString()
       transaction.year = parseInt(dateParts[0])
       transaction.month = parseInt(dateParts[1])
-
+      delete transaction.reference
+      delete transaction.dateTime
       return transaction
-    })
-    .sort((a, b) => new Date(a.paid) - new Date(b.paid))
+    }).sort((a, b) => new Date(a.paid) - new Date(b.paid))
 
-  return interetsPayments
-
-  /*
   const periodMap = new Map()
 
-  // Pad YYYYMM periods with no dividends to zero totals
-  const startYear = dividends[0].year
-  const endYear = dividends[dividends.length - 1].year
-  const startMonth = dividends[0].month
-  const endMonth = dividends[dividends.length - 1].month
+  // Pad YYYYMM periods with no interest payments to zero totals
+  const startYear = interetsPayments[0].year
+  const endYear = interetsPayments[interetsPayments.length - 1].year
+  const startMonth = interetsPayments[0].month
+  const endMonth = interetsPayments[interetsPayments.length - 1].month
 
   for (let year = startYear; year <= endYear; year++) {
     const monthStart = year === startYear ? startMonth : 1
@@ -234,35 +222,20 @@ export const TransactionInterestHistory = async (t212Key) => {
     }
   }
 
-  dividends.forEach((order) => {
-    const period = order.period
-    periodMap.get(period).push(order)
+  interetsPayments.forEach((payment) => {
+    const period = payment.period
+    periodMap.get(period).push(payment)
   })
 
   let runningTotal = 0.0
-  const periodTotals = Array.from(periodMap.entries()).map(([period, orders]) => {
-    const total = +orders.reduce((sum, order) => sum + order.amount, 0).toFixed(2)
+  const periodTotals = Array.from(periodMap.entries()).map(([period, payements]) => {
+    const total = +payements.reduce((sum, payment) => sum + payment.amount, 0).toFixed(2)
     runningTotal += total
     return { period, total, runningTotal: +runningTotal.toFixed(2) }
   })
-  
-  return { dividends, periodTotals, grandDividendTotal: +runningTotal.toFixed(2) }
-  */
+
+  return { interetsPayments, periodTotals, grandInterestTotal: +runningTotal.toFixed(2) }
 }
-
-/*
-const classifyDepositByTime = (item) => {
-  if (item.type !== "DEPOSIT") return "OTHER";
-
-  const hour = new Date(item.dateTime).getUTCHours();
-
-  if (hour >= 1 && hour < 3) {
-    return "INTEREST";
-  }
-
-  return "CASH_DEPOSIT";
-};
-*/
 
 export const Positions = async (t212Key) => {
   const positionsPath = `/api/v0/equity/positions?limit=100`
