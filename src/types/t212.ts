@@ -11,7 +11,8 @@ export interface T212InvestmentSummary {
 }
 
 export interface T212AccountSummary {
-  totalValue: number // ← add this
+  totalValue: number
+  totalCashForInterest: number
   cash: T212CashSummary
   investments: T212InvestmentSummary
 }

@@ -12,14 +12,23 @@ export const createT212Store = (apiKeyId: string) => {
       accountSummary: null as T212AccountSummary | null,
 
       totalValue: 0.0 as number,
+      totalCashForInterest: 0.0 as number,
       investmentSummary: null as T212InvestmentSummary | null,
       cashSummary: null as T212CashSummary | null,
       openOrders: [] as any[], // add proper type when known
       positions: [] as any[],
+
       dividendHistory: [] as any[],
       dividendHistoryByPeriod: [] as any[],
       dividendGrandTotal: 0.0,
       dividendPerMonth: 0.0,
+
+      interestData: null as any, // raw data for interest payments
+      interestPayments: [] as any[],
+      interestPaymentsByPeriod: [] as any[],
+      interestPaymentsGrandTotal: 0.0,
+      interestPaymentsPerMonth: 0.0,
+
       loading: false,
       error: null as string | null,
       nextReq: 0.0,
@@ -46,6 +55,7 @@ export const createT212Store = (apiKeyId: string) => {
           if (!response.ok) throw new Error(`Failed: ${response.statusText}`)
           const data = await response.json()
           this.totalValue = data.totalValue
+          this.totalCashForInterest = data.totalCashForInterest
           this.cashSummary = data.cash
           this.investmentSummary = data.investments
         } catch (err: any) {
@@ -90,6 +100,29 @@ export const createT212Store = (apiKeyId: string) => {
           this.loading = false
         }
       },
+      async getInterestHistory(t212Key: string): Promise<void> {
+        this.error = null
+        this.loading = true
+        try {
+          const response = await fetch(`${import.meta.env.VITE_GCF_URL}/t212/equity/history/transactions/interest`, {
+            method: 'GET',
+            headers: this.getHeaders(t212Key),
+          })
+          if (!response.ok) throw new Error(`Failed: ${response.statusText}`)
+          const data = await response.json()
+
+          this.interestPayments = data.interestPayments ?? []
+          this.interestPaymentsByPeriod = data.periodTotals ?? []
+          this.interestPaymentsGrandTotal = data.grandInterestTotal ?? 0.0
+          this.interestPaymentsPerMonth = +(data.grandInterestTotal / (data.periodTotals?.length || 1)).toFixed(2)
+
+          // avoid division by zero
+        } catch (err: any) {
+          this.error = err.message || 'Unknown error'
+        } finally {
+          this.loading = false
+        }
+      },
 
       // cancelOrder would also take t212Key + orderId + ticker
       async cancelOrder(t212Key: string, orderId: string, ticker: string): Promise<void> {
@@ -119,9 +152,16 @@ export const createT212Store = (apiKeyId: string) => {
         this.accountSummary = null
         this.openOrders = []
         this.positions = []
+
         this.dividendHistory = []
         this.dividendHistoryByPeriod = []
-        this.dividendGrandTotal = 0
+        this.dividendGrandTotal = 0.0
+
+        this.interestData = null
+        this.interestPayments = []
+        this.interestPaymentsByPeriod = []
+        this.interestPaymentsGrandTotal = 0.0
+
         this.error = null
       },
     },

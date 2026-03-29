@@ -151,8 +151,8 @@ export const AccountSummary = async (t212Key) => {
     headers: { 'Content-Type': 'application/json', Authorization: `Basic ${t212Key}` },
   })
 
-  const data = await response.json()
-
+  const data = await response.json();
+  data.totalCashForInterest = +(data.cash.availableToTrade + data.cash.reservedForOrders).toFixed(2)
   return data
 }
 

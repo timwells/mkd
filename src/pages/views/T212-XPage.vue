@@ -28,6 +28,10 @@
           <div class="text-xl text-blue-600">
             Reserved: {{ formatValue(storeFor(account.id).cashSummary?.reservedForOrders) }}
           </div>
+          <VaDivider />
+          <div class="text-xl text-blue-600">
+            Cash for Interest: {{ formatValue(storeFor(account.id).totalCashForInterest) }}
+          </div>
         </VaCardContent>
       </VaCard>
       <VaCard class="tab-content rounded-xl" outlined>
@@ -129,7 +133,7 @@
     </div>
     <div v-if="tabSelect === 'Dividends'">
       <VaCard class="tab-content rounded-xl" outlined>
-        <VaCardTitle>Dividends txw</VaCardTitle>
+        <VaCardTitle>Dividends - txw</VaCardTitle>
         <VaCollapse color="#DEE5F2" color-all icon="info">
           <VaCardContent>
             <EasyDataTable
@@ -157,8 +161,7 @@
         </VaCollapse>
       </VaCard>
     </div>
-
-    <div v-if="tabSelect === 'Periods'">
+    <div v-if="tabSelect === 'Dividend Periods'">
       <VaCard class="tab-content rounded-xl" outlined>
         <VaCardTitle>Dividend Periods - txw</VaCardTitle>
         <VaCardContent class="w-full" style="height: 500px">
@@ -175,7 +178,6 @@
           />
         </VaCardContent>
       </VaCard>
-
       <VaCard class="tab-content rounded-xl" outlined>
         <VaCardTitle>Dividend Periods - zxt</VaCardTitle>
         <VaCardContent class="w-full" style="height: 600px">
@@ -193,6 +195,39 @@
         </VaCardContent>
       </VaCard>
     </div>
+    <div v-if="tabSelect === 'Interest Periods'">
+      <VaCard class="tab-content rounded-xl" outlined>
+        <VaCardTitle>Interest Periods - txw</VaCardTitle>
+        <VaCardContent class="w-full" style="height: 600px">
+          <p>
+            Grand Total: £ {{ storeFor('txw').interestPaymentsGrandTotal }} /
+            {{ storeFor('txw').interestPaymentsByPeriod.length }} mths / £
+            {{ storeFor('txw').interestPaymentsPerMonth }} avg.mth / £
+            {{ formatValue(storeFor('txw').totalCashForInterest) }} cash for interest
+          </p>
+          <AgCharts
+            :options="interestHistoryByPeriodChartOptions(storeFor('txw').interestPaymentsByPeriod)"
+            style="display: grid; width: 100%; height: 550px"
+          />
+        </VaCardContent>
+      </VaCard>
+      <VaCard class="tab-content rounded-xl" outlined>
+        <VaCardTitle>Interest Periods - zxt</VaCardTitle>
+        <VaCardContent class="w-full" style="height: 600px">
+          <p>
+            Grand Total: £ {{ storeFor('zxt').interestPaymentsGrandTotal }} /
+            {{ storeFor('zxt').interestPaymentsByPeriod.length }} mths / £
+            {{ storeFor('zxt').interestPaymentsPerMonth }} avg.mth / £
+            {{ formatValue(storeFor('zxt').totalCashForInterest) }} cash for interest
+          </p>
+
+          <AgCharts
+            :options="interestHistoryByPeriodChartOptions(storeFor('zxt').interestPaymentsByPeriod)"
+            style="display: grid; width: 100%; height: 550px"
+          />
+        </VaCardContent>
+      </VaCard>
+    </div>
   </div>
 </template>
 
@@ -205,7 +240,7 @@ import type { AgCartesianChartOptions, AgBarSeriesOptions, AgLineSeriesOptions }
 
 // import type { T212AccountSummary, T212CashSummary, T212InvestmentSummary } from '@/stores/t212.ts'
 
-const tabs = ['Summary', 'Positions', 'Orders', 'Dividends', 'Periods']
+const tabs = ['Summary', 'Positions', 'Orders', 'Dividends', 'Dividend Periods', 'Interest Periods']
 const tabSelect = ref('Summary')
 
 const positionsSummaryHeader: Header[] = [
@@ -351,12 +386,121 @@ onMounted(async () => {
     (store, key) => store.getDividendHistory(key),
     (store) => store.dividendHistory.length > 0,
   )
+  await delay(900)
+  await loadDataForAllAccounts(
+    (store, key) => store.getDividendHistory(key),
+    (store) => store.dividendHistory.length > 0,
+  )
+  await delay(900)
+  await loadDataForAllAccounts(
+    (store, key) => store.getInterestHistory(key),
+    (store) => store.interestPayments.length > 0,
+  )
 })
 
 // AG Charts configuration
 const dividendHistoryByPeriodChartOptions = (dividendHistoryByPeriod: any): AgCartesianChartOptions => ({
   data: dividendHistoryByPeriod,
   title: { text: 'Monthly Dividend Totals' },
+  series: [
+    {
+      type: 'bar',
+      xKey: 'period',
+      yKey: 'total',
+      yName: 'Total',
+      fill: '#7eade0', // nice blue
+      stroke: '#2c4f7c',
+      strokeWidth: 1,
+      cornerRadius: 6,
+      label: {
+        enabled: true,
+        fontSize: 14,
+        fontWeight: 'normal', // or 'bold'
+        color: '#333', // dark gray — good contrast on light bars
+        placement: 'outside-end',
+        formatter: (params: any) => '£' + params.value.toFixed(2),
+      },
+      tooltip: {
+        renderer: ({ datum }) => ({
+          content: `${datum.period}: <b>${datum.total.toFixed(2)}</b>`,
+        }),
+      },
+    } as AgBarSeriesOptions,
+    {
+      type: 'line',
+      xKey: 'period',
+      yKey: 'runningTotal',
+      yName: 'Running Total',
+      stroke: '#f28e2b', // nice contrasting orange
+      strokeWidth: 2,
+      marker: {
+        enabled: true,
+        shape: 'circle',
+        size: 7,
+        fill: '#f28e2b',
+        stroke: '#c15d00',
+      },
+      label: {
+        enabled: true,
+        fontSize: 14,
+        color: '#c15d00',
+        // placement: 'outside-end',
+        formatter: (p: any) => '£' + p.value.toFixed(2), // whole pounds for cumulative
+      },
+      tooltip: {
+        renderer: ({ datum }) => ({
+          content: `${datum.period}<br>Monthly: £${datum.total.toFixed(
+            2,
+          )}<br><b>Cumulative: £${datum.runningTotal.toFixed(2)}</b>`,
+        }),
+      },
+    } as AgLineSeriesOptions,
+  ],
+  axes: [
+    {
+      type: 'category',
+      position: 'bottom',
+      title: { text: 'Period' },
+      label: {
+        rotation: 0,
+        formatter: (p: any) => p.value.slice(2).replace(/(\d{2})(\d{2})/, '$1-$2'), // already formatted
+      },
+    },
+    {
+      // Primary left axis (for bars / monthly values)
+      type: 'number',
+      position: 'left',
+      title: { text: 'Monthly £' },
+      label: {
+        formatter: (p: any) => '£' + p.value.toFixed(0),
+      },
+      keys: ['total'], // explicitly bind bar series to this axis (optional but clearer)
+    },
+    {
+      // Secondary right axis (for cumulative line – different scale)
+      type: 'number',
+      position: 'right',
+      title: { text: 'Cumulative £' },
+      label: { formatter: (p: any) => '£' + p.value.toFixed(0) },
+      keys: ['runningTotal'], // bind line to this axis
+    },
+  ],
+  legend: {
+    enabled: true,
+    position: 'bottom',
+    item: {
+      marker: { shape: 'square' }, // or 'line' for the cumulative
+    },
+  },
+  background: {
+    fill: '#ffffff',
+  },
+})
+
+// AG Charts configuration
+const interestHistoryByPeriodChartOptions = (interestHistoryByPeriod: any): AgCartesianChartOptions => ({
+  data: interestHistoryByPeriod,
+  title: { text: 'Monthly Interest Totals' },
   /* subtitle: {
     text: 'Payments / month + Cumulative Total',
     fontSize: 13,
