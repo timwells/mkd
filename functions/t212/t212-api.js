@@ -160,7 +160,7 @@ export const AccountSummary = async (t212Key) => {
 export const TransactionInterestHistory = async (t212Key) => {
   let allTransactions = []
   let nextPagePath = `/api/v0/equity/history/transactions`
-  let nextPagePathVariables = `limit=30`
+  let nextPagePathVariables = `limit=50`
 
   let bRateLimitHit = false
   do {
