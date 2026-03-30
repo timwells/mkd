@@ -187,7 +187,7 @@ export const TransactionInterestHistory = async (t212Key) => {
         const date = new Date(item.dateTime)
         if (isNaN(date.getTime())) return false
         const hour = date.getUTCHours()
-        return hour >= 0 && hour <= 4 // 00:00 - 04:00 UTC
+        return (hour >= 0 && hour <= 4) && item.amount < 12.0  // 00:00 - 04:00 UTC
       }),
     )
 
